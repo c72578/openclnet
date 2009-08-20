@@ -1,4 +1,25 @@
-﻿August 19, 2009
+﻿August 20, 2009
+---------------
+
+Got a basic VB project up and running and cleaned up the OpenCL event handling a bit.
+All the Enqueue* methods now have two new overloads. One that chops off the "out event" parameter,
+and another that also chops out the event wait list and its size parameter.
+
+This solves the problem of forcing the caller to process events for every single enqueued function
+without dragging pointers all the way to the high level API.
+
+Also changed the SetArg(*) methods so they take the parameter number as an integer instead of as an
+uint to make things less painful for VB. I'm also considering adding aliases for SetArg that specify
+the type in the method name due to cryptic runtimeerror messages in VB when dealing with the overloaded ones
+that are so convenient in strongly typed languages.
+
+I've decided to leave events as IntPtrs for now, even though an Event weapper class has been checked in.
+There's not really much use for an event class other than to garbage collect events(Which has a dangerous aspect to it. It might be better to fail fast during development if there are that kind of memory leaks present.)
+and make code look prettier due to better type checking. I haven't completely decided yet, we'll see what happens after the unit tests are done. Converting to use an event class should mostly involve a few regular expression search and replaces anyway.
+
+
+August 19, 2009
+---------------
 
 OpenCLNet - Quick feature walkthough
 
