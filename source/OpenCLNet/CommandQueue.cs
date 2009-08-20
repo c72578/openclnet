@@ -1,4 +1,29 @@
-﻿using System;
+﻿/*
+ * Copyright (c) 2009 Olav Kalgraf(olav.kalgraf@gmail.com)
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -92,26 +117,61 @@ namespace OpenCLNet
 
         #endregion
 
-        public void EnqueueWriteBuffer( Mem buffer, bool blockingWrite, IntPtr offset, IntPtr cb, IntPtr ptr, int numEventsInWaitList, IntPtr[] eventWaitList, out IntPtr _event )
+        public void EnqueueWriteBuffer(Mem buffer, bool blockingWrite, IntPtr offset, IntPtr cb, IntPtr ptr, int numEventsInWaitList, IntPtr[] eventWaitList, out IntPtr _event)
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
-            result = CL.EnqueueWriteBuffer( CommandQueueID,
+            result = CL.EnqueueWriteBuffer(CommandQueueID,
                 buffer.MemID,
-                (uint)(blockingWrite?Bool.TRUE:Bool.FALSE),
+                (uint)(blockingWrite ? Bool.TRUE : Bool.FALSE),
                 offset,
                 cb,
                 ptr.ToPointer(),
                 (uint)numEventsInWaitList,
                 eventWaitList,
-                out _event );
-            if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "EnqueueReadBuffer failed with error code "+result );
+                &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("EnqueueReadBuffer failed with error code " + result);
+        }
+        public void EnqueueWriteBuffer(Mem buffer, bool blockingWrite, IntPtr offset, IntPtr cb, IntPtr ptr, int numEventsInWaitList, IntPtr[] eventWaitList)
+        {
+            ErrorCode result;
+
+            result = CL.EnqueueWriteBuffer(CommandQueueID,
+                buffer.MemID,
+                (uint)(blockingWrite ? Bool.TRUE : Bool.FALSE),
+                offset,
+                cb,
+                ptr.ToPointer(),
+                (uint)numEventsInWaitList,
+                eventWaitList,
+                null);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("EnqueueReadBuffer failed with error code " + result);
+        }
+        public void EnqueueWriteBuffer(Mem buffer, bool blockingWrite, IntPtr offset, IntPtr cb, IntPtr ptr)
+        {
+            ErrorCode result;
+
+            result = CL.EnqueueWriteBuffer(CommandQueueID,
+                buffer.MemID,
+                (uint)(blockingWrite ? Bool.TRUE : Bool.FALSE),
+                offset,
+                cb,
+                ptr.ToPointer(),
+                (uint)0,
+                null,
+                null);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("EnqueueReadBuffer failed with error code " + result);
         }
 
         public void EnqueueReadBuffer( Mem buffer, bool blockingRead, IntPtr offset, IntPtr cb, IntPtr ptr, int numEventsInWaitList, IntPtr[] eventWaitList, out IntPtr _event )
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
             result = CL.EnqueueReadBuffer( CommandQueueID,
                 buffer.MemID,
@@ -121,14 +181,16 @@ namespace OpenCLNet
                 ptr.ToPointer(),
                 (uint)numEventsInWaitList,
                 eventWaitList,
-                out _event );
-            if( result!=ErrorCode.SUCCESS )
+                &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueReadBuffer failed with error code "+result );
         }
 
         public void EnqueueCopyBuffer( Mem src_buffer, Mem dst_buffer, IntPtr src_offset, IntPtr dst_offset, IntPtr cb, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event )
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
             result = CL.EnqueueCopyBuffer( CommandQueueID,
                 src_buffer.MemID,
@@ -138,14 +200,16 @@ namespace OpenCLNet
                 cb,
                 (uint)num_events_in_wait_list,
                 eventWaitList,
-                out _event );
-            if( result!=ErrorCode.SUCCESS )
+                &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueCopyBuffer failed with error code "+result );
         }
 
         public void EnqueueReadImage( Mem image, bool blockingRead, IntPtr[] origin, IntPtr[] region, IntPtr row_pitch, IntPtr slice_pitch, void* ptr, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event )
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
             result = CL.EnqueueReadImage( CommandQueueID,
                 image.MemID,
@@ -157,14 +221,16 @@ namespace OpenCLNet
                 ptr,
                 (uint)num_events_in_wait_list,
                 eventWaitList,
-                out _event );
-            if( result!=ErrorCode.SUCCESS )
+                &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueReadImage failed with error code "+result );
         }
 
         public void EnqueueWriteImage( Mem image, bool blockingWrite, IntPtr[] origin, IntPtr[] region, IntPtr input_row_pitch, IntPtr input_slice_pitch, void* ptr, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event )
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
             result = CL.EnqueueWriteImage( CommandQueueID,
                 image.MemID,
@@ -176,14 +242,16 @@ namespace OpenCLNet
                 ptr,
                 (uint)num_events_in_wait_list,
                 eventWaitList,
-                out _event );
-            if( result!=ErrorCode.SUCCESS )
+                &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueWriteImage failed with error code "+result );
         }
 
         public void EnqueueCopyImage( Mem src_image, Mem dst_image, IntPtr[] src_origin, IntPtr[] dst_origin, IntPtr[] region, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event )
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
             result = CL.EnqueueCopyImage( CommandQueueID,
                 src_image,
@@ -193,14 +261,16 @@ namespace OpenCLNet
                 region,
                 (uint)num_events_in_wait_list,
                 eventWaitList,
-                out _event );
-            if( result!=ErrorCode.SUCCESS )
+                &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueCopyImage failed with error code "+result );
         }
 
         public void EnqueueCopyImageToBuffer( Mem src_image, Mem dst_buffer, IntPtr[] src_origin, IntPtr[] region, IntPtr dst_offset, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event )
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
             result = CL.EnqueueCopyImageToBuffer( CommandQueueID,
                 src_image,
@@ -210,14 +280,16 @@ namespace OpenCLNet
                 dst_offset,
                 (uint)num_events_in_wait_list,
                 eventWaitList,
-                out _event );
-            if( result!=ErrorCode.SUCCESS )
+                &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueCopyImageToBuffer failed with error code "+result );
         }
 
         public void EnqueueCopyBufferToImage( Mem src_buffer, Mem dst_image, IntPtr src_offset, IntPtr[] dst_origin, IntPtr[] region, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event )
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
             result = CL.EnqueueCopyBufferToImage( CommandQueueID,
                 src_buffer,
@@ -227,14 +299,16 @@ namespace OpenCLNet
                 region,
                 (uint) num_events_in_wait_list,
                 eventWaitList,
-                out _event );
-            if( result!=ErrorCode.SUCCESS )
+                &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueCopyBufferToImage failed with error code "+result );
         }
 
         public IntPtr EnqueueMapBuffer( Mem buffer, bool blockingMap, MapFlags map_flags, IntPtr offset, IntPtr cb, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event, out ErrorCode result )
         {
             IntPtr ptr;
+            IntPtr tmpEvent;
 
             ptr = (IntPtr)CL.EnqueueMapBuffer( CommandQueueID,
                 buffer,
@@ -244,8 +318,10 @@ namespace OpenCLNet
                 cb,
                 (uint)num_events_in_wait_list,
                 eventWaitList,
-                out _event,
+                &tmpEvent,
                 out result );
+            _event = tmpEvent;
+
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "EnqueueMapBuffer failed with error code "+result );
             return ptr;
@@ -254,6 +330,7 @@ namespace OpenCLNet
         public IntPtr EnqueueMapImage( Mem image, bool blockingMap, MapFlags map_flags, IntPtr[] origin, IntPtr[] region, IntPtr image_row_pitch, IntPtr image_slice_pitch, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event, out ErrorCode result )
         {
             IntPtr ptr;
+            IntPtr tmpEvent;
 
             ptr = (IntPtr)CL.EnqueueMapImage( CommandQueueID,
                 image,
@@ -265,9 +342,10 @@ namespace OpenCLNet
                 image_slice_pitch,
                 (uint)num_events_in_wait_list,
                 eventWaitList,
-                out _event,
-                out result );
-            if( result!=ErrorCode.SUCCESS )
+                &tmpEvent,
+                out result);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueMapImage failed with error code "+result );
             return ptr;
         }
@@ -275,36 +353,42 @@ namespace OpenCLNet
         public void EnqueueUnmapMemObject( Mem memobj, IntPtr mapped_ptr, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event )
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
             result = CL.EnqueueUnmapMemObject( CommandQueueID,
                 memobj,
                 mapped_ptr.ToPointer(),
                 (uint)num_events_in_wait_list,
                 eventWaitList,
-                out _event );
-            if( result!=ErrorCode.SUCCESS )
+                &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueUnmapMemObject failed with error code "+result );
         }
 
         public void EnqueueNDRangeKernel( Kernel kernel, uint workDim, IntPtr[] globalWorkOffset, IntPtr[] globalWorkSize, IntPtr[] localWorkSize, uint numEventsInWaitList, IntPtr[] eventWaitList, out IntPtr _event )
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
-            result = CL.EnqueueNDRangeKernel( CommandQueueID, kernel.KernelID, workDim, globalWorkOffset, globalWorkSize, localWorkSize, numEventsInWaitList, eventWaitList, out _event );
-            if( result!=ErrorCode.SUCCESS )
+            result = CL.EnqueueNDRangeKernel(CommandQueueID, kernel.KernelID, workDim, globalWorkOffset, globalWorkSize, localWorkSize, numEventsInWaitList, eventWaitList, &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueNDRangeKernel failed with error code "+result );
         }
 
         public void EnqueueTask( Kernel kernel, int numEventsInWaitList, IntPtr[] eventWaitList, ref IntPtr _event )
         {
             ErrorCode result;
+            IntPtr tmpEvent;
 
             result = (ErrorCode)CL.EnqueueTask( CommandQueueID,
                 kernel.KernelID,
                 (uint)numEventsInWaitList,
                 eventWaitList,
-                out _event );
-            if( result!=ErrorCode.SUCCESS )
+                &tmpEvent);
+            _event = tmpEvent;
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "EnqueueTask failed with error code "+result );
         }
 

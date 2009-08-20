@@ -1,4 +1,29 @@
-﻿using System;
+﻿/*
+ * Copyright (c) 2009 Olav Kalgraf(olav.kalgraf@gmail.com)
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -196,8 +221,8 @@ namespace OpenCLNet
             IntPtr cb,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event );
         public abstract ErrorCode EnqueueWriteBuffer( cl_command_queue command_queue,
             cl_mem buffer,
             cl_bool blocking_write,
@@ -205,8 +230,8 @@ namespace OpenCLNet
             IntPtr cb,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event);
         public abstract ErrorCode EnqueueCopyBuffer( cl_command_queue command_queue,
             cl_mem src_buffer,
             cl_mem dst_buffer,
@@ -214,8 +239,8 @@ namespace OpenCLNet
             IntPtr dst_offset,
             IntPtr cb,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event);
         public abstract ErrorCode EnqueueReadImage( cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_read,
@@ -225,8 +250,8 @@ namespace OpenCLNet
             IntPtr slice_pitch,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event);
         public abstract ErrorCode EnqueueWriteImage( cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_write,
@@ -236,8 +261,8 @@ namespace OpenCLNet
             IntPtr input_slice_pitch,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event);
         public abstract ErrorCode EnqueueCopyImage( cl_command_queue command_queue,
             cl_mem src_image,
             cl_mem dst_image,
@@ -245,8 +270,8 @@ namespace OpenCLNet
             IntPtr[] dst_origin,
             IntPtr[] region,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event );
         public abstract ErrorCode EnqueueCopyImageToBuffer( cl_command_queue command_queue,
             cl_mem src_image,
             cl_mem dst_buffer,
@@ -254,8 +279,8 @@ namespace OpenCLNet
             IntPtr[] region,
             IntPtr dst_offset,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event );
         public abstract ErrorCode EnqueueCopyBufferToImage( cl_command_queue command_queue,
             cl_mem src_buffer,
             cl_mem dst_image,
@@ -263,8 +288,8 @@ namespace OpenCLNet
             IntPtr[] dst_origin,
             IntPtr[] region,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event);
         public abstract void* EnqueueMapBuffer( cl_command_queue command_queue,
             cl_mem buffer,
             cl_bool blocking_map,
@@ -272,8 +297,8 @@ namespace OpenCLNet
             IntPtr offset,
             IntPtr cb,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event,
+            cl_event[] event_wait_list,
+            cl_event* _event,
             out ErrorCode errcode_ret );
         public abstract void* EnqueueMapImage( cl_command_queue command_queue,
             cl_mem image,
@@ -284,15 +309,15 @@ namespace OpenCLNet
             IntPtr image_row_pitch,
             IntPtr image_slice_pitch,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event,
+            cl_event[] event_wait_list,
+            cl_event* _event,
             out ErrorCode errcode_ret );
         public abstract ErrorCode EnqueueUnmapMemObject( cl_command_queue command_queue,
             cl_mem memobj,
             void* mapped_ptr,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event);
         public abstract ErrorCode EnqueueNDRangeKernel( cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint work_dim,
@@ -300,13 +325,13 @@ namespace OpenCLNet
             IntPtr[] global_work_size,
             IntPtr[] local_work_size,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event);
         public abstract ErrorCode EnqueueTask( cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint num_events_in_wait_list,
-            cl_event[] _event_wait_list,
-            out cl_event _event );
+            cl_event[] event_wait_list,
+            cl_event* _event);
         // TODO
 #if false
         public abstract ErrorCode EnqueueNativeKernel( cl_command_queue command_queue,
@@ -317,10 +342,10 @@ namespace OpenCLNet
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=4)] cl_mem[] mem_list,
             const void** args_mem_loc,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
             out cl_event _event);
 #endif
-        public abstract ErrorCode EnqueueMarker( cl_command_queue command_queue, out cl_event _event );
+        public abstract ErrorCode EnqueueMarker( cl_command_queue command_queue, cl_event* _event );
         public abstract ErrorCode EnqueueWaitForEvents( cl_command_queue command_queue, cl_uint num_events, cl_event[] _event_list );
         public abstract ErrorCode EnqueueBarrier( cl_command_queue command_queue );
 

@@ -1,4 +1,29 @@
-﻿using System;
+﻿/*
+ * Copyright (c) 2009 Olav Kalgraf(olav.kalgraf@gmail.com)
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -420,8 +445,8 @@ namespace OpenCLNet
             IntPtr cb,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
-            out cl_event _event);
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            cl_event* _event);
         [DllImport( Configuration.Library, EntryPoint="_clEnqueueWriteBuffer@36" )]
         public extern static ErrorCode clEnqueueWriteBuffer( cl_command_queue command_queue,
             cl_mem buffer,
@@ -430,9 +455,9 @@ namespace OpenCLNet
             IntPtr cb,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
-            out cl_event _event);
-        [DllImport( Configuration.Library, EntryPoint="_clEnqueueCopyBuffer@36" )]
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueCopyBuffer@36")]
         public extern static ErrorCode clEnqueueCopyBuffer( cl_command_queue command_queue,
             cl_mem src_buffer,
             cl_mem dst_buffer,
@@ -440,9 +465,9 @@ namespace OpenCLNet
             IntPtr dst_offset,
             IntPtr cb,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
-            out cl_event _event);
-        [DllImport( Configuration.Library, EntryPoint="_clEnqueueReadImage@44" )]
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueReadImage@44")]
         public extern static ErrorCode clEnqueueReadImage( cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_read,
@@ -452,9 +477,9 @@ namespace OpenCLNet
             IntPtr slice_pitch,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=8)] cl_event[] _event_wait_list,
-            out cl_event _event);
-        [DllImport( Configuration.Library, EntryPoint="_clEnqueueWriteImage@44" )]
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=8)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueWriteImage@44")]
         public extern static ErrorCode clEnqueueWriteImage( cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_write,
@@ -464,9 +489,9 @@ namespace OpenCLNet
             IntPtr input_slice_pitch,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=8)] cl_event[] _event_wait_list,
-            out cl_event _event);
-        [DllImport( Configuration.Library, EntryPoint="_clEnqueueCopyImage@36" )]
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=8)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueCopyImage@36")]
         public extern static ErrorCode clEnqueueCopyImage( cl_command_queue command_queue,
             cl_mem src_image,
             cl_mem dst_image,
@@ -474,9 +499,9 @@ namespace OpenCLNet
             IntPtr[] dst_origin,
             IntPtr[] region,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
-            out cl_event _event);
-        [DllImport( Configuration.Library, EntryPoint="_clEnqueueCopyImageToBuffer@36" )]
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueCopyImageToBuffer@36")]
         public extern static ErrorCode clEnqueueCopyImageToBuffer( cl_command_queue command_queue,
             cl_mem src_image,
             cl_mem dst_buffer,
@@ -484,9 +509,9 @@ namespace OpenCLNet
             IntPtr[] region,
             IntPtr dst_offset,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
-            out cl_event _event);
-        [DllImport( Configuration.Library, EntryPoint="_clEnqueueCopyBufferToImage@36" )]
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueCopyBufferToImage@36")]
         public extern static ErrorCode clEnqueueCopyBufferToImage( cl_command_queue command_queue,
             cl_mem src_buffer,
             cl_mem dst_image,
@@ -494,9 +519,9 @@ namespace OpenCLNet
             IntPtr[] dst_origin,
             IntPtr[] region,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
-            out cl_event _event);
-        [DllImport( Configuration.Library, EntryPoint="_clEnqueueMapBuffer@44" )]
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueMapBuffer@44")]
         public extern static void* clEnqueueMapBuffer( cl_command_queue command_queue,
             cl_mem buffer,
             cl_bool blocking_map,
@@ -504,8 +529,8 @@ namespace OpenCLNet
             IntPtr offset,
             IntPtr cb,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
-            out cl_event _event,
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            cl_event* _event,
             out ErrorCode errcode_ret);
         [DllImport( Configuration.Library, EntryPoint="_clEnqueueMapImage@52" )]
         public extern static void* clEnqueueMapImage( cl_command_queue command_queue,
@@ -517,17 +542,17 @@ namespace OpenCLNet
             IntPtr image_row_pitch,
             IntPtr image_slice_pitch,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
-            out cl_event _event,
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            cl_event* _event,
             out ErrorCode errcode_ret);
         [DllImport( Configuration.Library, EntryPoint="_clEnqueueUnmapMemObject@24" )]
         public extern static ErrorCode clEnqueueUnmapMemObject( cl_command_queue command_queue,
             cl_mem memobj,
             void* mapped_ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
-            out cl_event _event);
-        [DllImport( Configuration.Library, EntryPoint="_clEnqueueNDRangeKernel@36" )]
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueNDRangeKernel@36")]
         public extern static ErrorCode clEnqueueNDRangeKernel( cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint work_dim,
@@ -535,21 +560,21 @@ namespace OpenCLNet
             [In] [MarshalAs( UnmanagedType.LPArray, SizeParamIndex=2 )] IntPtr[] global_work_size,
             [In] [MarshalAs( UnmanagedType.LPArray, SizeParamIndex=2 )] IntPtr[] local_work_size,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] _event_wait_list,
-            out cl_event _event);
-        [DllImport( Configuration.Library, EntryPoint="_clEnqueueTask@20" )]
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueTask@20")]
         public extern static ErrorCode clEnqueueTask( cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=2)] cl_event[] _event_wait_list,
-            out cl_event _event);
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=2)] cl_event[] event_wait_list,
+            cl_event* _event);
         //TODO
 #if false
         [DllImport( Configuration.Library, EntryPoint="_clEnqueueNativeKernel@40" )]
-        public extern static cl_int clEnqueueNativeKernel( void* command_queue, void (*user_func)(void*), void* args, size_t cb_args, cl_uint num_mem_objects, const cl_mem* mem_list, const void** args_mem_loc, cl_uint num_events_in_wait_list, void** _event_wait_list, void** _event);
+        public extern static cl_int clEnqueueNativeKernel( void* command_queue, void (*user_func)(void*), void* args, size_t cb_args, cl_uint num_mem_objects, const cl_mem* mem_list, const void** args_mem_loc, cl_uint num_events_in_wait_list, void** event_wait_list, void** _event);
 #endif
         [DllImport( Configuration.Library, EntryPoint="_clEnqueueMarker@8" )]
-        public extern static ErrorCode clEnqueueMarker( cl_command_queue command_queue, out cl_event _event );
+        public extern static ErrorCode clEnqueueMarker( cl_command_queue command_queue, cl_event* _event );
         [DllImport( Configuration.Library, EntryPoint="_clEnqueueWaitForEvents@12" )]
         public extern static ErrorCode clEnqueueWaitForEvents( cl_command_queue command_queue,
             cl_uint num_events,
@@ -558,74 +583,74 @@ namespace OpenCLNet
         public extern static ErrorCode clEnqueueBarrier( cl_command_queue command_queue );
 
 
-        public override ErrorCode EnqueueReadBuffer( IntPtr command_queue, IntPtr buffer, uint blocking_read, IntPtr offset, IntPtr cb, void* ptr, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueReadBuffer( IntPtr command_queue, IntPtr buffer, uint blocking_read, IntPtr offset, IntPtr cb, void* ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueReadBuffer( command_queue, buffer, blocking_read, offset, cb, ptr, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueReadBuffer( command_queue, buffer, blocking_read, offset, cb, ptr, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override ErrorCode EnqueueWriteBuffer( IntPtr command_queue, IntPtr buffer, uint blocking_write, IntPtr offset, IntPtr cb, void* ptr, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueWriteBuffer( IntPtr command_queue, IntPtr buffer, uint blocking_write, IntPtr offset, IntPtr cb, void* ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueWriteBuffer( command_queue, buffer, blocking_write, offset, cb, ptr, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueWriteBuffer( command_queue, buffer, blocking_write, offset, cb, ptr, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override ErrorCode EnqueueCopyBuffer( IntPtr command_queue, IntPtr src_buffer, IntPtr dst_buffer, IntPtr src_offset, IntPtr dst_offset, IntPtr cb, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueCopyBuffer( IntPtr command_queue, IntPtr src_buffer, IntPtr dst_buffer, IntPtr src_offset, IntPtr dst_offset, IntPtr cb, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueCopyBuffer( command_queue, src_buffer, dst_buffer, src_offset, dst_offset, cb, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueCopyBuffer( command_queue, src_buffer, dst_buffer, src_offset, dst_offset, cb, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override ErrorCode EnqueueReadImage( IntPtr command_queue, IntPtr image, uint blocking_read, IntPtr[] origin, IntPtr[] region, IntPtr row_pitch, IntPtr slice_pitch, void* ptr, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueReadImage( IntPtr command_queue, IntPtr image, uint blocking_read, IntPtr[] origin, IntPtr[] region, IntPtr row_pitch, IntPtr slice_pitch, void* ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueReadImage( command_queue, image, blocking_read, origin, region, row_pitch, slice_pitch, ptr, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueReadImage( command_queue, image, blocking_read, origin, region, row_pitch, slice_pitch, ptr, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override ErrorCode EnqueueWriteImage( IntPtr command_queue, IntPtr image, uint blocking_write, IntPtr[] origin, IntPtr[] region, IntPtr input_row_pitch, IntPtr input_slice_pitch, void* ptr, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueWriteImage( IntPtr command_queue, IntPtr image, uint blocking_write, IntPtr[] origin, IntPtr[] region, IntPtr input_row_pitch, IntPtr input_slice_pitch, void* ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueWriteImage( command_queue, image, blocking_write, origin, region, input_row_pitch, input_slice_pitch, ptr, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueWriteImage( command_queue, image, blocking_write, origin, region, input_row_pitch, input_slice_pitch, ptr, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override ErrorCode EnqueueCopyImage( IntPtr command_queue, IntPtr src_image, IntPtr dst_image, IntPtr[] src_origin, IntPtr[] dst_origin, IntPtr[] region, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueCopyImage( IntPtr command_queue, IntPtr src_image, IntPtr dst_image, IntPtr[] src_origin, IntPtr[] dst_origin, IntPtr[] region, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueCopyImage( command_queue, src_image, dst_image, src_origin, dst_origin, region, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueCopyImage( command_queue, src_image, dst_image, src_origin, dst_origin, region, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override ErrorCode EnqueueCopyImageToBuffer( IntPtr command_queue, IntPtr src_image, IntPtr dst_buffer, IntPtr[] src_origin, IntPtr[] region, IntPtr dst_offset, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueCopyImageToBuffer( IntPtr command_queue, IntPtr src_image, IntPtr dst_buffer, IntPtr[] src_origin, IntPtr[] region, IntPtr dst_offset, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueCopyImageToBuffer( command_queue, src_image, dst_buffer, src_origin, region, dst_offset, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueCopyImageToBuffer( command_queue, src_image, dst_buffer, src_origin, region, dst_offset, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override ErrorCode EnqueueCopyBufferToImage( IntPtr command_queue, IntPtr src_buffer, IntPtr dst_image, IntPtr src_offset, IntPtr[] dst_origin, IntPtr[] region, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueCopyBufferToImage( IntPtr command_queue, IntPtr src_buffer, IntPtr dst_image, IntPtr src_offset, IntPtr[] dst_origin, IntPtr[] region, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueCopyBufferToImage( command_queue, src_buffer, dst_image, src_offset, dst_origin, region, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueCopyBufferToImage( command_queue, src_buffer, dst_image, src_offset, dst_origin, region, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override void* EnqueueMapBuffer( IntPtr command_queue, IntPtr buffer, uint blocking_map, ulong map_flags, IntPtr offset, IntPtr cb, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event, out ErrorCode errcode_ret )
+        public override void* EnqueueMapBuffer( IntPtr command_queue, IntPtr buffer, uint blocking_map, ulong map_flags, IntPtr offset, IntPtr cb, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event, out ErrorCode errcode_ret )
         {
-            return clEnqueueMapBuffer( command_queue, buffer, blocking_map, map_flags, offset, cb, num_events_in_wait_list, _event_wait_list, out _event, out errcode_ret );
+            return clEnqueueMapBuffer( command_queue, buffer, blocking_map, map_flags, offset, cb, num_events_in_wait_list, event_wait_list, _event, out errcode_ret );
         }
 
-        public override void* EnqueueMapImage( IntPtr command_queue, IntPtr image, uint blocking_map, ulong map_flags, IntPtr[] origin, IntPtr[] region, IntPtr image_row_pitch, IntPtr image_slice_pitch, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event, out ErrorCode errcode_ret )
+        public override void* EnqueueMapImage( IntPtr command_queue, IntPtr image, uint blocking_map, ulong map_flags, IntPtr[] origin, IntPtr[] region, IntPtr image_row_pitch, IntPtr image_slice_pitch, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event, out ErrorCode errcode_ret )
         {
-            return clEnqueueMapImage( command_queue, image, blocking_map, map_flags, origin, region, image_row_pitch, image_slice_pitch, num_events_in_wait_list, _event_wait_list, out _event, out errcode_ret );
+            return clEnqueueMapImage( command_queue, image, blocking_map, map_flags, origin, region, image_row_pitch, image_slice_pitch, num_events_in_wait_list, event_wait_list, _event, out errcode_ret );
         }
 
-        public override ErrorCode EnqueueUnmapMemObject( IntPtr command_queue, IntPtr memobj, void* mapped_ptr, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueUnmapMemObject( IntPtr command_queue, IntPtr memobj, void* mapped_ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueUnmapMemObject( command_queue, memobj, mapped_ptr, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueUnmapMemObject( command_queue, memobj, mapped_ptr, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override ErrorCode EnqueueNDRangeKernel( IntPtr command_queue, IntPtr kernel, uint work_dim, IntPtr[] global_work_offset, IntPtr[] global_work_size, IntPtr[] local_work_size, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueNDRangeKernel( IntPtr command_queue, IntPtr kernel, uint work_dim, IntPtr[] global_work_offset, IntPtr[] global_work_size, IntPtr[] local_work_size, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueNDRangeKernel( command_queue, kernel, work_dim, global_work_offset, global_work_size, local_work_size, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueNDRangeKernel( command_queue, kernel, work_dim, global_work_offset, global_work_size, local_work_size, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override ErrorCode EnqueueTask( IntPtr command_queue, IntPtr kernel, uint num_events_in_wait_list, IntPtr[] _event_wait_list, out IntPtr _event )
+        public override ErrorCode EnqueueTask( IntPtr command_queue, IntPtr kernel, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
-            return clEnqueueTask( command_queue, kernel, num_events_in_wait_list, _event_wait_list, out _event );
+            return clEnqueueTask( command_queue, kernel, num_events_in_wait_list, event_wait_list, _event );
         }
 
-        public override ErrorCode EnqueueMarker( IntPtr command_queue, out IntPtr _event )
+        public override ErrorCode EnqueueMarker( IntPtr command_queue, IntPtr* _event )
         {
-            return clEnqueueMarker( command_queue, out _event );
+            return clEnqueueMarker( command_queue, _event );
         }
 
         public override ErrorCode EnqueueWaitForEvents( IntPtr command_queue, uint num_events, IntPtr[] _event_list )
