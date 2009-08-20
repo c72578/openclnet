@@ -457,7 +457,7 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
             cl_event* _event);
-        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueCopyBuffer@36")]
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueCopyBuffer( cl_command_queue command_queue,
             cl_mem src_buffer,
             cl_mem dst_buffer,
@@ -467,7 +467,7 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
             cl_event* _event);
-        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueReadImage@44")]
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueReadImage( cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_read,
@@ -479,7 +479,7 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=8)] cl_event[] event_wait_list,
             cl_event* _event);
-        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueWriteImage@44")]
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWriteImage( cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_write,
@@ -491,7 +491,7 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=8)] cl_event[] event_wait_list,
             cl_event* _event);
-        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueCopyImage@36")]
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueCopyImage( cl_command_queue command_queue,
             cl_mem src_image,
             cl_mem dst_image,
@@ -501,7 +501,7 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
             cl_event* _event);
-        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueCopyImageToBuffer@36")]
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueCopyImageToBuffer( cl_command_queue command_queue,
             cl_mem src_image,
             cl_mem dst_buffer,
@@ -511,7 +511,7 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
             cl_event* _event);
-        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueCopyBufferToImage@36")]
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueCopyBufferToImage( cl_command_queue command_queue,
             cl_mem src_buffer,
             cl_mem dst_image,
@@ -521,7 +521,7 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
             cl_event* _event);
-        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueMapBuffer@44")]
+        [DllImport(Configuration.Library)]
         public extern static void* clEnqueueMapBuffer( cl_command_queue command_queue,
             cl_mem buffer,
             cl_bool blocking_map,
@@ -552,7 +552,7 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
             cl_event* _event);
-        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueNDRangeKernel@36")]
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueNDRangeKernel( cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint work_dim,
@@ -562,7 +562,7 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
             cl_event* _event);
-        [DllImport(Configuration.Library, EntryPoint = "_clEnqueueTask@20")]
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueTask( cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint num_events_in_wait_list,
