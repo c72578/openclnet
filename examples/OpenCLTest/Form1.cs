@@ -69,13 +69,13 @@ namespace OpenCLTest
                 OpenCL = new OpenCL(new ATI());
                 Mandelbrot = new Mandelbrot(OpenCL, Width, Height);
                 Mandelbrot.AllocBuffers();
+                UpdateMandelbrot();
             }
-            catch (OpenCLException oex)
+            catch (Exception oex)
             {
                 MessageBox.Show( oex.ToString(), "OpenCL Initialization failed" );
                 Application.Exit();
             }
-            UpdateMandelbrot();
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
