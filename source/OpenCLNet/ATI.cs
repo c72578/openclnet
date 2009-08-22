@@ -655,12 +655,12 @@ namespace OpenCLNet
 
         public override ErrorCode EnqueueWaitForEvents( IntPtr command_queue, uint num_events, IntPtr[] _event_list )
         {
-            return EnqueueWaitForEvents( command_queue, num_events, _event_list );
+            return clEnqueueWaitForEvents( command_queue, num_events, _event_list );
         }
 
         public override ErrorCode EnqueueBarrier( IntPtr command_queue )
         {
-            return EnqueueBarrier( command_queue );
+            return clEnqueueBarrier( command_queue );
         }
 
         #endregion

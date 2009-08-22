@@ -41,7 +41,7 @@ namespace OpenCLNet
         public string Version { get { return InteropTools.ReadString( this, (uint)PlatformInfo.VERSION ); } }
         public string Name { get { return InteropTools.ReadString( this, (uint)PlatformInfo.NAME ); } }
         public string Vendor { get { return InteropTools.ReadString( this, (uint)PlatformInfo.VENDOR ); } }
-        public string Extension { get { return InteropTools.ReadString( this, (uint)PlatformInfo.EXTENSIONS ); } }
+        public string Extensions { get { return InteropTools.ReadString( this, (uint)PlatformInfo.EXTENSIONS ); } }
 
         protected Dictionary<IntPtr,Device> _Devices =  new Dictionary<IntPtr, Device>();
         Device[] DeviceList;
@@ -57,6 +57,11 @@ namespace OpenCLNet
             for( int i=0; i<DeviceIDs.Length; i++ )
                 _Devices[DeviceIDs[i]] = new Device( this, DeviceIDs[i] );
             DeviceList = InteropTools.ConvertDeviceIDsToDevices( this, DeviceIDs );
+        }
+
+        public Context CreateDefaultContext()
+        {
+            return CreateDefaultContext(null, IntPtr.Zero);
         }
 
         public Context CreateDefaultContext( ContextNotify notify, IntPtr userData )
@@ -81,6 +86,38 @@ namespace OpenCLNet
             return new Context( this, contextID );
         }
 
+        public Context CreateContext(IntPtr[] contextProperties, Device[] devices, ContextNotify notify, IntPtr userData)
+        {
+            IntPtr contextID;
+            ErrorCode result;
+
+            IntPtr[] deviceIDs = InteropTools.ConvertDevicesToDeviceIDs(devices);
+            contextID = (IntPtr)CL.CreateContext(contextProperties,
+                (uint)deviceIDs.Length,
+                deviceIDs,
+                notify,
+                userData,
+                out result);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateContext failed with error code: " + result);
+            return new Context(this, contextID);
+        }
+
+        public Context CreateContextFromType(IntPtr[] contextProperties, DeviceType deviceType, ContextNotify notify, IntPtr userData)
+        {
+            IntPtr contextID;
+            ErrorCode result;
+
+            contextID = (IntPtr)CL.CreateContextFromType(contextProperties,
+                deviceType,
+                notify,
+                userData,
+                out result);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateContextFromType failed with error code: " + result);
+            return new Context(this, contextID);
+        }
+
         public Device GetDevice( IntPtr index )
         {
             return _Devices[index];
@@ -93,12 +130,15 @@ namespace OpenCLNet
             IntPtr[] deviceIDs;
 
             result = (ErrorCode)CL.GetDeviceIDs( PlatformID, deviceType, 0, null, out numberOfDevices );
+            if (result == ErrorCode.DEVICE_NOT_FOUND)
+                return new IntPtr[0];
+
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "GetDeviceIDs failed: "+((ErrorCode)result).ToString() );
 
             deviceIDs = new IntPtr[numberOfDevices];
             result = (ErrorCode)CL.GetDeviceIDs( PlatformID, deviceType, numberOfDevices, deviceIDs, out numberOfDevices );
-            if( result!=ErrorCode.SUCCESS )
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "GetDeviceIDs failed: "+((ErrorCode)result).ToString() );
 
             return deviceIDs;

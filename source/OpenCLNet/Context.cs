@@ -139,9 +139,9 @@ namespace OpenCLNet
 
         #region Properties
 
-        public uint ContextReferenceCount { get { return InteropTools.ReadUInt( this, (uint)ContextInfo.REFERENCE_COUNT ); } }
+        public uint ReferenceCount { get { return InteropTools.ReadUInt( this, (uint)ContextInfo.REFERENCE_COUNT ); } }
 
-        public Device[] ContextDevices
+        public Device[] Devices
         {
             get
             {
@@ -164,7 +164,7 @@ namespace OpenCLNet
             }
         }
 
-        public ContextProperties[] ContextProperties
+        public ContextProperties[] Properties
         {
             get
             {
@@ -173,6 +173,11 @@ namespace OpenCLNet
         }
 
         #endregion
+
+        public CommandQueue CreateCommandQueue(Device device)
+        {
+            return CreateCommandQueue(device, (CommandQueueProperties)0);
+        }
 
         public CommandQueue CreateCommandQueue( Device device, CommandQueueProperties properties )
         {

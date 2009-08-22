@@ -32,7 +32,7 @@ using System.Text;
 
 namespace OpenCLNet
 {
-    unsafe public class CommandQueue
+    unsafe public class CommandQueue : IDisposable
     {
         public IntPtr CommandQueueID { get; private set; }
         public Context Context { get; private set; }
@@ -119,6 +119,17 @@ namespace OpenCLNet
 
         #region EnqueueWriteBuffer
 
+        /// <summary>
+        /// Enqueues a command to write data to a buffer object identified by buffer from host memory identified by ptr.
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="blockingWrite"></param>
+        /// <param name="offset"></param>
+        /// <param name="cb"></param>
+        /// <param name="ptr"></param>
+        /// <param name="numEventsInWaitList"></param>
+        /// <param name="eventWaitList"></param>
+        /// <param name="_event"></param>
         public void EnqueueWriteBuffer(Mem buffer, bool blockingWrite, IntPtr offset, IntPtr cb, IntPtr ptr, int numEventsInWaitList, IntPtr[] eventWaitList, out IntPtr _event)
         {
             ErrorCode result;
@@ -173,6 +184,17 @@ namespace OpenCLNet
 
         #region EnqueueReadBuffer
 
+        /// <summary>
+        /// Enqueues a command to read data from a buffer object identified by buffer to host memory identified by ptr.
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="blockingRead"></param>
+        /// <param name="offset"></param>
+        /// <param name="cb"></param>
+        /// <param name="ptr"></param>
+        /// <param name="numEventsInWaitList"></param>
+        /// <param name="eventWaitList"></param>
+        /// <param name="_event"></param>
         public void EnqueueReadBuffer(Mem buffer, bool blockingRead, IntPtr offset, IntPtr cb, IntPtr ptr, int numEventsInWaitList, IntPtr[] eventWaitList, out IntPtr _event)
         {
             ErrorCode result;
@@ -230,6 +252,17 @@ namespace OpenCLNet
 
         #region EnqueueCopyBuffer
 
+        /// <summary>
+        /// Enqueues a command to copy a buffer object identified by src_buffer to another buffer object identified by dst_buffer.
+        /// </summary>
+        /// <param name="src_buffer"></param>
+        /// <param name="dst_buffer"></param>
+        /// <param name="src_offset"></param>
+        /// <param name="dst_offset"></param>
+        /// <param name="cb"></param>
+        /// <param name="num_events_in_wait_list"></param>
+        /// <param name="eventWaitList"></param>
+        /// <param name="_event"></param>
         public void EnqueueCopyBuffer(Mem src_buffer, Mem dst_buffer, IntPtr src_offset, IntPtr dst_offset, IntPtr cb, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event)
         {
             ErrorCode result;
@@ -584,8 +617,9 @@ namespace OpenCLNet
 
         #region EnqueueMapBuffer
 
-        public IntPtr EnqueueMapBuffer(Mem buffer, bool blockingMap, MapFlags map_flags, IntPtr offset, IntPtr cb, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event, out ErrorCode result)
+        public IntPtr EnqueueMapBuffer(Mem buffer, bool blockingMap, MapFlags map_flags, IntPtr offset, IntPtr cb, int num_events_in_wait_list, IntPtr[] eventWaitList, out IntPtr _event)
         {
+            ErrorCode result;
             IntPtr ptr;
             IntPtr tmpEvent;
 
@@ -606,8 +640,9 @@ namespace OpenCLNet
             return ptr;
         }
 
-        public IntPtr EnqueueMapBuffer(Mem buffer, bool blockingMap, MapFlags map_flags, IntPtr offset, IntPtr cb, int num_events_in_wait_list, IntPtr[] eventWaitList, out ErrorCode result)
+        public IntPtr EnqueueMapBuffer(Mem buffer, bool blockingMap, MapFlags map_flags, IntPtr offset, IntPtr cb, int num_events_in_wait_list, IntPtr[] eventWaitList)
         {
+            ErrorCode result;
             IntPtr ptr;
 
             ptr = (IntPtr)CL.EnqueueMapBuffer(CommandQueueID,
@@ -626,8 +661,9 @@ namespace OpenCLNet
             return ptr;
         }
 
-        public IntPtr EnqueueMapBuffer(Mem buffer, bool blockingMap, MapFlags map_flags, IntPtr offset, IntPtr cb, out ErrorCode result)
+        public IntPtr EnqueueMapBuffer(Mem buffer, bool blockingMap, MapFlags map_flags, IntPtr offset, IntPtr cb)
         {
+            ErrorCode result;
             IntPtr ptr;
 
             ptr = (IntPtr)CL.EnqueueMapBuffer(CommandQueueID,

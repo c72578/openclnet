@@ -161,6 +161,55 @@ namespace OpenCLNet
                 throw new OpenCLException( "SetArg failed with error code "+result );
         }
 
+        #region Setargs with explicit function names(For VB mostly)
+
+        public void SetIntArg(int argIndex, int c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(int)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result);
+        }
+
+        public void SetLongArg(int argIndex, long c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(long)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result);
+        }
+
+        public void SetSingleArg(int argIndex, float c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(float)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result);
+        }
+
+        public void SetDoubleArg(int argIndex, double c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(double)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result);
+        }
+
+        public void SetIntPtrArg(int argIndex, IntPtr c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result);
+        }
+
+        #endregion
+
         public static implicit operator IntPtr( Kernel k )
         {
             return k.KernelID;
