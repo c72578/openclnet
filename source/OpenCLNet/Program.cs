@@ -169,7 +169,7 @@ namespace OpenCLNet
                 // only the following code is executed.
                 ErrorCode result = (ErrorCode)CL.ReleaseProgram( ProgramID );
                 if( result!=ErrorCode.SUCCESS )
-                    throw new OpenCLException( "ReleaseProgram failed: "+result );
+                    throw new OpenCLException( "ReleaseProgram failed: "+result, result);
 
                 // Note disposing has been done.
                 disposed = true;
@@ -201,7 +201,7 @@ namespace OpenCLNet
                 notify,
                 userData );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "Build failed with error code "+result );
+                throw new OpenCLException( "Build failed with error code "+result, result);
         }
 
         public Kernel CreateKernel( string kernelName )
@@ -211,7 +211,7 @@ namespace OpenCLNet
 
             kernelID = (IntPtr)CL.CreateKernel( ProgramID, kernelName, out result );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "CreateKernel failed with error code "+result );
+                throw new OpenCLException( "CreateKernel failed with error code "+result, result);
             return new Kernel( Context, kernelID );
         }
 
@@ -222,12 +222,12 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.CreateKernelsInProgram( ProgramID, 0, null, out numKernels );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "CreateKernels failed with error code "+result );
+                throw new OpenCLException( "CreateKernels failed with error code "+result, result);
 
             IntPtr[] kernelIDs = new IntPtr[numKernels];
             result = (ErrorCode)CL.CreateKernelsInProgram( ProgramID, numKernels, kernelIDs, out numKernels );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "CreateKernels failed with error code "+result );
+                throw new OpenCLException( "CreateKernels failed with error code "+result, result);
 
             Kernel[] kernels = new Kernel[numKernels];
             for( int i=0; i<kernels.Length; i++ )
@@ -286,7 +286,7 @@ namespace OpenCLNet
 
                 result = (ErrorCode)CL.GetProgramBuildInfo( Program.ProgramID, Device.DeviceID, key, IntPtr.Zero, null, out size );
                 if( result!=ErrorCode.SUCCESS )
-                    throw new OpenCLException( "clGetProgramBuildInfo failed with error code "+result );
+                    throw new OpenCLException( "clGetProgramBuildInfo failed with error code "+result, result);
 
                 return size;
             }
@@ -298,7 +298,7 @@ namespace OpenCLNet
 
                 result = (ErrorCode)CL.GetProgramBuildInfo( Program.ProgramID, Device.DeviceID, key, keyLength, pBuffer, out size );
                 if( result!=ErrorCode.SUCCESS )
-                    throw new OpenCLException( "clGetProgramBuildInfo failed with error code "+result );
+                    throw new OpenCLException( "clGetProgramBuildInfo failed with error code "+result, result);
             }
 
             #endregion
@@ -313,7 +313,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetProgramInfo( ProgramID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "clGetProgramInfo failed with error code "+result );
+                throw new OpenCLException( "clGetProgramInfo failed with error code "+result, result);
 
             return size;
         }
@@ -325,7 +325,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetProgramInfo( ProgramID, key, keyLength, pBuffer, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "clGetProgramInfo failed with error code "+result );
+                throw new OpenCLException( "clGetProgramInfo failed with error code "+result, result);
         }
 
         #endregion

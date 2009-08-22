@@ -120,7 +120,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetEventInfo( EventID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "GetEventInfo failed; "+result );
+                throw new OpenCLException( "GetEventInfo failed; "+result, result);
             return size;
         }
 
@@ -131,7 +131,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetEventInfo( EventID, key, keyLength, pBuffer, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "GetEventInfo failed; "+result );
+                throw new OpenCLException( "GetEventInfo failed; "+result, result);
         }
 
         #endregion

@@ -139,7 +139,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetSamplerInfo( SamplerID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "clGetSamplerInfo failed with error code "+result );
+                throw new OpenCLException( "clGetSamplerInfo failed with error code "+result, result);
 
             return size;
         }
@@ -151,7 +151,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetSamplerInfo( SamplerID, key, keyLength, pBuffer, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "clGetSamplerInfo failed with error code "+result );
+                throw new OpenCLException( "clGetSamplerInfo failed with error code "+result, result);
         }
 
 

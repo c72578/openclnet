@@ -121,7 +121,7 @@ namespace UnitTests
             
             Output("Extensions: " + p.Extensions);
 
-
+            // Test whether number of devices is consistent
             allDevices = p.QueryDevices(DeviceType.ALL);
             if( allDevices.Length<=0 )
                 Warning( "Platform "+p.Name+" has no devices" );
@@ -132,12 +132,15 @@ namespace UnitTests
             if( allDevices.Length!=cpuDevices.Length+gpuDevices.Length+acceleratorDevices.Length )
                 Warning( "QueryDevices( DeviceType.ALL ) return length inconsistent with sum of special purpose queries" );
 
+            // Create a few contexts and test them
             Output( "Testing Platform.CreateDefaultContext()" );
             using (Context c = p.CreateDefaultContext())
             {
                 Output("Testing context"+c);
                 TestContext(c);
             }
+            Output("");
+            Output("");
 
             Output("Testing Platform.CreateContext()");
             using (Context c = p.CreateContext(null, cpuDevices, new ContextNotify(ContextNotifyFunc), (IntPtr)0x01234567))
@@ -145,6 +148,8 @@ namespace UnitTests
                 Output("Testing context" + c);
                 TestContext(c);
             }
+            Output("");
+            Output("");
 
             Output("Testing Platform.CreateContextFromType()");
             using (Context c = p.CreateContextFromType(null, DeviceType.CPU, new ContextNotify(ContextNotifyFunc), (IntPtr)0x01234567))
@@ -179,15 +184,61 @@ namespace UnitTests
         private void TestDevice( Device d )
         {
             Output("Testing device: " + d.Name);
+            // d.ToString() is overloaded to output all properties as a string, so every property will be tested that way
+            Output(d.ToString());
         }
 
         private void TestCommandQueue(Context c, CommandQueue cq )
         {
-            AlignedArrayFloat aafSrc = new AlignedArrayFloat(1024*1024, 64);
-            AlignedArrayFloat aafDst = new AlignedArrayFloat(1024*1024, 64);
+            string programName = @"MemoryTests.cl";
 
-            SetAAF( aafSrc, 0.0f );
-            SetAAF( aafDst, 1.0f );
+            Output("Testing compilation of: " + programName);
+            OpenCLNet.Program p0 = c.CreateProgramWithSource(File.ReadAllLines(programName));
+            OpenCLNet.Program p = c.CreateProgramWithSource(File.ReadAllText(programName));
+            p0.Build();
+            p.Build();
+            Kernel k = p.CreateKernel(@"LoopAndDoNothing");
+            
+            TestCommandQueueMemCopy(c, cq);
+            TestCommandQueueAsync(c, cq, k );
+        }
+
+        #region TestCommandQueue helper functions
+
+        private void TestCommandQueueAsync(Context c, CommandQueue cq, Kernel kernel )
+        {
+            List<IntPtr> events = new List<IntPtr>();
+            IntPtr _event;
+
+            Output("Testing asynchronous task issuing (clEnqueueTask) and waiting for events");
+
+            // Issue a bunch of slow operations
+            kernel.SetArg(0, 5000000);
+            for (int i = 0; i < 10; i++)
+            {
+                cq.EnqueueTask(kernel, 0, null, out _event);
+                events.Add(_event);
+            }
+
+            // Issue a bunch of fast operations
+            kernel.SetArg(0, 500);
+            for (int i = 0; i < 1000; i++)
+            {
+                cq.EnqueueTask(kernel, 0, null, out _event);
+                events.Add(_event);
+            }
+
+            IntPtr[] eventList = events.ToArray();
+            cq.EnqueueWaitForEvents(eventList.Length, eventList);
+        }
+
+        private void TestCommandQueueMemCopy(Context c, CommandQueue cq)
+        {
+            AlignedArrayFloat aafSrc = new AlignedArrayFloat(1024 * 1024, 64);
+            AlignedArrayFloat aafDst = new AlignedArrayFloat(1024 * 1024, 64);
+
+            SetAAF(aafSrc, 0.0f);
+            SetAAF(aafDst, 1.0f);
 
             /// Test HOST_PTR -> HOST_PTR copy
             /// The call to EnqueueMapBuffer synchronizes caches before testing the result
@@ -201,7 +252,7 @@ namespace UnitTests
                     IntPtr mappedPtr = cq.EnqueueMapBuffer(memDst, true, MapFlags.READ, (IntPtr)0, (IntPtr)aafDst.ByteLength);
                     if (!TestAAF(aafDst, 0.0f))
                         Error("EnqueueCopyBuffer failed, destination is invalid");
-                    cq.EnqueueUnmapMemObject( memDst, mappedPtr );
+                    cq.EnqueueUnmapMemObject(memDst, mappedPtr);
                     cq.EnqueueBarrier();
                 }
             }
@@ -294,6 +345,8 @@ namespace UnitTests
             for (int i = 0; i < aaf.Length; i++)
                 aaf[i] = (float)i;
         }
+
+        #endregion
 
         private void Output(string s)
         {

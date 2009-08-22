@@ -69,7 +69,7 @@ namespace OpenCLNet
                 IntPtr.Zero,
                 out result );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "CreateContext failed: "+result );
+                throw new OpenCLException( "CreateContext failed: "+result , result);
         }
 
         // Use C# destructor syntax for finalization code.
@@ -151,14 +151,14 @@ namespace OpenCLNet
 
                 result = (ErrorCode)CL.GetContextInfo( ContextID, (uint)ContextInfo.DEVICES, IntPtr.Zero, null, out contextDevicesSize );
                 if( result!=ErrorCode.SUCCESS )
-                    throw new OpenCLException( "Unable to get context info for context "+ContextID+" "+result );
+                    throw new OpenCLException( "Unable to get context info for context "+ContextID+" "+result, result);
 
                 contextDevices = new IntPtr[contextDevicesSize.ToInt64()/sizeof( IntPtr )];
                 fixed( IntPtr* pContextDevices = contextDevices )
                 {
                     result = (ErrorCode)CL.GetContextInfo( ContextID, (uint)ContextInfo.DEVICES, contextDevicesSize, (void*)pContextDevices, out contextDevicesSize );
                     if( result!=ErrorCode.SUCCESS )
-                        throw new OpenCLException( "Unable to get context info for context "+ContextID+" "+result );
+                        throw new OpenCLException( "Unable to get context info for context "+ContextID+" "+result, result);
                 }
                 return InteropTools.ConvertDeviceIDsToDevices( Platform, contextDevices );
             }
@@ -186,7 +186,7 @@ namespace OpenCLNet
 
             commandQueueID = (IntPtr)CL.CreateCommandQueue( ContextID, device.DeviceID, (ulong)properties, out result );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "CreateCommandQueue failed with error code "+result );
+                throw new OpenCLException( "CreateCommandQueue failed with error code "+result, result);
             return new CommandQueue( this, device, commandQueueID );
         }
 
@@ -202,8 +202,52 @@ namespace OpenCLNet
 
             memID = (IntPtr)CL.CreateBuffer( ContextID, (ulong)flags, new IntPtr(size), pHost, out result );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "CreateBuffer failed with error code "+result );
+                throw new OpenCLException( "CreateBuffer failed with error code "+result, result);
             return new Mem( this, memID );
+        }
+
+        public Mem CreateFromGLBuffer(MemFlags flags, IntPtr bufobj)
+        {
+            IntPtr memID;
+            ErrorCode result;
+
+            memID = CL.CreateFromGLBuffer(ContextID, (ulong)flags, (uint)bufobj, out result);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateFromGLBuffer failed with error code " + result, result);
+            return new Mem(this, memID);
+        }
+
+        public Mem CreateFromGLTexture2D(MemFlags flags, int target, int mipLevel, int texture)
+        {
+            IntPtr memID;
+            ErrorCode result;
+
+            memID = CL.CreateFromGLTexture2D(ContextID, (ulong)flags, target, mipLevel, (uint)texture, out result);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateFromGLTexture2D failed with error code " + result, result);
+            return new Mem(this, memID);
+        }
+
+        public Mem CreateFromGLTexture3D(MemFlags flags, int target, int mipLevel, int texture)
+        {
+            IntPtr memID;
+            ErrorCode result;
+
+            memID = CL.CreateFromGLTexture3D(ContextID, (ulong)flags, target, mipLevel, (uint)texture, out result);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateFromGLTexture3D failed with error code " + result, result);
+            return new Mem(this, memID);
+        }
+
+        public Mem CreateFromGLRenderbuffer(MemFlags flags, IntPtr renderbuffer)
+        {
+            IntPtr memID;
+            ErrorCode result;
+
+            memID = CL.CreateFromGLRenderbuffer(ContextID, (ulong)flags, (uint)renderbuffer, out result);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateFromGLTexture3D failed with error code " + result, result);
+            return new Mem(this, memID);
         }
 
         public Program CreateProgramWithSource( string source )
@@ -216,9 +260,9 @@ namespace OpenCLNet
             IntPtr programID;
             ErrorCode result;
 
-            programID = (IntPtr)CL.CreateProgramWithSource( ContextID, 1, source, (IntPtr[])null, out result );
+            programID = (IntPtr)CL.CreateProgramWithSource( ContextID, (uint)source.Length, source, (IntPtr[])null, out result );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "CreateProgramWithSource failed with error code "+result );
+                throw new OpenCLException( "CreateProgramWithSource failed with error code "+result, result);
             return new Program( this, programID );
         }
 
@@ -244,7 +288,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetContextInfo( ContextID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "GetContextInfo failed: "+result );
+                throw new OpenCLException( "GetContextInfo failed: "+result, result);
             return size;
         }
 
@@ -255,7 +299,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetContextInfo( ContextID, key, keyLength, pBuffer, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "GetContextInfo failed: "+result );
+                throw new OpenCLException( "GetContextInfo failed: "+result, result);
         }
 
         #endregion

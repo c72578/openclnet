@@ -78,6 +78,20 @@ namespace OpenCLNet
             return devices;
         }
 
+
+        public static IntPtr[] ConvertMemToMemIDs(Mem[] mems)
+        {
+            IntPtr[] memIDs;
+
+            if (mems == null)
+                return null;
+
+            memIDs = new IntPtr[mems.Length];
+            for (int i = 0; i < mems.Length; i++)
+                memIDs[i] = mems[i];
+            return memIDs;
+        }
+
         #region Helper functions to read properties
 
         unsafe public static bool ReadBool( IPropertyContainer propertyContainer, uint key )

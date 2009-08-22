@@ -23,14 +23,19 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-__constant char[] TestMemory = "TestMemory";
+__constant char TestMemory[] = "TestMemory";
 
-__kernel void MemoryCopy( float* pSrc, float* pDst, size_t length )
+__kernel void MemoryCopy( __global float* pSrc, __global float* pDst, size_t length )
 {
-	float* pEnd;
+	__global float* pEnd;
 	
 	pEnd = pSrc+length;
 	while( pSrc<pEnd )
 		*pDst++ = *pSrc++;
 }
 
+__kernel void LoopAndDoNothing( int iterations )
+{
+	for( int i=0; i<iterations; i++ )
+		;
+}

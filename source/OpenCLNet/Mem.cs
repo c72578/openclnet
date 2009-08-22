@@ -37,6 +37,8 @@ namespace OpenCLNet
         // Track whether Dispose has been called.
         private bool disposed = false;
 
+        private TextureInfo TxInfo;
+
         public IntPtr MemID { get; protected set; }
         public Context Context { get; protected set; }
         internal OpenCLAPI CL { get { return Context.CL; } }
@@ -47,12 +49,17 @@ namespace OpenCLNet
         public uint MapCount { get { return InteropTools.ReadUInt( this, (uint)MemInfo.MAP_COUNT ); } }
         public uint ReferenceCount { get { return InteropTools.ReadUInt( this, (uint)MemInfo.REFERENCE_COUNT ); } }
 
+        public uint TextureTarget { get { return InteropTools.ReadUInt(TxInfo, (uint)CLGLTextureInfo.TEXTURE_TARGET); } }
+        public int MipMapLevel { get { return InteropTools.ReadInt(TxInfo, (uint)CLGLTextureInfo.MIPMAP_LEVEL);  } }
+
+
         #region Construction / Destruction
 
         internal Mem( Context context, IntPtr memID )
         {
             Context = context;
             MemID = memID;
+            TxInfo = new TextureInfo(this);
         }
 
         // Use C# destructor syntax for finalization code.
@@ -124,6 +131,20 @@ namespace OpenCLNet
             return mem.MemID;
         }
 
+        public void GetGLObjectInfo(out CLGLObjectType glObjectType, out IntPtr glObjectName)
+        {
+            ErrorCode result;
+            uint type;
+            uint name;
+
+            result = CL.GetGLObjectInfo(MemID, out type, out name);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("GetGLObjectInfo failed: " + result, result);
+            glObjectType = (CLGLObjectType)type;
+            glObjectName = (IntPtr)name;
+        }
+
+
         #region IPropertyContainer Members
 
         unsafe public IntPtr GetPropertySize( uint key )
@@ -133,7 +154,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetMemObjectInfo( MemID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "GetMemObjectInfo failed: "+result );
+                throw new OpenCLException( "GetMemObjectInfo failed: "+result, result );
             return size;
         }
 
@@ -144,10 +165,48 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetMemObjectInfo( MemID, key, keyLength, pBuffer, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "GetMemObjectInfo failed: "+result );
+                throw new OpenCLException( "GetMemObjectInfo failed: "+result, result );
         }
 
         #endregion
+
+
+        class TextureInfo : InteropTools.IPropertyContainer
+        {
+            public OpenCLAPI CL { get { return Mem.CL; } }
+            Mem Mem;
+
+            public TextureInfo(Mem mem)
+            {
+                Mem = mem;
+            }
+
+            #region IPropertyContainer Members
+
+            public IntPtr GetPropertySize(uint key)
+            {
+                ErrorCode result;
+                IntPtr size;
+
+                result = (ErrorCode)CL.GetGLTextureInfo(Mem.MemID, key, IntPtr.Zero, null, out size);
+                if (result != ErrorCode.SUCCESS)
+                    throw new OpenCLException("GetGLTextureInfo failed with error code " + result, result);
+
+                return size;
+            }
+
+            public void ReadProperty(uint key, IntPtr keyLength, void* pBuffer)
+            {
+                ErrorCode result;
+                IntPtr size;
+
+                result = (ErrorCode)CL.GetGLTextureInfo(Mem.MemID, key, keyLength, pBuffer, out size);
+                if (result != ErrorCode.SUCCESS)
+                    throw new OpenCLException("GetGLTextureInfo failed with error code " + result, result);
+            }
+
+            #endregion
+        }
 
     }
 }

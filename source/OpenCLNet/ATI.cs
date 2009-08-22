@@ -90,7 +90,15 @@ namespace OpenCLNet
     using cl_command_type=UInt32;
     using cl_profiling_info=UInt32;
     
+    using cl_gl_object_type=UInt32;
+    using cl_gl_texture_info=UInt32;
+    using cl_gl_platform_info=UInt32;
+    using GLuint=UInt32;
+    using GLint=Int32;
+    using GLenum=Int32;
     #endregion
+
+
 
 
 
@@ -724,6 +732,8 @@ namespace OpenCLNet
 
         #endregion
 
+        #region Sampler API
+
         // Sampler APIs
         [DllImport( Configuration.Library )]
         public extern static cl_sampler clCreateSampler( cl_context context, cl_bool normalized_coords, cl_addressing_mode addressing_mode, cl_filter_mode filter_mode, out ErrorCode errcode_ret );
@@ -754,53 +764,123 @@ namespace OpenCLNet
             return clGetSamplerInfo( sampler, param_name, param_value_size, param_value, out param_value_size_ret );
         }
 
+        #endregion
+
+        #region GLObject API
+
+        [DllImport( Configuration.Library )]
+        public extern static cl_mem clCreateFromGLBuffer( cl_context context,
+            cl_mem_flags flags,
+            GLuint bufobj,
+            out ErrorCode errcode_ret );
+        [DllImport( Configuration.Library )]
+        public extern static cl_mem clCreateFromGLTexture2D( cl_context context,
+            cl_mem_flags flags,
+            GLenum target,
+            GLint mipLevel,
+            GLuint texture,
+            out ErrorCode errcode_ret );
+        [DllImport( Configuration.Library )]
+        public extern static cl_mem clCreateFromGLTexture3D( cl_context context,
+            cl_mem_flags flags,
+            GLenum target,
+            GLint mipLevel,
+            GLuint texture,
+            out ErrorCode errcode_ret );
+        [DllImport( Configuration.Library )]
+        public extern static cl_mem clCreateFromGLRenderbuffer( cl_context context,
+            cl_mem_flags flags,
+            GLuint renderBuffer,
+            out ErrorCode errcode_ret );
+        [DllImport( Configuration.Library )]
+        public extern static ErrorCode clGetGLObjectInfo( cl_mem memobj,
+            out cl_gl_object_type gl_object_type,
+            out GLuint gl_object_name );
+        [DllImport( Configuration.Library )]
+        public extern static ErrorCode clGetGLTextureInfo( cl_mem memobj,
+            cl_gl_texture_info param_name,
+            IntPtr param_value_size,
+            void* param_value,
+            out IntPtr param_value_size_ret );
+        [DllImport( Configuration.Library )]
+        public extern static ErrorCode clEnqueueAcquireGLObjects( cl_command_queue command_queue,
+            cl_uint num_objects,
+            [In] cl_mem[] mem_objects,
+            cl_uint num_events_in_wait_list,
+            [In] cl_event[] event_wait_list,
+            cl_event* _event );
+        [DllImport( Configuration.Library )]
+        public extern static ErrorCode clEnqueueReleaseGLObjects( cl_command_queue command_queue,
+            cl_uint num_objects,
+            [In] cl_mem[] mem_objects,
+            cl_uint num_events_in_wait_list,
+            [In] cl_event[] event_wait_list,
+            cl_event* _event );
+
+        public override cl_mem CreateFromGLBuffer(cl_context context, cl_mem_flags flags, GLuint bufobj, out ErrorCode errcode_ret)
+        {
+            return clCreateFromGLBuffer(context, flags, bufobj, out errcode_ret);
+        }
+        public override cl_mem CreateFromGLTexture2D(cl_context context, cl_mem_flags flags, GLenum target, GLint mipLevel, GLuint texture, out ErrorCode errcode_ret)
+        {
+            return clCreateFromGLTexture2D(context, flags, target, mipLevel, texture, out errcode_ret);
+        }
+        public override cl_mem CreateFromGLTexture3D(cl_context context, cl_mem_flags flags, GLenum target, GLint mipLevel, GLuint texture, out ErrorCode errcode_ret)
+        {
+            return clCreateFromGLTexture3D(context, flags, target, mipLevel, texture, out errcode_ret);
+        }
+        public override cl_mem CreateFromGLRenderbuffer(cl_context context, cl_mem_flags flags, GLuint renderbuffer, out ErrorCode errcode_ret)
+        {
+            return clCreateFromGLRenderbuffer(context, flags, renderbuffer, out errcode_ret);
+        }
+        public override ErrorCode GetGLObjectInfo(cl_mem memobj, out cl_gl_object_type gl_object_type, out GLuint gl_object_name)
+        {
+            return clGetGLObjectInfo(memobj, out gl_object_type, out gl_object_name);
+        }
+        public override ErrorCode GetGLTextureInfo(cl_mem memobj, cl_gl_texture_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret)
+        {
+            return clGetGLTextureInfo(memobj, param_name, param_value_size, param_value, out param_value_size_ret);
+        }
+        public override ErrorCode EnqueueAcquireGLObjects(cl_command_queue command_queue, cl_uint num_objects, cl_mem[] mem_objects, cl_uint num_events_in_wait_list, cl_event[] event_wait_list, cl_event* _event)
+        {
+            return clEnqueueAcquireGLObjects(command_queue, num_objects, mem_objects, num_events_in_wait_list, event_wait_list, _event);
+        }
+        public override ErrorCode EnqueueReleaseGLObjects(cl_command_queue command_queue, cl_uint num_objects, cl_mem[] mem_objects, cl_uint num_events_in_wait_list, cl_event[] event_wait_list, cl_event* _event)
+        {
+            return clEnqueueAcquireGLObjects(command_queue, num_objects, mem_objects, num_events_in_wait_list, event_wait_list, _event);
+        }
+
+        #endregion
+
+
+        // Extension function access
+        [DllImport(Configuration.Library)]
+        public extern static IntPtr clGetExtensionFunctionAddress(string func_name);
+
+        public override IntPtr GetExtensionFunctionAddress( string func_name )
+        {
+            return clGetExtensionFunctionAddress(func_name);
+        }
+
+#if false
     //    // Profiling APIs
     //    public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, size_t param_value_size, void* param_value, size_t* param_value_size_ret);
 
-    //    // Extension function access
-    //    //
-    //    // Returns the extension function address for the given function name, 
-    //    // or NULL if a valid function can not be found. The client must
-    //    // check to make sure the address is not NULL, before using or 
-    //    // calling the returned function address.
-    //    //
-    //    public extern static void* clGetExtensionFunctionAddress(const char* func_name);
-
-#if false
         _clCreateFromD3D10Buffer@20
         _clCreateFromD3D9Buffer@24
-        _clCreateFromGLBuffer@20
-        _clCreateFromGLRenderbuffer@20
-        _clCreateFromGLTexture2D@28
-        _clCreateFromGLTexture3D@28
         _clCreateImageFromD3D10Resource@20
         _clCreateImageFromD3D9Resource@24
 #endif
     }
 }
 
-
 //int __stdcall clEnqueueAcquireExternalObjects(struct _cl_command_queue *,unsigned int,struct _cl_mem * const *,unsigned int,struct _cl_event * const *,struct _cl_event * *)	0x10001890	0x00001890	1 (0x1)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
 //int __stdcall clEnqueueReleaseExternalObjects(struct _cl_command_queue *,unsigned int,struct _cl_mem * const *,unsigned int,struct _cl_event * const *,struct _cl_event * *)	0x10001ad0	0x00001ad0	2 (0x2)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//APPLE_USE_THREAD_POLICY	0x10383322	0x00383322	3 (0x3)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//ATISTREAMSDKROOT	0x1037bcf4	0x0037bcf4	4 (0x4)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//CPU_ALIGN_STRUCTS	0x10383320	0x00383320	5 (0x5)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//CPU_COMPILER_OPTIONS	0x1037bcfc	0x0037bcfc	6 (0x6)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//CPU_MAX_COMPUTE_UNITS	0x1037bd00	0x0037bd00	7 (0x7)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//CPU_MAX_WORKGROUP_SIZE	0x1037bd04	0x0037bd04	8 (0x8)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//CPU_VECTOR_BY_REFERENCE	0x10383321	0x00383321	9 (0x9)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//GPU_DOUBLE_PRECISION	0x10383323	0x00383323	10 (0xa)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//LLVM_LINK_LIBS	0x1037bcf8	0x0037bcf8	11 (0xb)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//REMOTE_ALLOC	0x10383324	0x00383324	12 (0xc)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
 //_clCreatePerfCounterAMD@12	0x10003bb0	0x00003bb0	30 (0x1e)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//_clEnqueueAcquireGLObjects@24	0x1000b1a0	0x0000b1a0	34 (0x22)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
 //_clEnqueueBeginPerfCounterAMD@24	0x10003620	0x00003620	36 (0x24)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
 //_clEnqueueEndPerfCounterAMD@24	0x10003870	0x00003870	41 (0x29)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//_clEnqueueReleaseGLObjects@24	0x1000b260	0x0000b260	49 (0x31)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
 //_clGetEventProfilingInfo@20	0x10007cb0	0x00007cb0	62 (0x3e)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
 //_clGetExtensionFunctionAddress@4	0x10004e40	0x00004e40	63 (0x3f)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//_clGetGLObjectInfo@12	0x1000afd0	0x0000afd0	64 (0x40)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
-//_clGetGLTextureInfo@20	0x1000b0b0	0x0000b0b0	65 (0x41)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
 //_clGetPerfCounterInfoAMD@20	0x100029e0	0x000029e0	70 (0x46)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
 //_clReleasePerfCounterAMD@4	0x10002840	0x00002840	82 (0x52)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	
 //_clRetainPerfCounterAMD@4	0x10002910	0x00002910	90 (0x5a)	OpenCL.dll	C:\src\Vision\Vision\bin\x86\Debug\OpenCL.dll	Exported Function	

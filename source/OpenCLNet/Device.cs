@@ -113,7 +113,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetDeviceInfo( DeviceID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "Unable to get device info for device "+DeviceID );
+                throw new OpenCLException( "Unable to get device info for device "+DeviceID, result);
             return size;
         }
 
@@ -124,7 +124,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetDeviceInfo( DeviceID, (uint)key, keyLength, pBuffer, out size );
             if( result!=(int)ErrorCode.SUCCESS )
-                throw new OpenCLException( "Unable to get device info for device "+DeviceID );
+                throw new OpenCLException( "Unable to get device info for device "+DeviceID, result);
         }
 
         #endregion

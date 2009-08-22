@@ -82,7 +82,7 @@ namespace OpenCLNet
                 userData,
                 out result );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "CreateContext failed with error code: "+result );
+                throw new OpenCLException( "CreateContext failed with error code: "+result, result);
             return new Context( this, contextID );
         }
 
@@ -99,7 +99,7 @@ namespace OpenCLNet
                 userData,
                 out result);
             if (result != ErrorCode.SUCCESS)
-                throw new OpenCLException("CreateContext failed with error code: " + result);
+                throw new OpenCLException("CreateContext failed with error code: " + result, result);
             return new Context(this, contextID);
         }
 
@@ -114,7 +114,7 @@ namespace OpenCLNet
                 userData,
                 out result);
             if (result != ErrorCode.SUCCESS)
-                throw new OpenCLException("CreateContextFromType failed with error code: " + result);
+                throw new OpenCLException("CreateContextFromType failed with error code: " + result, result);
             return new Context(this, contextID);
         }
 
@@ -134,12 +134,12 @@ namespace OpenCLNet
                 return new IntPtr[0];
 
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "GetDeviceIDs failed: "+((ErrorCode)result).ToString() );
+                throw new OpenCLException( "GetDeviceIDs failed: "+((ErrorCode)result).ToString(), result);
 
             deviceIDs = new IntPtr[numberOfDevices];
             result = (ErrorCode)CL.GetDeviceIDs( PlatformID, deviceType, numberOfDevices, deviceIDs, out numberOfDevices );
             if (result != ErrorCode.SUCCESS)
-                throw new OpenCLException( "GetDeviceIDs failed: "+((ErrorCode)result).ToString() );
+                throw new OpenCLException( "GetDeviceIDs failed: "+((ErrorCode)result).ToString(), result);
 
             return deviceIDs;
         }
@@ -166,7 +166,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetPlatformInfo( PlatformID, key, IntPtr.Zero, null, out propertySize );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "Unable to get platform info for platform "+PlatformID+": "+result );
+                throw new OpenCLException( "Unable to get platform info for platform "+PlatformID+": "+result, result);
             return propertySize;
 
         }
@@ -178,7 +178,7 @@ namespace OpenCLNet
 
             result = (ErrorCode)CL.GetPlatformInfo( PlatformID, key, keyLength, (void*)pBuffer, out propertySize );
             if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "Unable to get platform info for platform "+PlatformID+": "+result );
+                throw new OpenCLException( "Unable to get platform info for platform "+PlatformID+": "+result, result);
         }
 
         #endregion

@@ -90,6 +90,12 @@ namespace OpenCLNet
     using cl_command_type=UInt32;
     using cl_profiling_info=UInt32;
 
+    using cl_gl_object_type=UInt32;
+    using cl_gl_texture_info=UInt32;
+    using cl_gl_platform_info=UInt32;
+    using GLuint=UInt32;
+    using GLint=Int32;
+    using GLenum=Int32;
     #endregion
 
     public delegate void ContextNotify( string errInfo, byte[] data, IntPtr cb, IntPtr userData );
@@ -379,17 +385,25 @@ namespace OpenCLNet
 
         #endregion            
 
+        #region GLObject API
+
+        // There's no actual GLObject class. These functions are located in Context, Mem and CommandQueue
+        public abstract cl_mem CreateFromGLBuffer(cl_context context, cl_mem_flags flags, GLuint bufobj, out ErrorCode errcode_ret);
+        public abstract cl_mem CreateFromGLTexture2D(cl_context context, cl_mem_flags flags, GLenum target, GLint mipLevel, GLuint texture, out ErrorCode errcode_ret);
+        public abstract cl_mem CreateFromGLTexture3D(cl_context context, cl_mem_flags flags, GLenum target, GLint mipLevel, GLuint texture, out ErrorCode errcode_ret);
+        public abstract cl_mem CreateFromGLRenderbuffer(cl_context context, cl_mem_flags flags, GLuint renderBuffer, out ErrorCode errcode_ret);
+        public abstract ErrorCode GetGLObjectInfo(cl_mem memobj, out cl_gl_object_type gl_object_type, out GLuint gl_object_name);
+        public abstract ErrorCode GetGLTextureInfo(cl_mem memobj, cl_gl_texture_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public abstract ErrorCode EnqueueAcquireGLObjects(cl_command_queue command_queue, cl_uint num_objects, cl_mem[] mem_objects, cl_uint num_events_in_wait_list, cl_event[] event_wait_list, cl_event* _event);
+        public abstract ErrorCode EnqueueReleaseGLObjects(cl_command_queue command_queue, cl_uint num_objects, cl_mem[] mem_objects, cl_uint num_events_in_wait_list, cl_event[] event_wait_list, cl_event* _event);
+
+        #endregion
+
+
+        // Extension function access
+        public abstract IntPtr GetExtensionFunctionAddress(string func_name);
+
         //    // Profiling APIs
         //    public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, size_t param_value_size, void* param_value, size_t* param_value_size_ret);
-
-
-        //    // Extension function access
-        //    //
-        //    // Returns the extension function address for the given function name, 
-        //    // or NULL if a valid function can not be found. The client must
-        //    // check to make sure the address is not NULL, before using or 
-        //    // calling the returned function address.
-        //    //
-        //    public extern static void* clGetExtensionFunctionAddress(const char* func_name);
     }
 }

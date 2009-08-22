@@ -495,4 +495,22 @@ namespace OpenCLNet
         END                   = 0x1283,
     };
 
+
+
+    // ********************************************
+    // * CLGL enums
+    // ********************************************
+    public enum CLGLObjectType
+    {
+        BUFFER            = 0x2000,
+        TEXTURE2D         = 0x2001,
+        TEXTURE3D         = 0x2002,
+        RENDERBUFFER      = 0x2003,
+    };
+
+    public enum CLGLTextureInfo
+    {
+        TEXTURE_TARGET           = 0x2004,
+        MIPMAP_LEVEL             = 0x2005,
+    };
 }
