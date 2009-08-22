@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace CLNet
+namespace OpenCLNet
 {
 
     unsafe public class AlignedArray<T> where T : struct
