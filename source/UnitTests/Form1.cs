@@ -59,7 +59,7 @@ namespace UnitTests
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Test terminated with a fatal exception.");
+                MessageBox.Show(ex.ToString(), "Test terminated with a fatal exception.");
             }
         }
 
