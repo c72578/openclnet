@@ -1,4 +1,22 @@
-﻿August 20, 2009
+﻿AUgust 22, 2009
+---------------
+Started work on a unit tester, which apparently was a good idea. Several embarrassing bugs were eliminated in the process, such as infinite recursion in a few of the wrapper functions where I had forgotten to add the "cl" prefix. What fun. =)
+
+Also fleshed out the low level API a bit more. I think there's only one function missing for full OpenCL 1.0 support at that level.
+
+Added a bunch of new SetXXXArg functions to the Kernel class. They should be a bit easier to use from visual basic than the overloaded SetArg.
+
+What has been tested at this point could be said to boil down to "that which does not involve images". Which has a natural explanation. ATI's version of OpenCL doesn't support them yet. Even here there are some exceptions, but they're getting fewer as I flesh out the unit-tester. The high level API is certainly usable at this point and far more fun to play around with than the C API. I'm not promising that it's frozen or anything, but feel free to play with it.
+
+There are two caveats though:
+
+1) If you're going to make your own project to test stuff with, be aware that ATI's driver refuses to run clBuild() in the managed debugger(I think there may be some environment issue so it can't find its own compiler or something), so you have to enable native debugging in the project's debug tab.
+
+2) I have no idea if it even runs with Nvidia's driver. I'd be a bit surprised if it didn't, but feel free to tell me if it works or not. =) I'll buy an Nvidia card once the DX11 cards hit the shelves, but that's probably a few months off. In the meantime I'll focus on testing the other stuff and using this library in the private project that motivated it in the first place.
+
+
+
+August 20, 2009
 ---------------
 
 Got a basic VB project up and running and cleaned up the OpenCL event handling a bit.
