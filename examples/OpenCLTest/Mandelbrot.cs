@@ -56,8 +56,8 @@ namespace OpenCLTest
         Device[] openCLDevices;
         Context openCLContext;
         CommandQueue openCLCQ;
-        Program mandelBrotProgram;
-        Kernel mandelbrotKernel;
+        CLProgram mandelBrotProgram;
+        CLKernel mandelbrotKernel;
 
         public Mandelbrot( OpenCL openCL, int width, int height )
         {
@@ -101,7 +101,7 @@ namespace OpenCLTest
             IntPtr[] globalWorkSize = new IntPtr[2] { new IntPtr( BitmapWidth ), new IntPtr( BitmapHeight ) };
             IntPtr[] localWorkSize = new IntPtr[2] { new IntPtr( 32 ), new IntPtr( 32 ) };
             openCLCQ.EnqueueNDRangeKernel(mandelbrotKernel, 2u, null, globalWorkSize, null, 0, null, out clEvent);
-            openCLContext.WaitForEvents(1, new Event[] { clEvent });
+            openCLContext.WaitForEvent(clEvent);
             clEvent.Dispose();
             Bitmap.UnlockBits(bd);
             mandelbrotMemBuffer.Dispose();

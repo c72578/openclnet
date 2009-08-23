@@ -86,13 +86,13 @@
     <Compile Include="Device.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Event.cs" />
-    <Compile Include="Kernel.cs" />
+    <Compile Include="CLKernel.cs" />
     <Compile Include="Mem.cs" />
     <Compile Include="OpenCL.cs" />
     <Compile Include="OpenCLAPI.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="Platforms.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="CLProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sampler.cs" />
   </ItemGroup>

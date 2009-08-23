@@ -172,8 +172,8 @@ namespace UnitTests
         private void TestContext(Context c)
         {
             Device[] devices = c.Devices;
-            OpenCLNet.Program p = c.CreateProgramFromFile("MemoryTests.cl");
-            Dictionary<string, Kernel> kernelDictionary;
+            OpenCLNet.CLProgram p = c.CreateProgramFromFile("MemoryTests.cl");
+            Dictionary<string, CLKernel> kernelDictionary;
             
             p.Build();
             kernelDictionary = p.CreateKernelDictionary();
@@ -222,7 +222,7 @@ namespace UnitTests
             internal IntPtr outIntPtr;
         }
 
-        private unsafe void TestKernel(Context c, CommandQueue cq, Kernel argIOKernel)
+        private unsafe void TestKernel(Context c, CommandQueue cq, CLKernel argIOKernel)
         {
             Mem outArgBuffer = c.CreateBuffer(MemFlags.WRITE_ONLY, sizeof(IOKernelArgs), IntPtr.Zero);
 
@@ -253,7 +253,7 @@ namespace UnitTests
                 Error("argIOKernel failed to return correct arguments");
         }
 
-        private void TestMem(Context c, CommandQueue cq, Dictionary<string, Kernel> kernelDictionary )
+        private void TestMem(Context c, CommandQueue cq, Dictionary<string, CLKernel> kernelDictionary )
         {
             long size = 8192;
 
@@ -272,7 +272,7 @@ namespace UnitTests
                 if (buffer.MapCount != 0)
                     Error("Mem.MapCount!=0");
 
-                Kernel k = kernelDictionary["TestReadWriteMemory"];
+                CLKernel k = kernelDictionary["TestReadWriteMemory"];
                 k.SetArg(0, buffer);
                 k.SetArg(1, (IntPtr)size);
                 cq.EnqueueTask(k);
@@ -293,7 +293,7 @@ namespace UnitTests
                 if (buffer.MapCount != 0)
                     Error("Mem.MapCount!=0");
 
-                Kernel k = kernelDictionary["TestReadMemory"];
+                CLKernel k = kernelDictionary["TestReadMemory"];
                 k.SetArg(0, buffer);
                 k.SetArg(1, (IntPtr)size);
                 cq.EnqueueTask(k);
@@ -314,7 +314,7 @@ namespace UnitTests
                 if (buffer.MapCount != 0)
                     Error("Mem.MapCount!=0");
 
-                Kernel k = kernelDictionary["TestWriteMemory"];
+                CLKernel k = kernelDictionary["TestWriteMemory"];
                 k.SetArg(0, buffer);
                 k.SetArg(1, (IntPtr)size);
                 cq.EnqueueTask(k);
@@ -334,11 +334,11 @@ namespace UnitTests
             string programName = @"MemoryTests.cl";
 
             Output("Testing compilation of: " + programName);
-            OpenCLNet.Program p0 = c.CreateProgramWithSource(File.ReadAllLines(programName));
-            OpenCLNet.Program p = c.CreateProgramWithSource(File.ReadAllText(programName));
+            OpenCLNet.CLProgram p0 = c.CreateProgramWithSource(File.ReadAllLines(programName));
+            OpenCLNet.CLProgram p = c.CreateProgramWithSource(File.ReadAllText(programName));
             p0.Build();
             p.Build();
-            Kernel k = p.CreateKernel(@"LoopAndDoNothing");
+            CLKernel k = p.CreateKernel(@"LoopAndDoNothing");
             
             TestCommandQueueMemCopy(c, cq);
             TestCommandQueueAsync(c, cq, k );
@@ -346,7 +346,7 @@ namespace UnitTests
 
         #region TestCommandQueue helper functions
 
-        private void TestCommandQueueAsync(Context c, CommandQueue cq, Kernel kernel )
+        private void TestCommandQueueAsync(Context c, CommandQueue cq, CLKernel kernel )
         {
             List<Event> events = new List<Event>();
             Event clEvent;

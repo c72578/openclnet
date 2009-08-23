@@ -251,17 +251,17 @@ namespace OpenCLNet
             return new Mem(this, memID);
         }
 
-        public Program CreateProgramFromFile(string path)
+        public CLProgram CreateProgramFromFile(string path)
         {
             return CreateProgramWithSource(File.ReadAllText(path));
         }
 
-        public Program CreateProgramWithSource( string source )
+        public CLProgram CreateProgramWithSource( string source )
         {
             return CreateProgramWithSource( new string[] { source } );
         }
 
-        public Program CreateProgramWithSource( string[] source )
+        public CLProgram CreateProgramWithSource( string[] source )
         {
             IntPtr programID;
             ErrorCode result;
@@ -269,7 +269,7 @@ namespace OpenCLNet
             programID = (IntPtr)CL.CreateProgramWithSource( ContextID, (uint)source.Length, source, (IntPtr[])null, out result );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateProgramWithSource failed with error code "+result, result);
-            return new Program( this, programID );
+            return new CLProgram( this, programID );
         }
 
         public Sampler CreateSampler( bool normalizedCoords, AddressingMode addressingMode, FilterMode filterMode, out ErrorCode result )
