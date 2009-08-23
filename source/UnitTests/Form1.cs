@@ -33,6 +33,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading;
 using OpenCLNet;
 
 namespace UnitTests
@@ -164,10 +166,18 @@ namespace UnitTests
             Error(errInfo);
         }
 
+        int NativeKernelCalled = 0;
+        NativeKernel NativeKernelCallRef;
+
         private void TestContext(Context c)
         {
             Device[] devices = c.Devices;
-
+            OpenCLNet.Program p = c.CreateProgramFromFile("MemoryTests.cl");
+            Dictionary<string, Kernel> kernelDictionary;
+            
+            p.Build();
+            kernelDictionary = p.CreateKernelDictionary();
+            NativeKernelCallRef = new NativeKernel(NativeKernelTest);
             for (int deviceIndex = 0; deviceIndex < devices.Length; deviceIndex++)
             {
                 Device d;
@@ -175,16 +185,147 @@ namespace UnitTests
                 d = devices[deviceIndex];
                 using (CommandQueue cq = c.CreateCommandQueue(d))
                 {
+                    if ( (d.ExecutionCapabilities & (ulong)DeviceExecCapabilities.NATIVE_KERNEL)!=0 )
+                    {
+                        Output("Testing native kernel execution");
+                        cq.EnqueueNativeKernel(NativeKernelCallRef);
+                        cq.EnqueueBarrier();
+                        if (NativeKernelCalled != 1)
+                            Error("EnqueueNativeKernel failed");
+                        Interlocked.Decrement(ref NativeKernelCalled);
+                    }
+                    else
+                    {
+                        Output("Testing native kernel execution: Not supported");
+                    }
+
+                    TestMem(c, cq, kernelDictionary);
                     TestDevice(d);
                     TestCommandQueue(c, cq);
+                    TestKernel(c, cq, kernelDictionary["ArgIO"]);
                 }
+            }
+        }
+
+        public unsafe void NativeKernelTest(IntPtr args)
+        {
+            Interlocked.Increment(ref NativeKernelCalled);
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack=1)]
+        internal struct IOKernelArgs
+        {
+            internal double outDouble;
+            internal long outLong;
+            internal int outInt;
+            internal float outSingle;
+            internal IntPtr outIntPtr;
+        }
+
+        private unsafe void TestKernel(Context c, CommandQueue cq, Kernel argIOKernel)
+        {
+            Mem outArgBuffer = c.CreateBuffer(MemFlags.WRITE_ONLY, sizeof(IOKernelArgs), IntPtr.Zero);
+
+            Output("Testing kernel - Argument return");
+
+            argIOKernel.SetIntArg(0, 1);
+            argIOKernel.SetLongArg(1, 65);
+            argIOKernel.SetSingleArg(2, 38.4f);
+            argIOKernel.SetDoubleArg(3, 6533.6546);
+            argIOKernel.SetIntPtrArg(4, new IntPtr(0x01234567));
+            argIOKernel.SetIntPtrArg(5, outArgBuffer);
+
+            cq.EnqueueTask(argIOKernel);
+
+            IntPtr outArgPtr = cq.EnqueueMapBuffer( outArgBuffer, true, MapFlags.READ, IntPtr.Zero, (IntPtr)sizeof(IOKernelArgs) );
+            IOKernelArgs args = (IOKernelArgs)Marshal.PtrToStructure(outArgPtr, typeof(IOKernelArgs));
+            cq.EnqueueUnmapMemObject(outArgBuffer, outArgPtr);
+
+            if (args.outInt != 1)
+                Error("argIOKernel failed to return correct arguments");
+            if (args.outLong != 65)
+                Error("argIOKernel failed to return correct arguments");
+            if (args.outSingle != 38.4f)
+                Error("argIOKernel failed to return correct arguments");
+            if (args.outDouble != 6533.6546)
+                Error("argIOKernel failed to return correct arguments");
+            if (args.outIntPtr != new IntPtr(0x01234567))
+                Error("argIOKernel failed to return correct arguments");
+        }
+
+        private void TestMem(Context c, CommandQueue cq, Dictionary<string, Kernel> kernelDictionary )
+        {
+            long size = 8192;
+
+            Output( "Testing Mem class" );
+            Output( "Allocating "+size+" bytes of READ_WRITE memory" );
+            using (Mem buffer = c.CreateBuffer(MemFlags.READ_WRITE, size, IntPtr.Zero))
+            {
+                Output("Mem.MemSize=" + size);
+                if (buffer.MemSize.ToInt64() != size)
+                    Error("Mem.Size!=input size");
+                Output("Mem.MemType=" + buffer.MemType);
+                if (buffer.MemType != MemObjectType.BUFFER)
+                    Error("Mem.MemType!=MemObjectType.BUFFER");
+
+                Output("Mem.MapCount=" + buffer.MapCount);
+                if (buffer.MapCount != 0)
+                    Error("Mem.MapCount!=0");
+
+                Kernel k = kernelDictionary["TestReadWriteMemory"];
+                k.SetArg(0, buffer);
+                k.SetArg(1, (IntPtr)size);
+                cq.EnqueueTask(k);
+                cq.EnqueueBarrier();
+            }
+
+            Output("Allocating " + size + " bytes of READ memory");
+            using (Mem buffer = c.CreateBuffer(MemFlags.READ_ONLY, size, IntPtr.Zero))
+            {
+                Output("Mem.MemSize=" + size);
+                if (buffer.MemSize.ToInt64() != size)
+                    Error("Mem.Size!=input size");
+                Output("Mem.MemType=" + buffer.MemType);
+                if (buffer.MemType != MemObjectType.BUFFER)
+                    Error("Mem.MemType!=MemObjectType.BUFFER");
+
+                Output("Mem.MapCount=" + buffer.MapCount);
+                if (buffer.MapCount != 0)
+                    Error("Mem.MapCount!=0");
+
+                Kernel k = kernelDictionary["TestReadMemory"];
+                k.SetArg(0, buffer);
+                k.SetArg(1, (IntPtr)size);
+                cq.EnqueueTask(k);
+                cq.EnqueueBarrier();
+            }
+
+            Output("Allocating " + size + " bytes of WRITE memory");
+            using (Mem buffer = c.CreateBuffer(MemFlags.WRITE_ONLY, size, IntPtr.Zero))
+            {
+                Output("Mem.MemSize=" + size);
+                if (buffer.MemSize.ToInt64() != size)
+                    Error("Mem.Size!=input size");
+                Output("Mem.MemType=" + buffer.MemType);
+                if (buffer.MemType != MemObjectType.BUFFER)
+                    Error("Mem.MemType!=MemObjectType.BUFFER");
+
+                Output("Mem.MapCount=" + buffer.MapCount);
+                if (buffer.MapCount != 0)
+                    Error("Mem.MapCount!=0");
+
+                Kernel k = kernelDictionary["TestWriteMemory"];
+                k.SetArg(0, buffer);
+                k.SetArg(1, (IntPtr)size);
+                cq.EnqueueTask(k);
+                cq.EnqueueBarrier();
             }
         }
 
         private void TestDevice( Device d )
         {
             Output("Testing device: " + d.Name);
-            // d.ToString() is overloaded to output all properties as a string, so every property will be tested that way
+            // d.ToString() is overloaded to output all properties as a string, so every property will be used that way
             Output(d.ToString());
         }
 
@@ -207,8 +348,8 @@ namespace UnitTests
 
         private void TestCommandQueueAsync(Context c, CommandQueue cq, Kernel kernel )
         {
-            List<IntPtr> events = new List<IntPtr>();
-            IntPtr _event;
+            List<Event> events = new List<Event>();
+            Event clEvent;
 
             Output("Testing asynchronous task issuing (clEnqueueTask) and waiting for events");
 
@@ -216,20 +357,25 @@ namespace UnitTests
             kernel.SetArg(0, 5000000);
             for (int i = 0; i < 10; i++)
             {
-                cq.EnqueueTask(kernel, 0, null, out _event);
-                events.Add(_event);
+                cq.EnqueueTask(kernel, 0, null, out clEvent);
+                events.Add(clEvent);
             }
 
             // Issue a bunch of fast operations
             kernel.SetArg(0, 500);
             for (int i = 0; i < 1000; i++)
             {
-                cq.EnqueueTask(kernel, 0, null, out _event);
-                events.Add(_event);
+                cq.EnqueueTask(kernel, 0, null, out clEvent);
+                events.Add(clEvent);
             }
 
-            IntPtr[] eventList = events.ToArray();
+            Event[] eventList = events.ToArray();
             cq.EnqueueWaitForEvents(eventList.Length, eventList);
+            while (events.Count > 0)
+            {
+                events[0].Dispose();
+                events.RemoveAt(0);
+            }
         }
 
         private void TestCommandQueueMemCopy(Context c, CommandQueue cq)
@@ -351,16 +497,19 @@ namespace UnitTests
         private void Output(string s)
         {
             listBoxOutput.Items.Add(s);
+            Application.DoEvents();
         }
 
         private void Warning(string s)
         {
             listBoxWarnings.Items.Add(s);
+            Application.DoEvents();
         }
 
         private void Error(string s)
         {
             listBoxErrors.Items.Add(s);
+            Application.DoEvents();
         }
     }
 }

@@ -43,7 +43,7 @@ namespace OpenCLNet
 
         public IntPtr SamplerID { get; protected set; }
         public Context Context { get; protected set; }
-        public OpenCLAPI CL { get { return Context.CL; } }
+        internal OpenCLAPI CL { get { return Context.CL; } }
 
         public uint ReferenceCount { get { return InteropTools.ReadUInt( this, (uint)SamplerInfo.REFERENCE_COUNT ); } }
         public AddressingMode AddressingMode { get { return (AddressingMode)InteropTools.ReadUInt( this, (uint)SamplerInfo.ADDRESSING_MODE ); } }

@@ -32,6 +32,22 @@ using System.Text;
 
 namespace OpenCLNet
 {
+    /// <summary>
+    /// The Kernel class wraps an OpenCL kernel handle
+    /// 
+    /// The main purposes of this class is to serve as a handle to
+    /// a compiled OpenCL function and to set arguments on the function
+    /// before enqueueing calls.
+    /// 
+    /// Arguments are set using either the overloaded SetArg functions or
+    /// explicit Set*Arg functions where * is a type. The most usual types
+    /// are supported, but no vectors. If you need to set a parameter that's
+    /// more advanced than what's supported here, use the version of SetArg
+    /// that takes a pointer and size.
+    /// 
+    /// Note that pointer arguments are set by passing their OpenCL memory object,
+    /// not native pointers.
+    /// </summary>
     unsafe public class Kernel : InteropTools.IPropertyContainer
     {
         // Track whether Dispose has been called.
@@ -44,7 +60,7 @@ namespace OpenCLNet
         public Program Program { get { throw new NotImplementedException(); } }
         public IntPtr KernelID { get; set; }
 
-        public OpenCLAPI CL { get { return Context.CL; } }
+        internal OpenCLAPI CL { get { return Context.CL; } }
 
         internal Kernel( Context context, IntPtr kernelID )
         {
@@ -116,6 +132,11 @@ namespace OpenCLNet
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
 
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
         public void SetArg( int argIndex, int c )
         {
             ErrorCode result;
@@ -125,6 +146,11 @@ namespace OpenCLNet
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
 
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
         public void SetArg( int argIndex, long c )
         {
             ErrorCode result;
@@ -134,6 +160,11 @@ namespace OpenCLNet
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
 
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
         public void SetArg( int argIndex, float c )
         {
             ErrorCode result;
@@ -143,7 +174,12 @@ namespace OpenCLNet
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
 
-        public void SetArg( int argIndex, double c )
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
+        public void SetArg(int argIndex, double c)
         {
             ErrorCode result;
 
@@ -152,6 +188,11 @@ namespace OpenCLNet
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
 
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
         public void SetArg( int argIndex, IntPtr c )
         {
             ErrorCode result;

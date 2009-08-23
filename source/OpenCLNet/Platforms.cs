@@ -38,21 +38,32 @@ namespace OpenCLNet
         Dictionary<IntPtr,Platform> _Platforms = new Dictionary<IntPtr, Platform>();
         IntPtr[] PlatformIDs;
         Platform[] Platforms;
-        public OpenCLAPI CL;
+        internal OpenCLAPI CL;
+
+        public OpenCL()
+        {
+            CL = new ATI();
+            Initialize();
+        }
 
         public OpenCL( OpenCLAPI cl )
         {
             CL = cl;
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             PlatformIDs = GetPlatformIDs();
-            if( PlatformIDs==null )
+            if (PlatformIDs == null)
                 return;
 
             Platforms = new Platform[PlatformIDs.Length];
-            for( int i=0; i<PlatformIDs.Length; i++ )
+            for (int i = 0; i < PlatformIDs.Length; i++)
             {
                 Platform p;
 
-                p = new Platform( CL, PlatformIDs[i] );
+                p = new Platform(CL, PlatformIDs[i]);
                 Platforms[i] = p;
                 _Platforms[PlatformIDs[i]] = p;
             }

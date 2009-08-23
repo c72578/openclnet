@@ -48,7 +48,7 @@ namespace OpenCLNet
 
         #region Properties
 
-        public OpenCLAPI CL { get { return Platform.CL; } }
+        internal OpenCLAPI CL { get { return Platform.CL; } }
         public IntPtr DeviceID { get; protected set; }
 
         public DeviceType DeviceType { get { return (DeviceType) InteropTools.ReadULong( this, (uint)DeviceInfo.TYPE ); } }

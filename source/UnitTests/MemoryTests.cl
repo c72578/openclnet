@@ -39,3 +39,46 @@ __kernel void LoopAndDoNothing( int iterations )
 	for( int i=0; i<iterations; i++ )
 		;
 }
+
+struct IOKernelArgs
+{
+    double outDouble;
+    long outLong;
+    int outInt;
+    float outSingle;
+    intptr_t outIntPtr;
+};
+
+__kernel void ArgIO( int i,
+  long l,
+  float s,
+  double d,
+  intptr_t p,
+  __global struct IOKernelArgs* pA)
+{
+	pA->outInt = i;
+	pA->outLong = l;
+	pA->outSingle = s;
+	pA->outDouble = d;
+	pA->outIntPtr = p;
+}
+
+__kernel void TestReadMemory( __global char* pData, size_t length )
+{
+	int sum;
+	
+	for( size_t i=0; i<length; i++ )
+		sum += pData[i];
+}
+
+__kernel void TestWriteMemory( __global char* pData, size_t length )
+{
+	for( size_t i=0; i<length; i++ )
+		pData[i] = 1;
+}
+
+__kernel void TestReadWriteMemory( __global char* pData, size_t length )
+{
+	for( size_t i=0; i<length; i++ )
+		pData[length-1-i] = pData[i];
+}

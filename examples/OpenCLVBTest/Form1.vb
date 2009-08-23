@@ -4,7 +4,6 @@ Imports OpenCLNet
 
 
 Public Class Form1
-    Dim clATI
     Dim openCL
     Dim platform
     Dim context
@@ -16,8 +15,7 @@ Public Class Form1
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Try
-            clATI = New OpenCLNet.ATI()
-            openCL = New OpenCLNet.OpenCL(clATI)
+            openCL = New OpenCLNet.OpenCL()
             platform = openCL.GetPlatform(0)
             devices = platform.QueryDevices(DeviceType.ALL)
             context = platform.CreateDefaultContext(Nothing, Nothing)
@@ -40,32 +38,32 @@ Public Class Form1
         Dim bd = bitmap.LockBits(New Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb)
         Dim bitmapSize = bd.Stride * bd.Height * 4
         Dim mandelbrotMemBuffer = context.CreateBuffer(MemFlags.WRITE_ONLY + MemFlags.USE_HOST_PTR, bitmapSize, bd.Scan0)
-        Dim _event = IntPtr.Zero
+        Dim clEvent As OpenCLNet.Event
         Dim globalWorkSize(0 To 1) As IntPtr
-        Dim eventWaitList(0 To 0) As IntPtr
-        Dim _Left As Single
-        Dim _Top As Single
-        Dim _Right As Single
-        Dim _Bottom As Single
+        Dim eventWaitList(0 To 0) As OpenCLNet.Event
+        Dim _Left
+        Dim _Top
+        Dim _Right
+        Dim _Bottom
 
         _Left = -2.0
         _Top = 2.0
         _Right = 2.0
         _Bottom = -2.0
-        kernel.SetArg(0, _Left)
-        kernel.SetArg(1, _Top)
-        kernel.SetArg(2, _Right)
-        kernel.SetArg(3, _Bottom)
-        kernel.SetArg(4, bd.Stride)
-        kernel.SetArg(5, mandelbrotMemBuffer)
+        kernel.SetSingleArg(0, _Left)
+        kernel.SetSingleArg(1, _Top)
+        kernel.SetSingleArg(2, _Right)
+        kernel.SetSingleArg(3, _Bottom)
+        kernel.SetIntArg(4, bd.Stride)
+        kernel.SetIntPtrArg(5, mandelbrotMemBuffer)
 
+        clEvent = Nothing
         globalWorkSize(0) = New IntPtr(CType(bd.Width, Long))
         globalWorkSize(1) = New IntPtr(CType(bd.Height, Long))
-        cq.EnqueueNDRangeKernel(kernel, 2, Nothing, globalWorkSize, Nothing, 0, Nothing, _event)
-        eventWaitList(0) = _event
-        openCL.CL.WaitForEvents(1, eventWaitList)
-
-        openCL.CL.ReleaseEvent(_event)
+        cq.EnqueueNDRangeKernel(kernel, 2, Nothing, globalWorkSize, Nothing, 0, Nothing, clEvent)
+        eventWaitList(0) = clEvent
+        context.WaitForEvents(1, eventWaitList)
+        clEvent.Dispose()
         bitmap.UnlockBits(bd)
         mandelbrotMemBuffer.Dispose()
     End Sub

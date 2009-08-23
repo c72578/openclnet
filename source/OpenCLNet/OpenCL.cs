@@ -78,7 +78,6 @@ namespace OpenCLNet
             return devices;
         }
 
-
         public static IntPtr[] ConvertMemToMemIDs(Mem[] mems)
         {
             IntPtr[] memIDs;
@@ -90,6 +89,19 @@ namespace OpenCLNet
             for (int i = 0; i < mems.Length; i++)
                 memIDs[i] = mems[i];
             return memIDs;
+        }
+
+        public static IntPtr[] ConvertEventsToEventIDs(Event[] events)
+        {
+            IntPtr[] eventIDs;
+
+            if (events == null)
+                return null;
+
+            eventIDs = new IntPtr[events.Length];
+            for (int i = 0; i < events.Length; i++)
+                eventIDs[i] = events[i];
+            return eventIDs;
         }
 
         #region Helper functions to read properties

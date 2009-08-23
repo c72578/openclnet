@@ -173,7 +173,7 @@ namespace OpenCLNet
 
         class TextureInfo : InteropTools.IPropertyContainer
         {
-            public OpenCLAPI CL { get { return Mem.CL; } }
+            internal OpenCLAPI CL { get { return Mem.CL; } }
             Mem Mem;
 
             public TextureInfo(Mem mem)

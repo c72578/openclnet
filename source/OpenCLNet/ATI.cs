@@ -547,8 +547,8 @@ namespace OpenCLNet
             cl_map_flags map_flags,
             IntPtr[] origin,
             IntPtr[] region,
-            IntPtr image_row_pitch,
-            IntPtr image_slice_pitch,
+            out IntPtr image_row_pitch,
+            out IntPtr image_slice_pitch,
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
             cl_event* _event,
@@ -576,11 +576,17 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=2)] cl_event[] event_wait_list,
             cl_event* _event);
-        //TODO
-#if false
         [DllImport( Configuration.Library )]
-        public extern static cl_int clEnqueueNativeKernel( void* command_queue, void (*user_func)(void*), void* args, size_t cb_args, cl_uint num_mem_objects, const cl_mem* mem_list, const void** args_mem_loc, cl_uint num_events_in_wait_list, void** event_wait_list, void** _event);
-#endif
+        public extern static ErrorCode clEnqueueNativeKernel(cl_command_queue command_queue,
+            NativeKernel user_func,
+            void* args,
+            IntPtr cb_args,
+            cl_uint num_mem_objects,
+            [In] cl_mem[] mem_list,
+            [Out] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] args_mem_loc,
+            cl_uint num_events_in_wait_list,
+            [In]cl_event[] event_wait_list,
+            cl_event* _event);
         [DllImport( Configuration.Library )]
         public extern static ErrorCode clEnqueueMarker( cl_command_queue command_queue, cl_event* _event );
         [DllImport( Configuration.Library )]
@@ -636,9 +642,9 @@ namespace OpenCLNet
             return clEnqueueMapBuffer( command_queue, buffer, blocking_map, map_flags, offset, cb, num_events_in_wait_list, event_wait_list, _event, out errcode_ret );
         }
 
-        public override void* EnqueueMapImage( IntPtr command_queue, IntPtr image, uint blocking_map, ulong map_flags, IntPtr[] origin, IntPtr[] region, IntPtr image_row_pitch, IntPtr image_slice_pitch, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event, out ErrorCode errcode_ret )
+        public override void* EnqueueMapImage( IntPtr command_queue, IntPtr image, uint blocking_map, ulong map_flags, IntPtr[] origin, IntPtr[] region, out IntPtr image_row_pitch, out IntPtr image_slice_pitch, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event, out ErrorCode errcode_ret )
         {
-            return clEnqueueMapImage( command_queue, image, blocking_map, map_flags, origin, region, image_row_pitch, image_slice_pitch, num_events_in_wait_list, event_wait_list, _event, out errcode_ret );
+            return clEnqueueMapImage( command_queue, image, blocking_map, map_flags, origin, region, out image_row_pitch, out image_slice_pitch, num_events_in_wait_list, event_wait_list, _event, out errcode_ret );
         }
 
         public override ErrorCode EnqueueUnmapMemObject( IntPtr command_queue, IntPtr memobj, void* mapped_ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
@@ -654,6 +660,29 @@ namespace OpenCLNet
         public override ErrorCode EnqueueTask( IntPtr command_queue, IntPtr kernel, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event )
         {
             return clEnqueueTask( command_queue, kernel, num_events_in_wait_list, event_wait_list, _event );
+        }
+
+        public override ErrorCode EnqueueNativeKernel(cl_command_queue command_queue,
+            NativeKernel user_func,
+            void* args,
+            IntPtr cb_args,
+            cl_uint num_mem_objects,
+            cl_mem[] mem_list,
+            IntPtr[] args_mem_loc,
+            cl_uint num_events_in_wait_list,
+            cl_event[] event_wait_list,
+            cl_event* _event)
+        {
+            return clEnqueueNativeKernel( command_queue,
+                user_func,
+                args,
+                cb_args,
+                num_mem_objects,
+                mem_list,
+                args_mem_loc,
+                num_events_in_wait_list,
+                event_wait_list,
+                _event );
         }
 
         public override ErrorCode EnqueueMarker( IntPtr command_queue, IntPtr* _event )

@@ -312,8 +312,8 @@ namespace OpenCLNet
             cl_map_flags map_flags,
             IntPtr[] origin,
             IntPtr[] region,
-            IntPtr image_row_pitch,
-            IntPtr image_slice_pitch,
+            out IntPtr image_row_pitch,
+            out IntPtr image_slice_pitch,
             cl_uint num_events_in_wait_list,
             cl_event[] event_wait_list,
             cl_event* _event,
@@ -338,20 +338,17 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             cl_event[] event_wait_list,
             cl_event* _event);
-        // TODO
-#if false
-        public abstract ErrorCode EnqueueNativeKernel( cl_command_queue command_queue,
+        public abstract ErrorCode EnqueueNativeKernel(cl_command_queue command_queue,
             NativeKernel user_func,
-            IntPtr args,
+            void* args,
             IntPtr cb_args,
             cl_uint num_mem_objects,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=4)] cl_mem[] mem_list,
-            const void** args_mem_loc,
+            cl_mem[] mem_list,
+            IntPtr[] args_mem_loc,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
-            out cl_event _event);
-#endif
-        public abstract ErrorCode EnqueueMarker( cl_command_queue command_queue, cl_event* _event );
+            cl_event[] event_wait_list,
+            cl_event* _event);
+        public abstract ErrorCode EnqueueMarker(cl_command_queue command_queue, cl_event* _event);
         public abstract ErrorCode EnqueueWaitForEvents( cl_command_queue command_queue, cl_uint num_events, cl_event[] _event_list );
         public abstract ErrorCode EnqueueBarrier( cl_command_queue command_queue );
 

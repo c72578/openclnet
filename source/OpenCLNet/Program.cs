@@ -42,7 +42,7 @@ namespace OpenCLNet
 
         #region Properties
 
-        public OpenCLAPI CL { get { return Context.CL; } }
+        internal OpenCLAPI CL { get { return Context.CL; } }
         public Context Context { get; protected set; }
         public IntPtr ProgramID { get; protected set; }
         public string Source { get { return InteropTools.ReadString( this, (uint)ProgramInfo.SOURCE ); } }
@@ -235,6 +235,17 @@ namespace OpenCLNet
             return kernels;
         }
 
+        public Dictionary<string, Kernel> CreateKernelDictionary()
+        {
+            Kernel[] kernels = CreateKernels();
+            Dictionary<string, Kernel> kernelDictionary = new Dictionary<string, Kernel>();
+
+            foreach (Kernel k in kernels)
+                kernelDictionary[k.FunctionName] = k;
+            
+            return kernelDictionary;
+        }
+
         public static implicit operator IntPtr( Program p )
         {
             return p.ProgramID;
@@ -267,7 +278,7 @@ namespace OpenCLNet
 
         class BuildInfo : InteropTools.IPropertyContainer
         {
-            public OpenCLAPI CL { get { return Program.CL; } }
+            internal OpenCLAPI CL { get { return Program.CL; } }
             Program Program;
             Device Device;
 

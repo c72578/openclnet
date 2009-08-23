@@ -50,10 +50,6 @@ namespace OpenCLTest
                 {-0.17225f, 0.66116f, -0.17115f, 0.660347f},
             };
 
-        float ZoomDX0;
-        float ZoomDX1;
-        float ZoomDY0;
-        float ZoomDY1;
         TimeSpan ZoomTime = TimeSpan.FromSeconds(30);
         DateTime ZoomStart;
 
@@ -66,8 +62,9 @@ namespace OpenCLTest
         {
             try
             {
-                OpenCL = new OpenCL(new ATI());
+                OpenCL = new OpenCL();
                 Mandelbrot = new Mandelbrot(OpenCL, Width, Height);
+//                Mandelbrot = new Mandelbrot(OpenCL, Align(Width, 64), Align(Height, 64));
                 Mandelbrot.AllocBuffers();
                 UpdateMandelbrot();
             }
@@ -76,6 +73,11 @@ namespace OpenCLTest
                 MessageBox.Show( oex.ToString(), "OpenCL Initialization failed" );
                 Application.Exit();
             }
+        }
+
+        protected int Align(int i, int align)
+        {
+            return (i + align - 1) / align * align;
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)

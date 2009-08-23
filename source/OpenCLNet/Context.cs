@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.IO;
 
 namespace OpenCLNet
 {
@@ -37,7 +38,7 @@ namespace OpenCLNet
     {
         public IntPtr ContextID { get; protected set; }
         public Platform Platform { get; protected set; }
-        public OpenCLAPI CL { get { return Platform.CL; } }
+        internal OpenCLAPI CL { get { return Platform.CL; } }
         // Track whether Dispose has been called.
         private bool disposed = false;
 
@@ -250,6 +251,11 @@ namespace OpenCLNet
             return new Mem(this, memID);
         }
 
+        public Program CreateProgramFromFile(string path)
+        {
+            return CreateProgramWithSource(File.ReadAllText(path));
+        }
+
         public Program CreateProgramWithSource( string source )
         {
             return CreateProgramWithSource( new string[] { source } );
@@ -272,6 +278,19 @@ namespace OpenCLNet
             
             samplerID = CL.CreateSampler( ContextID, normalizedCoords, (uint)addressingMode, (uint)filterMode, out result );
             return new Sampler( this, samplerID );
+        }
+
+        public void WaitForEvent(Event _event)
+        {
+            Event[] event_list = new Event[1];
+
+            event_list[0] = _event;
+            CL.WaitForEvents(1, InteropTools.ConvertEventsToEventIDs(event_list));
+        }
+
+        public void WaitForEvents(int num_events, Event[] event_list)
+        {
+            CL.WaitForEvents((uint)num_events, InteropTools.ConvertEventsToEventIDs(event_list));
         }
 
         public static implicit operator IntPtr( Context c )

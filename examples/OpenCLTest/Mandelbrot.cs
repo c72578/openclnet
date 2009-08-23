@@ -65,7 +65,7 @@ namespace OpenCLTest
 
             openCLPlatform = OpenCL.GetPlatform( 0 );
             openCLDevices = openCLPlatform.QueryDevices( DeviceType.ALL );
-            openCLContext = openCLPlatform.CreateDefaultContext( null, IntPtr.Zero );
+            openCLContext = openCLPlatform.CreateDefaultContext();
             openCLCQ = openCLContext.CreateCommandQueue( openCLDevices[0], (CommandQueueProperties)0 );
             mandelBrotProgram = openCLContext.CreateProgramWithSource( File.ReadAllText( "Mandelbrot.cl" ) );
             mandelBrotProgram.Build();
@@ -97,14 +97,13 @@ namespace OpenCLTest
             mandelbrotKernel.SetArg( 4, bd.Stride );
             mandelbrotKernel.SetArg( 5, mandelbrotMemBuffer );
 
-            IntPtr _event;
+            Event clEvent;
             IntPtr[] globalWorkSize = new IntPtr[2] { new IntPtr( BitmapWidth ), new IntPtr( BitmapHeight ) };
-            IntPtr[] localWorkSize = new IntPtr[2] { new IntPtr( 1 ), new IntPtr( 1 ) };
-            openCLCQ.EnqueueNDRangeKernel( mandelbrotKernel, 2u, null, globalWorkSize, null, 0, null, out _event );
-            OpenCL.CL.WaitForEvents( 1, new IntPtr[] { _event } );
-
-            OpenCL.CL.ReleaseEvent( _event );
-            Bitmap.UnlockBits( bd );
+            IntPtr[] localWorkSize = new IntPtr[2] { new IntPtr( 32 ), new IntPtr( 32 ) };
+            openCLCQ.EnqueueNDRangeKernel(mandelbrotKernel, 2u, null, globalWorkSize, null, 0, null, out clEvent);
+            openCLContext.WaitForEvents(1, new Event[] { clEvent });
+            clEvent.Dispose();
+            Bitmap.UnlockBits(bd);
             mandelbrotMemBuffer.Dispose();
         }
     }
