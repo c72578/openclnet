@@ -63,13 +63,20 @@ namespace OpenCLTest
         {
             OpenCL = openCL;
 
-            openCLPlatform = OpenCL.GetPlatform( 0 );
-            openCLDevices = openCLPlatform.QueryDevices( DeviceType.ALL );
+            openCLPlatform = OpenCL.GetPlatform(0);
+            openCLDevices = openCLPlatform.QueryDevices(DeviceType.ALL);
             openCLContext = openCLPlatform.CreateDefaultContext();
-            openCLCQ = openCLContext.CreateCommandQueue( openCLDevices[0], (CommandQueueProperties)0 );
-            mandelBrotProgram = openCLContext.CreateProgramWithSource( File.ReadAllText( "Mandelbrot.cl" ) );
-            mandelBrotProgram.Build();
-            mandelbrotKernel = mandelBrotProgram.CreateKernel( "Mandelbrot" );
+            openCLCQ = openCLContext.CreateCommandQueue(openCLDevices[0], (CommandQueueProperties)0);
+            mandelBrotProgram = openCLContext.CreateProgramWithSource(File.ReadAllText("Mandelbrot.cl"));
+            try
+            {
+                mandelBrotProgram.Build();
+            }
+            catch (OpenCLException ocle)
+            {
+                string buildLog = mandelBrotProgram.GetBuildLog(openCLDevices[0]);
+            }
+            mandelbrotKernel = mandelBrotProgram.CreateKernel("Mandelbrot");
 
             Left = -2.0f;
             Top = 2.0f;
