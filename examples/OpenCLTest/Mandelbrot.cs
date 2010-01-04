@@ -56,8 +56,8 @@ namespace OpenCLTest
         Device[] openCLDevices;
         Context openCLContext;
         CommandQueue openCLCQ;
-        CLProgram mandelBrotProgram;
-        CLKernel mandelbrotKernel;
+        Program mandelBrotProgram;
+        Kernel mandelbrotKernel;
 
         public Mandelbrot( OpenCL openCL, int width, int height )
         {

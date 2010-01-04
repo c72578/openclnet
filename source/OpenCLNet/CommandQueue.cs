@@ -856,7 +856,7 @@ namespace OpenCLNet
         /// <param name="numEventsInWaitList"></param>
         /// <param name="event_wait_list"></param>
         /// <param name="_event"></param>
-        public void EnqueueNDRangeKernel(CLKernel kernel, uint workDim, IntPtr[] globalWorkOffset, IntPtr[] globalWorkSize, IntPtr[] localWorkSize, uint numEventsInWaitList, Event[] event_wait_list, out Event _event)
+        public void EnqueueNDRangeKernel(Kernel kernel, uint workDim, IntPtr[] globalWorkOffset, IntPtr[] globalWorkSize, IntPtr[] localWorkSize, uint numEventsInWaitList, Event[] event_wait_list, out Event _event)
         {
             ErrorCode result;
             IntPtr tmpEvent;
@@ -875,7 +875,7 @@ namespace OpenCLNet
                 throw new OpenCLException("EnqueueNDRangeKernel failed with error code " + result, result);
         }
 
-        public void EnqueueNDRangeKernel(CLKernel kernel, uint workDim, IntPtr[] globalWorkOffset, IntPtr[] globalWorkSize, IntPtr[] localWorkSize, uint numEventsInWaitList, Event[] event_wait_list)
+        public void EnqueueNDRangeKernel(Kernel kernel, uint workDim, IntPtr[] globalWorkOffset, IntPtr[] globalWorkSize, IntPtr[] localWorkSize, uint numEventsInWaitList, Event[] event_wait_list)
         {
             ErrorCode result;
 
@@ -892,7 +892,7 @@ namespace OpenCLNet
                 throw new OpenCLException("EnqueueNDRangeKernel failed with error code " + result, result);
         }
 
-        public void EnqueueNDRangeKernel(CLKernel kernel, uint workDim, IntPtr[] globalWorkOffset, IntPtr[] globalWorkSize, IntPtr[] localWorkSize)
+        public void EnqueueNDRangeKernel(Kernel kernel, uint workDim, IntPtr[] globalWorkOffset, IntPtr[] globalWorkSize, IntPtr[] localWorkSize)
         {
             ErrorCode result;
 
@@ -920,7 +920,7 @@ namespace OpenCLNet
         /// <param name="numEventsInWaitList"></param>
         /// <param name="event_wait_list"></param>
         /// <param name="_event"></param>
-        public void EnqueueTask(CLKernel kernel, int numEventsInWaitList, Event[] event_wait_list, out Event _event)
+        public void EnqueueTask(Kernel kernel, int numEventsInWaitList, Event[] event_wait_list, out Event _event)
         {
             ErrorCode result;
             IntPtr tmpEvent;
@@ -941,7 +941,7 @@ namespace OpenCLNet
         /// <param name="kernel"></param>
         /// <param name="numEventsInWaitList"></param>
         /// <param name="event_wait_list"></param>
-        public void EnqueueTask(CLKernel kernel, int numEventsInWaitList, Event[] event_wait_list)
+        public void EnqueueTask(Kernel kernel, int numEventsInWaitList, Event[] event_wait_list)
         {
             ErrorCode result;
 
@@ -958,7 +958,7 @@ namespace OpenCLNet
         /// Execute a simple kernel
         /// </summary>
         /// <param name="kernel"></param>
-        public void EnqueueTask(CLKernel kernel)
+        public void EnqueueTask(Kernel kernel)
         {
             ErrorCode result;
 
