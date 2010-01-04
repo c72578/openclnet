@@ -75,6 +75,8 @@ namespace OpenCLTest
             catch (OpenCLException ocle)
             {
                 string buildLog = mandelBrotProgram.GetBuildLog(openCLDevices[0]);
+                MessageBox.Show(buildLog,"Build error(64 bit debug sessions in vs2008 always fail like this - debug in 32 bit)");
+                Application.Exit();
             }
             mandelbrotKernel = mandelBrotProgram.CreateKernel("Mandelbrot");
 
