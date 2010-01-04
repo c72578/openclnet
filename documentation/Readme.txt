@@ -1,4 +1,10 @@
-﻿AUgust 22, 2009
+﻿January 4, 2010
+---------------
+Added a VS2010 project as well as some bugfixes. Good news is that VS2010 can debug 64 bit projects in native mode, meaning that you can actually debug 64 bit  opencl code now, assuming you don't mind being tied to .NET Framework 4. I know I don't mind, but I left the old vs2008 solutions and project files there for people who don't want to use vs2010.
+
+Newer ATI compiler, .Net runtime etc unearthed a few more bugs. I'll be cleaning up and finishing up this project as far as possible in the next week or two. That is - bringing it up to date with current developments on the ATI driver side as well as finally testing it with real GPU hardware, with focus on making sure it works well in 64 bit mode.
+
+August 22, 2009
 ---------------
 Started work on a unit tester, which apparently was a good idea. Several embarrassing bugs were eliminated in the process, such as infinite recursion in a few of the wrapper functions where I had forgotten to add the "cl" prefix. What fun. =)
 
