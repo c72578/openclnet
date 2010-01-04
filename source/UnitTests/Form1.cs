@@ -154,7 +154,12 @@ namespace UnitTests
             Output("");
 
             Output("Testing Platform.CreateContextFromType()");
-            using (Context c = p.CreateContextFromType(null, DeviceType.CPU, new ContextNotify(ContextNotifyFunc), (IntPtr)0x01234567))
+            IntPtr[] contextProperties = new IntPtr[]
+            {
+                (IntPtr)ContextProperties.PLATFORM, p.PlatformID,
+                IntPtr.Zero
+            };
+            using (Context c = p.CreateContextFromType(contextProperties, DeviceType.CPU, new ContextNotify(ContextNotifyFunc), (IntPtr)0x01234567))
             {
                 Output("Testing context" + c);
                 TestContext(c);
@@ -174,8 +179,15 @@ namespace UnitTests
             Device[] devices = c.Devices;
             OpenCLNet.Program p = c.CreateProgramFromFile("MemoryTests.cl");
             Dictionary<string, Kernel> kernelDictionary;
-            
-            p.Build();
+
+            try
+            {
+                p.Build();
+            }
+            catch (OpenCLException ocle)
+            {
+                throw ocle;
+            }
             kernelDictionary = p.CreateKernelDictionary();
             NativeKernelCallRef = new NativeKernel(NativeKernelTest);
             for (int deviceIndex = 0; deviceIndex < devices.Length; deviceIndex++)
@@ -215,7 +227,6 @@ namespace UnitTests
         [StructLayout(LayoutKind.Sequential, Pack=1)]
         internal struct IOKernelArgs
         {
-            internal double outDouble;
             internal long outLong;
             internal int outInt;
             internal float outSingle;
@@ -231,9 +242,8 @@ namespace UnitTests
             argIOKernel.SetIntArg(0, 1);
             argIOKernel.SetLongArg(1, 65);
             argIOKernel.SetSingleArg(2, 38.4f);
-            argIOKernel.SetDoubleArg(3, 6533.6546);
-            argIOKernel.SetIntPtrArg(4, new IntPtr(0x01234567));
-            argIOKernel.SetIntPtrArg(5, outArgBuffer);
+            argIOKernel.SetIntPtrArg(3, new IntPtr(0x01234567));
+            argIOKernel.SetIntPtrArg(4, outArgBuffer);
 
             cq.EnqueueTask(argIOKernel);
 
@@ -246,8 +256,6 @@ namespace UnitTests
             if (args.outLong != 65)
                 Error("argIOKernel failed to return correct arguments");
             if (args.outSingle != 38.4f)
-                Error("argIOKernel failed to return correct arguments");
-            if (args.outDouble != 6533.6546)
                 Error("argIOKernel failed to return correct arguments");
             if (args.outIntPtr != new IntPtr(0x01234567))
                 Error("argIOKernel failed to return correct arguments");

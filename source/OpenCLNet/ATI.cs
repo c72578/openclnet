@@ -550,7 +550,7 @@ namespace OpenCLNet
             out IntPtr image_row_pitch,
             out IntPtr image_slice_pitch,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=8)] cl_event[] event_wait_list,
             cl_event* _event,
             out ErrorCode errcode_ret);
         [DllImport( Configuration.Library )]
@@ -558,7 +558,7 @@ namespace OpenCLNet
             cl_mem memobj,
             void* mapped_ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=3)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueNDRangeKernel( cl_command_queue command_queue,

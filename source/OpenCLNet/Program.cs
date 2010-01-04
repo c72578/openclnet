@@ -184,24 +184,29 @@ namespace OpenCLNet
             Build( null, null, IntPtr.Zero );
         }
 
-        public void Build( Device[] devices, ProgramNotify notify, IntPtr userData )
+        public void Build(Device[] devices, ProgramNotify notify, IntPtr userData)
+        {
+            Build(devices, null, notify, userData);
+        }
+
+        public void Build(Device[] devices, string options, ProgramNotify notify, IntPtr userData)
         {
             ErrorCode result;
             IntPtr[] deviceIDs;
             int deviceLength = 0;
 
-            if( devices!=null )
+            if (devices != null)
                 deviceLength = devices.Length;
 
-            deviceIDs = InteropTools.ConvertDevicesToDeviceIDs( devices );
-            result = (ErrorCode)CL.BuildProgram( ProgramID,
+            deviceIDs = InteropTools.ConvertDevicesToDeviceIDs(devices);
+            result = (ErrorCode)CL.BuildProgram(ProgramID,
                 (uint)deviceLength,
                 deviceIDs,
-                null,
+                options,
                 notify,
-                userData );
-            if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "Build failed with error code "+result, result);
+                userData);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("Build failed with error code " + result, result);
         }
 
         public Kernel CreateKernel( string kernelName )

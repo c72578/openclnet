@@ -23,6 +23,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable
+
 __constant char TestMemory[] = "TestMemory";
 
 __kernel void MemoryCopy( __global float* pSrc, __global float* pDst, size_t length )
@@ -42,7 +44,6 @@ __kernel void LoopAndDoNothing( int iterations )
 
 struct IOKernelArgs
 {
-    double outDouble;
     long outLong;
     int outInt;
     float outSingle;
@@ -52,14 +53,12 @@ struct IOKernelArgs
 __kernel void ArgIO( int i,
   long l,
   float s,
-  double d,
   intptr_t p,
   __global struct IOKernelArgs* pA)
 {
 	pA->outInt = i;
 	pA->outLong = l;
 	pA->outSingle = s;
-	pA->outDouble = d;
 	pA->outIntPtr = p;
 }
 
