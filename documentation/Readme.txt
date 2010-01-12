@@ -1,4 +1,10 @@
-﻿January 4, 2010
+﻿January 12, 2010
+----------------
+Finally got some hardware! ^_^. Of course, not a single example worked out of the box, but at least the errors were in the examples and not in the api. The examples are fixed now, and the problem was me forgetting about having to copy back results. Also added Flush, Finish to the CommandQueue class as well as profiling support. When profiling functionality is turned on in the CommandQueue creation function, profiling counters can be read out using methods in the Event class.
+
+The examples will still use the first platform and device in the list, which may or may not be a cpu device.
+
+January 4, 2010
 ---------------
 Added a VS2010 project as well as some bugfixes. Good news is that VS2010 can debug 64 bit projects in native mode, meaning that you can actually debug 64 bit  opencl code now, assuming you don't mind being tied to .NET Framework 4. I know I don't mind, but I left the old vs2008 solutions and project files there for people who don't want to use vs2010.
 
