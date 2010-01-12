@@ -47,6 +47,8 @@ namespace OpenCLNet
         Device[] DeviceList;
         IntPtr[] DeviceIDs;
 
+        protected HashSet<string> ExtensionHashSet = new HashSet<string>();
+
         public Platform( OpenCLAPI cl, IntPtr platformID )
         {
             CL = cl;
@@ -57,6 +59,8 @@ namespace OpenCLNet
             for( int i=0; i<DeviceIDs.Length; i++ )
                 _Devices[DeviceIDs[i]] = new Device( this, DeviceIDs[i] );
             DeviceList = InteropTools.ConvertDeviceIDsToDevices( this, DeviceIDs );
+
+            InitializeExtensionHashSet();
         }
 
         public Context CreateDefaultContext()
@@ -150,6 +154,27 @@ namespace OpenCLNet
 
             deviceIDs = QueryDeviceIntPtr( deviceType );
             return InteropTools.ConvertDeviceIDsToDevices( this, deviceIDs );
+        }
+
+        protected void InitializeExtensionHashSet()
+        {
+            string[] ext = Extensions.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string s in ext)
+                ExtensionHashSet.Add(s);
+        }
+
+        public bool HasExtension(string extension)
+        {
+            return ExtensionHashSet.Contains(extension);
+        }
+
+        public bool HasExtensions(string[] extensions)
+        {
+            foreach (string s in extensions)
+                if (!ExtensionHashSet.Contains(s))
+                    return false;
+            return true;
         }
 
         public static implicit operator IntPtr( Platform p )

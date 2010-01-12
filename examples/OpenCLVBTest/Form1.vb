@@ -4,14 +4,15 @@ Imports OpenCLNet
 
 
 Public Class Form1
-    Dim openCL
-    Dim platform
-    Dim context
-    Dim program
-    Dim kernel
-    Dim bitmap
-    Dim cq
+    Dim openCL As OpenCLNet.OpenCL
+    Dim platform As OpenCLNet.Platform
+    Dim context As OpenCLNet.Context
+    Dim program As OpenCLNet.Program
+    Dim kernel As OpenCLNet.Kernel
+    Dim bitmap As System.Drawing.Bitmap
+    Dim cq As OpenCLNet.CommandQueue
     Dim devices
+    Dim mandelbrotMemBuffer As OpenCLNet.Mem
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Try
@@ -25,8 +26,10 @@ Public Class Form1
         Catch ex As Exception
             Print(ex.ToString())
         End Try
+
         kernel = program.CreateKernel("Mandelbrot")
         bitmap = New Bitmap(1024, 1024, System.Drawing.Imaging.PixelFormat.Format32bppArgb)
+        mandelbrotMemBuffer = context.CreateBuffer(MemFlags.WRITE_ONLY, bitmap.Width * bitmap.Height * 4, Nothing)
     End Sub
 
     Private Sub DrawMandelbrot(ByVal g As Graphics)
@@ -36,8 +39,6 @@ Public Class Form1
 
     Private Sub CalcMandelbrot()
         Dim bd = bitmap.LockBits(New Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb)
-        Dim bitmapSize = bd.Stride * bd.Height * 4
-        Dim mandelbrotMemBuffer = context.CreateBuffer(MemFlags.WRITE_ONLY + MemFlags.USE_HOST_PTR, bitmapSize, bd.Scan0)
         Dim clEvent As OpenCLNet.Event
         Dim globalWorkSize(0 To 1) As IntPtr
         Dim eventWaitList(0 To 0) As OpenCLNet.Event
@@ -54,18 +55,19 @@ Public Class Form1
         kernel.SetSingleArg(1, _Top)
         kernel.SetSingleArg(2, _Right)
         kernel.SetSingleArg(3, _Bottom)
-        kernel.SetIntArg(4, bd.Stride)
+        kernel.SetIntArg(4, bitmap.Width)
         kernel.SetIntPtrArg(5, mandelbrotMemBuffer)
 
         clEvent = Nothing
         globalWorkSize(0) = New IntPtr(CType(bd.Width, Long))
         globalWorkSize(1) = New IntPtr(CType(bd.Height, Long))
         cq.EnqueueNDRangeKernel(kernel, 2, Nothing, globalWorkSize, Nothing, 0, Nothing, clEvent)
-        eventWaitList(0) = clEvent
-        context.WaitForEvents(1, eventWaitList)
-        clEvent.Dispose()
+        cq.Finish()
+        For i = 0 To bitmap.Width - 1
+            cq.EnqueueReadBuffer(mandelbrotMemBuffer, False, bitmap.Width * 4 * i, bitmap.Width * 4, bd.Scan0.ToInt32 + bd.Stride * i)
+        Next i
+        cq.Finish()
         bitmap.UnlockBits(bd)
-        mandelbrotMemBuffer.Dispose()
     End Sub
 
     Private Sub Form1_Paint(ByVal sender As System.Object, ByVal e As System.Windows.Forms.PaintEventArgs) Handles MyBase.Paint

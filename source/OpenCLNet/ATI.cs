@@ -453,7 +453,7 @@ namespace OpenCLNet
             IntPtr cb,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport( Configuration.Library )]
         public extern static ErrorCode clEnqueueWriteBuffer( cl_command_queue command_queue,
@@ -463,7 +463,7 @@ namespace OpenCLNet
             IntPtr cb,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueCopyBuffer( cl_command_queue command_queue,
@@ -473,7 +473,7 @@ namespace OpenCLNet
             IntPtr dst_offset,
             IntPtr cb,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueReadImage( cl_command_queue command_queue,
@@ -485,7 +485,7 @@ namespace OpenCLNet
             IntPtr slice_pitch,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=8)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWriteImage( cl_command_queue command_queue,
@@ -497,7 +497,7 @@ namespace OpenCLNet
             IntPtr input_slice_pitch,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=8)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueCopyImage( cl_command_queue command_queue,
@@ -507,7 +507,7 @@ namespace OpenCLNet
             IntPtr[] dst_origin,
             IntPtr[] region,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueCopyImageToBuffer( cl_command_queue command_queue,
@@ -517,7 +517,7 @@ namespace OpenCLNet
             IntPtr[] region,
             IntPtr dst_offset,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueCopyBufferToImage( cl_command_queue command_queue,
@@ -527,7 +527,7 @@ namespace OpenCLNet
             IntPtr[] dst_origin,
             IntPtr[] region,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static void* clEnqueueMapBuffer( cl_command_queue command_queue,
@@ -537,7 +537,7 @@ namespace OpenCLNet
             IntPtr offset,
             IntPtr cb,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event,
             out ErrorCode errcode_ret);
         [DllImport( Configuration.Library )]
@@ -550,7 +550,7 @@ namespace OpenCLNet
             out IntPtr image_row_pitch,
             out IntPtr image_slice_pitch,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=8)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event,
             out ErrorCode errcode_ret);
         [DllImport( Configuration.Library )]
@@ -558,23 +558,23 @@ namespace OpenCLNet
             cl_mem memobj,
             void* mapped_ptr,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=3)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueNDRangeKernel( cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint work_dim,
-            [In] [MarshalAs( UnmanagedType.LPArray, SizeParamIndex=2 )] IntPtr[] global_work_offset,
-            [In] [MarshalAs( UnmanagedType.LPArray, SizeParamIndex=2 )] IntPtr[] global_work_size,
-            [In] [MarshalAs( UnmanagedType.LPArray, SizeParamIndex=2 )] IntPtr[] local_work_size,
+            [In] [MarshalAs( UnmanagedType.LPArray )] IntPtr[] global_work_offset,
+            [In] [MarshalAs( UnmanagedType.LPArray )] IntPtr[] global_work_size,
+            [In] [MarshalAs( UnmanagedType.LPArray )] IntPtr[] local_work_size,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=6)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueTask( cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=2)] cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport( Configuration.Library )]
         public extern static ErrorCode clEnqueueNativeKernel(cl_command_queue command_queue,
@@ -583,7 +583,7 @@ namespace OpenCLNet
             IntPtr cb_args,
             cl_uint num_mem_objects,
             [In] cl_mem[] mem_list,
-            [Out] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)] IntPtr[] args_mem_loc,
+            [Out] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] IntPtr[] args_mem_loc,
             cl_uint num_events_in_wait_list,
             [In]cl_event[] event_wait_list,
             cl_event* _event);
@@ -592,7 +592,7 @@ namespace OpenCLNet
         [DllImport( Configuration.Library )]
         public extern static ErrorCode clEnqueueWaitForEvents( cl_command_queue command_queue,
             cl_uint num_events,
-            [In] [MarshalAs( UnmanagedType.LPArray, SizeParamIndex=1 )] cl_event[] _event_list );
+            [In] [MarshalAs( UnmanagedType.LPArray )] cl_event[] _event_list );
         [DllImport( Configuration.Library )]
         public extern static ErrorCode clEnqueueBarrier( cl_command_queue command_queue );
 
@@ -726,7 +726,7 @@ namespace OpenCLNet
 
         [DllImport( Configuration.Library )]
         public extern static ErrorCode clWaitForEvents( cl_uint num_events,
-            [In] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=0)] cl_event[] _event_list );
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] _event_list );
         [DllImport( Configuration.Library )]
         public extern static ErrorCode clGetEventInfo( cl_event _event,
             cl_event_info param_name,
@@ -891,9 +891,17 @@ namespace OpenCLNet
             return clGetExtensionFunctionAddress(func_name);
         }
 
+
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+
+        public override ErrorCode GetEventProfilingInfo(cl_event _event, ProfilingInfo param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret)
+        {
+            return (ErrorCode)clGetEventProfilingInfo(_event, (uint)param_name, param_value_size, param_value, out param_value_size_ret);
+        }
 #if false
-    //    // Profiling APIs
-    //    public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, size_t param_value_size, void* param_value, size_t* param_value_size_ret);
+        // Profiling APIs
+        public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         _clCreateFromD3D10Buffer@20
         _clCreateFromD3D9Buffer@24

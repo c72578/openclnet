@@ -58,6 +58,7 @@ namespace OpenCLTest
         CommandQueue openCLCQ;
         Program mandelBrotProgram;
         Kernel mandelbrotKernel;
+        Mem mandelbrotMemBuffer;
 
         public Mandelbrot( OpenCL openCL, int width, int height )
         {
@@ -66,7 +67,7 @@ namespace OpenCLTest
             openCLPlatform = OpenCL.GetPlatform(0);
             openCLDevices = openCLPlatform.QueryDevices(DeviceType.ALL);
             openCLContext = openCLPlatform.CreateDefaultContext();
-            openCLCQ = openCLContext.CreateCommandQueue(openCLDevices[0], (CommandQueueProperties)0);
+            openCLCQ = openCLContext.CreateCommandQueue(openCLDevices[0], CommandQueueProperties.PROFILING_ENABLE);
             mandelBrotProgram = openCLContext.CreateProgramWithSource(File.ReadAllText("Mandelbrot.cl"));
             try
             {
@@ -86,6 +87,8 @@ namespace OpenCLTest
             Bottom = -2.0f;
             BitmapWidth = width;
             BitmapHeight = height;
+
+            mandelbrotMemBuffer = openCLContext.CreateBuffer((MemFlags)((long)MemFlags.WRITE_ONLY), width*height*4, IntPtr.Zero);
         }
 
         public void AllocBuffers()
@@ -95,25 +98,52 @@ namespace OpenCLTest
 
         public void Calculate()
         {
-            BitmapData bd = Bitmap.LockBits( new Rectangle( 0, 0, Bitmap.Width, Bitmap.Height ), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb );
-            int bitmapSize = bd.Stride*bd.Height*4;
-            Mem mandelbrotMemBuffer = openCLContext.CreateBuffer( (MemFlags)((long)MemFlags.WRITE_ONLY+(long)MemFlags.USE_HOST_PTR), bitmapSize, bd.Scan0 );
+            BitmapData bd = Bitmap.LockBits(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            int bitmapSize = bd.Width * bd.Height;
 
             mandelbrotKernel.SetArg( 0, Left );
             mandelbrotKernel.SetArg( 1, Top );
             mandelbrotKernel.SetArg( 2, Right );
             mandelbrotKernel.SetArg( 3, Bottom );
-            mandelbrotKernel.SetArg( 4, bd.Stride );
+            mandelbrotKernel.SetArg( 4, BitmapWidth );
             mandelbrotKernel.SetArg( 5, mandelbrotMemBuffer );
 
-            Event clEvent;
-            IntPtr[] globalWorkSize = new IntPtr[2] { new IntPtr( BitmapWidth ), new IntPtr( BitmapHeight ) };
-            IntPtr[] localWorkSize = new IntPtr[2] { new IntPtr( 32 ), new IntPtr( 32 ) };
-            openCLCQ.EnqueueNDRangeKernel(mandelbrotKernel, 2u, null, globalWorkSize, null, 0, null, out clEvent);
-            openCLContext.WaitForEvent(clEvent);
-            clEvent.Dispose();
+            Event calculationStart;
+            Event calculationEnd;
+
+            openCLCQ.EnqueueMarker(out calculationStart);
+
+            IntPtr[] globalWorkSize = new IntPtr[2];
+
+            globalWorkSize[0] = (IntPtr)BitmapWidth;
+            globalWorkSize[1] = (IntPtr)BitmapHeight;
+            openCLCQ.EnqueueNDRangeKernel(mandelbrotKernel, 2, null, globalWorkSize, null);
+
+            for (int y = 0; y < BitmapHeight; y++)
+                openCLCQ.EnqueueReadBuffer(mandelbrotMemBuffer, true, (IntPtr)(BitmapWidth*4*y), (IntPtr)(BitmapWidth*4), (IntPtr)(bd.Scan0.ToInt64()+y*bd.Stride));
+            openCLCQ.Finish();
+            openCLCQ.EnqueueMarker(out calculationEnd);
+            openCLCQ.Finish();
+
+            ulong start = 0;
+            ulong end = 0;
+            try
+            {
+                calculationStart.GetEventProfilingInfo(ProfilingInfo.QUEUED, out start);
+                calculationEnd.GetEventProfilingInfo(ProfilingInfo.END, out end);
+            }
+            catch (OpenCLException ocle)
+            {
+            }
+            finally
+            {
+                CalculationTimeMS = (end - start) / 1000000;
+                calculationStart.Dispose();
+                calculationEnd.Dispose();
+            }
             Bitmap.UnlockBits(bd);
-            mandelbrotMemBuffer.Dispose();
         }
+
+        public ulong CalculationTimeMS;
     }
 }

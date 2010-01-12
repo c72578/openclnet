@@ -1189,12 +1189,30 @@ namespace OpenCLNet
 
         public void EnqueueBarrier()
         {
-            CL.EnqueueBarrier( CommandQueueID );
+            CL.EnqueueBarrier(CommandQueueID);
         }
 
         #endregion
 
-        public void SetProperty( CommandQueueProperties properties, bool enable, out CommandQueueProperties oldProperties )
+        #region Flush
+
+        public void Flush()
+        {
+            CL.Flush(CommandQueueID);
+        }
+
+        #endregion
+
+        #region Finish
+
+        public void Finish()
+        {
+            CL.Finish(CommandQueueID);
+        }
+
+        #endregion
+
+        public void SetProperty(CommandQueueProperties properties, bool enable, out CommandQueueProperties oldProperties)
         {
             ErrorCode result;
             ulong returnedProperties = 0;

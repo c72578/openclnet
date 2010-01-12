@@ -165,59 +165,126 @@ namespace OpenCLNet
     {
         int* pAlignedArray;
 
-        public AlignedArrayInt( long size, long byteAlignment )
-            : base( size, byteAlignment )
+        public AlignedArrayInt(long size, long byteAlignment)
+            : base(size, byteAlignment)
         {
             pAlignedArray = (int*)AlignedMemory.ToPointer();
         }
 
-        public IntPtr GetPtr( long index )
+        public IntPtr GetPtr(long index)
         {
-            if( index>=Length || index<0 )
+            if (index >= Length || index < 0)
                 throw new IndexOutOfRangeException();
 
-            return new IntPtr( pAlignedArray+index );
+            return new IntPtr(pAlignedArray + index);
         }
 
-        public void Extract( long index, int[] destinationArray, long destinationIndex, long length )
+        public void Extract(long index, int[] destinationArray, long destinationIndex, long length)
         {
-            if( index+length>Length || index+length<0 )
+            if (index + length > Length || index + length < 0)
                 throw new IndexOutOfRangeException();
 
-            for( long i=0; i<length; i++ )
-                destinationArray[destinationIndex+i] = pAlignedArray[index+i];
+            for (long i = 0; i < length; i++)
+                destinationArray[destinationIndex + i] = pAlignedArray[index + i];
         }
 
-        public void Insert( long index, int[] sourceArray, long sourceIndex, long length )
+        public void Insert(long index, int[] sourceArray, long sourceIndex, long length)
         {
-            if( index+length>Length || index+length<0 )
+            if (index + length > Length || index + length < 0)
                 throw new IndexOutOfRangeException();
 
-            for( long i=0; i<length; i++ )
-                pAlignedArray[index+i] = sourceArray[sourceIndex+i];
+            for (long i = 0; i < length; i++)
+                pAlignedArray[index + i] = sourceArray[sourceIndex + i];
         }
 
         public int this[long index]
         {
             get
             {
-                if( index<0 || index>Length )
+                if (index < 0 || index > Length)
                     throw new IndexOutOfRangeException();
 
                 return pAlignedArray[index];
             }
             set
             {
-                if( index<0 || index>Length )
+                if (index < 0 || index > Length)
                     throw new IndexOutOfRangeException();
 
                 pAlignedArray[index] = value;
             }
         }
 
-        public static implicit operator IntPtr( AlignedArrayInt array )
+        public static implicit operator IntPtr(AlignedArrayInt array)
         {
-            return new IntPtr( array.pAlignedArray );
+            return new IntPtr(array.pAlignedArray);
+        }
+    }
+
+    #endregion
+
+    #region AlignedArrayLong
+
+    /// <summary>
+    /// Aligned 1D array class for longs
+    /// </summary>
+    unsafe public class AlignedArrayLong : AlignedArray<long>
+    {
+        long* pAlignedArray;
+
+        public AlignedArrayLong(long size, long byteAlignment)
+            : base(size, byteAlignment)
+        {
+            pAlignedArray = (long*)AlignedMemory.ToPointer();
+        }
+
+        public IntPtr GetPtr(long index)
+        {
+            if (index >= Length || index < 0)
+                throw new IndexOutOfRangeException();
+
+            return new IntPtr(pAlignedArray + index);
+        }
+
+        public void Extract(long index, long[] destinationArray, long destinationIndex, long length)
+        {
+            if (index + length > Length || index + length < 0)
+                throw new IndexOutOfRangeException();
+
+            for (long i = 0; i < length; i++)
+                destinationArray[destinationIndex + i] = pAlignedArray[index + i];
+        }
+
+        public void Insert(long index, long[] sourceArray, long sourceIndex, long length)
+        {
+            if (index + length > Length || index + length < 0)
+                throw new IndexOutOfRangeException();
+
+            for (long i = 0; i < length; i++)
+                pAlignedArray[index + i] = sourceArray[sourceIndex + i];
+        }
+
+        public long this[long index]
+        {
+            get
+            {
+                if (index < 0 || index > Length)
+                    throw new IndexOutOfRangeException();
+
+                return pAlignedArray[index];
+            }
+            set
+            {
+                if (index < 0 || index > Length)
+                    throw new IndexOutOfRangeException();
+
+                pAlignedArray[index] = value;
+            }
+        }
+
+        public static implicit operator IntPtr(AlignedArrayLong array)
+        {
+            return new IntPtr(array.pAlignedArray);
         }
     }
 
@@ -232,61 +299,62 @@ namespace OpenCLNet
     {
         float* pAlignedArray;
 
-        public AlignedArrayFloat( long size, long byteAlignment )
-            : base( size, byteAlignment )
+        public AlignedArrayFloat(long size, long byteAlignment)
+            : base(size, byteAlignment)
         {
             pAlignedArray = (float*)AlignedMemory.ToPointer();
         }
 
-        public IntPtr GetPtr( long index )
+        public IntPtr GetPtr(long index)
         {
-            if( index>=Length || index<0 )
+            if (index >= Length || index < 0)
                 throw new IndexOutOfRangeException();
 
-            return new IntPtr( pAlignedArray+index );
+            return new IntPtr(pAlignedArray + index);
         }
 
-        public void Extract( long index, float[] destinationArray, long destinationIndex, long length )
+        public void Extract(long index, float[] destinationArray, long destinationIndex, long length)
         {
-            if( index+length>Length || index+length<0 )
+            if (index + length > Length || index + length < 0)
                 throw new IndexOutOfRangeException();
 
-            for( long i=0; i<length; i++ )
-                destinationArray[destinationIndex+i] = pAlignedArray[index+i];
+            for (long i = 0; i < length; i++)
+                destinationArray[destinationIndex + i] = pAlignedArray[index + i];
         }
 
-        public void Insert( long index, float[] sourceArray, long sourceIndex, long length )
+        public void Insert(long index, float[] sourceArray, long sourceIndex, long length)
         {
-            if( index+length>Length || index+length<0 )
+            if (index + length > Length || index + length < 0)
                 throw new IndexOutOfRangeException();
 
-            for( long i=0; i<length; i++ )
-                pAlignedArray[index+i] = sourceArray[sourceIndex+i];
+            for (long i = 0; i < length; i++)
+                pAlignedArray[index + i] = sourceArray[sourceIndex + i];
         }
 
         public float this[long index]
         {
             get
             {
-                if( index<0 || index>Length )
+                if (index < 0 || index > Length)
                     throw new IndexOutOfRangeException();
 
                 return pAlignedArray[index];
             }
             set
             {
-                if( index<0 || index>Length )
+                if (index < 0 || index > Length)
                     throw new IndexOutOfRangeException();
 
                 pAlignedArray[index] = value;
             }
         }
 
-        public static implicit operator IntPtr( AlignedArrayFloat array )
+        public static implicit operator IntPtr(AlignedArrayFloat array)
         {
-            return new IntPtr( array.pAlignedArray );
+            return new IntPtr(array.pAlignedArray);
         }
     }
 
     #endregion
+
 }

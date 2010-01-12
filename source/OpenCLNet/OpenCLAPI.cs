@@ -400,7 +400,7 @@ namespace OpenCLNet
         // Extension function access
         public abstract IntPtr GetExtensionFunctionAddress(string func_name);
 
-        //    // Profiling APIs
-        //    public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, size_t param_value_size, void* param_value, size_t* param_value_size_ret);
+        // Profiling APIs
+        public abstract ErrorCode GetEventProfilingInfo(cl_event _event, ProfilingInfo param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
     }
 }

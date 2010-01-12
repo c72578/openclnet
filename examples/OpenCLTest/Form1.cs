@@ -64,7 +64,6 @@ namespace OpenCLTest
             {
                 OpenCL = new OpenCL();
                 Mandelbrot = new Mandelbrot(OpenCL, Width, Height);
-//                Mandelbrot = new Mandelbrot(OpenCL, Align(Width, 64), Align(Height, 64));
                 Mandelbrot.AllocBuffers();
                 UpdateMandelbrot();
             }
@@ -98,8 +97,12 @@ namespace OpenCLTest
         private void UpdateMandelbrot()
         {
             Mandelbrot.Calculate();
-            Graphics gfx = this.CreateGraphics();
-            gfx.DrawImageUnscaled( Mandelbrot.Bitmap, 0, 0 );
+
+            using (Graphics gfx = this.CreateGraphics())
+            {
+                gfx.DrawImageUnscaled(Mandelbrot.Bitmap, 0, 0);
+                gfx.DrawString("ms per frame="+Mandelbrot.CalculationTimeMS, Font, Brushes.Yellow, new PointF(50.0f, 50.0f));
+            }
         }
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)

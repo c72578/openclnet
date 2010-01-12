@@ -136,6 +136,18 @@ namespace OpenCLNet
 
         #endregion
 
+        public unsafe void GetEventProfilingInfo(ProfilingInfo paramName, out ulong paramValue)
+        {
+            IntPtr paramValueSizeRet;
+            ulong v;
+            ErrorCode errorCode;
+
+            errorCode = CL.GetEventProfilingInfo(EventID, paramName, (IntPtr)sizeof(ulong), &v, out paramValueSizeRet);
+            if (errorCode != ErrorCode.SUCCESS)
+                throw new OpenCLException("GetEventProfilingInfo failed with error code "+errorCode, errorCode );
+            paramValue = v;
+        }
+
         public static implicit operator IntPtr( Event _event )
         {
             return _event.EventID;
