@@ -272,6 +272,27 @@ namespace OpenCLNet
             return new Program( this, programID );
         }
 
+        public Program CreateProgramWithBinary( Device[] devices, byte[][] binaries, int[] binaryStatus )
+        {
+            IntPtr programID; 
+            ErrorCode result;
+            IntPtr[] lengths;
+
+            lengths = new IntPtr[devices.Length];
+            for (int i = 0; i < lengths.Length; i++)
+                lengths[i] = (IntPtr)binaries[i].Length;
+            programID = CL.CreateProgramWithBinary(ContextID,
+                (uint)devices.Length,
+                InteropTools.ConvertDevicesToDeviceIDs(devices),
+                lengths,
+                binaries,
+                binaryStatus,
+                out result );
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateProgramWithBinary failed with error code " + result, result);
+            return new Program(this, programID);
+        }
+
         public Sampler CreateSampler( bool normalizedCoords, AddressingMode addressingMode, FilterMode filterMode, out ErrorCode result )
         {
             IntPtr samplerID;
