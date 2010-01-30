@@ -50,7 +50,6 @@ namespace OpenCLTest
         public int BitmapHeight { get; set; }
 
         public Bitmap Bitmap { get; protected set; }
-        OpenCL OpenCL;
 
         Platform openCLPlatform;
         Device[] openCLDevices;
@@ -60,11 +59,9 @@ namespace OpenCLTest
         Kernel mandelbrotKernel;
         Mem mandelbrotMemBuffer;
 
-        public Mandelbrot( OpenCL openCL, int width, int height )
+        public Mandelbrot( Platform platform, int width, int height )
         {
-            OpenCL = openCL;
-
-            openCLPlatform = OpenCL.GetPlatform(0);
+            openCLPlatform = platform;
             openCLDevices = openCLPlatform.QueryDevices(DeviceType.ALL);
             openCLContext = openCLPlatform.CreateDefaultContext();
             openCLCQ = openCLContext.CreateCommandQueue(openCLDevices[0], CommandQueueProperties.PROFILING_ENABLE);

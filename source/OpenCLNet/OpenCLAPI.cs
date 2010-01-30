@@ -98,156 +98,192 @@ namespace OpenCLNet
     using GLenum=Int32;
     #endregion
 
-    public delegate void ContextNotify( string errInfo, byte[] data, IntPtr cb, IntPtr userData );
-    public delegate void ProgramNotify( cl_program program, IntPtr userData );
-    public delegate void NativeKernel( IntPtr args );
-
-    public class OpenCLException : Exception
+    /// <summary>
+    /// OpenCLAPI - native bindings
+    /// </summary>
+    unsafe public static class OpenCLAPI
     {
-        public ErrorCode ErrorCode=ErrorCode.SUCCESS;
-
-        public OpenCLException()
+        internal static class Configuration
         {
+            public const string Library = "opencl.dll";
         }
 
-        public OpenCLException( ErrorCode errorCode )
-        {
-            ErrorCode = errorCode;
-        }
-
-        public OpenCLException( string errorMessage )
-            : base( errorMessage )
-        {
-        }
-
-        public OpenCLException( string errorMessage, ErrorCode errorCode )
-            : base( errorMessage )
-        {
-            ErrorCode = errorCode;
-        }
-
-        public OpenCLException( string message, Exception innerException )
-            : base( message, innerException )
-        {
-        }
-
-        public OpenCLException( string message, ErrorCode errorCode, Exception innerException )
-            : base( message, innerException )
-        {
-            ErrorCode = errorCode;
-        }
-    }
-
-    public unsafe abstract class OpenCLAPI
-    {
         #region Platform API
+
         // Platform API
-        public abstract ErrorCode GetPlatformIDs( cl_uint num_entries, cl_platform_id[] platforms, out cl_uint numPlatforms );
-        public abstract ErrorCode GetPlatformInfo( cl_platform_id platform, cl_platform_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetPlatformIDs(cl_uint num_entries, [Out] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] cl_platform_id[] platforms, out cl_uint num_platforms);
+
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetPlatformInfo(cl_platform_id platform, cl_platform_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+
         #endregion
 
         #region Device API
 
         // Device APIs
-        public abstract ErrorCode GetDeviceIDs( cl_platform_id platform, DeviceType device_type, cl_uint num_entries, cl_device_id[] devices, out cl_uint num_devices );
-        public abstract ErrorCode GetDeviceInfo( cl_device_id device, cl_device_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetDeviceIDs(cl_platform_id platform, [MarshalAs(UnmanagedType.U8)]DeviceType device_type, cl_uint num_entries, [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 2)]cl_device_id[] devices, out cl_uint num_devices);
+
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetDeviceInfo(cl_device_id device, cl_device_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         #endregion
 
         #region Context API
 
-        // Context APIs
-        public abstract cl_context CreateContext( cl_context_properties[] properties, cl_uint num_devices, cl_device_id[] devices, ContextNotify pfn_notify, IntPtr user_data, out ErrorCode errcode_ret );
-        public abstract cl_context CreateContextFromType( cl_context_properties[] properties, DeviceType device_type, ContextNotify pfn_notify, IntPtr user_data, out ErrorCode errcode_ret );
-        public abstract ErrorCode RetainContext( cl_context context );
-        public abstract ErrorCode ReleaseContext( cl_context context );
-        public abstract ErrorCode GetContextInfo( cl_context context, cl_context_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
+        // Context APIs 
+        [DllImport(Configuration.Library)]
+        public extern static cl_context clCreateContext([In] cl_context_properties[] properties, cl_uint num_devices, [In]cl_device_id[] devices, ContextNotify pfn_notify, IntPtr user_data, [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_context clCreateContextFromType([In] cl_context_properties[] properties, [MarshalAs(UnmanagedType.U8)]DeviceType device_type, ContextNotify pfn_notify, IntPtr user_data, [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clRetainContext(cl_context context);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clReleaseContext(cl_context context);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetContextInfo(cl_context context, cl_context_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         #endregion
 
         #region Program Object API
 
         // Program Object APIs
-        public abstract cl_program CreateProgramWithSource( cl_context context, cl_uint count, string[] strings, IntPtr[] lengths, out ErrorCode errcode_ret );
-        public abstract cl_program CreateProgramWithBinary( cl_context context, cl_uint num_devices, cl_device_id[] device_list, IntPtr[] lengths, byte[][] binaries, cl_int[] binary_status, out ErrorCode errcode_ret );
-        public abstract ErrorCode RetainProgram( cl_program program );
-        public abstract ErrorCode ReleaseProgram( cl_program program );
-        public abstract ErrorCode BuildProgram( cl_program program, cl_uint num_devices, cl_device_id[] device_list, string options, ProgramNotify pfn_notify, IntPtr user_data );
-        public abstract ErrorCode UnloadCompiler();
-        public abstract ErrorCode GetProgramInfo( cl_program program, cl_program_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
-        public abstract ErrorCode GetProgramBuildInfo( cl_program program, cl_device_id device, cl_program_build_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
+        [DllImport(Configuration.Library)]
+        public extern static cl_program clCreateProgramWithSource(cl_context context,
+            cl_uint count,
+            [In] string[] strings,
+            [In] IntPtr[] lengths,
+            [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_program clCreateProgramWithBinary(cl_context context,
+            cl_uint num_devices,
+            [In] cl_device_id[] device_list,
+            [In] IntPtr[] lengths,
+            [In] byte[][] binaries,
+            [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] cl_int[] binary_status,
+            [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clRetainProgram(cl_program program);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clReleaseProgram(cl_program program);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clBuildProgram(cl_program program,
+            cl_uint num_devices,
+            [In] cl_device_id[] device_list,
+            string options,
+            ProgramNotify pfn_notify,
+            IntPtr user_data);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clUnloadCompiler();
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetProgramInfo(cl_program program, cl_program_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetProgramBuildInfo(cl_program program, cl_device_id device, cl_program_build_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         #endregion
 
         #region Command Queue API
 
         // Command Queue APIs
-        public abstract cl_command_queue CreateCommandQueue( cl_context context, cl_device_id device, cl_command_queue_properties properties, out ErrorCode errcode_ret );
-        public abstract ErrorCode RetainCommandQueue( cl_context command_queue );
-        public abstract ErrorCode ReleaseCommandQueue( cl_context command_queue );
-        public abstract ErrorCode GetCommandQueueInfo( cl_context command_queue, cl_command_queue_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
-        public abstract ErrorCode SetCommandQueueProperty( cl_context command_queue, cl_command_queue_properties properties, bool enable, out cl_command_queue_properties old_properties );
+        [DllImport(Configuration.Library)]
+        public extern static IntPtr clCreateCommandQueue(cl_context context, cl_device_id device, cl_command_queue_properties properties, [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clRetainCommandQueue(cl_command_queue command_queue);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clReleaseCommandQueue(cl_command_queue command_queue);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetCommandQueueInfo(cl_command_queue command_queue, cl_command_queue_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clSetCommandQueueProperty(cl_command_queue command_queue, cl_command_queue_properties properties, [MarshalAs(UnmanagedType.I4)]bool enable, out cl_command_queue_properties old_properties);
 
         #endregion
 
         #region Memory Object API
 
         // Memory Object APIs
-        public abstract cl_mem CreateBuffer( cl_context context, cl_mem_flags flags, IntPtr size, void* host_ptr, out ErrorCode errcode_ret );
-        public abstract cl_mem CreateImage2D( cl_context context, cl_mem_flags flags, cl_image_format image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret );
-        public abstract cl_mem CreateImage3D( cl_context context, cl_mem_flags flags, cl_image_format image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret );
-        public abstract ErrorCode RetainMemObject( cl_mem memobj );
-        public abstract ErrorCode ReleaseMemObject( cl_mem memobj );
-        public abstract ErrorCode GetSupportedImageFormats( cl_context context, cl_mem_flags flags, cl_mem_object_type image_type, cl_uint num_entries, cl_image_format[] image_formats, out cl_uint num_image_formats );
-        public abstract ErrorCode GetMemObjectInfo( cl_mem memobj, cl_mem_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
-        public abstract ErrorCode GetImageInfo( cl_mem image, cl_image_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
+        [DllImport(Configuration.Library)]
+        public extern static cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, IntPtr size, void* host_ptr, out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_mem clCreateImage2D(cl_context context, cl_mem_flags flags, cl_image_format* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_mem clCreateImage3D(cl_context context, cl_mem_flags flags, cl_image_format* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clRetainMemObject(cl_mem memobj);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clReleaseMemObject(cl_mem memobj);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetSupportedImageFormats(cl_context context,
+            cl_mem_flags flags,
+            cl_mem_object_type image_type,
+            cl_uint num_entries,
+            [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] cl_image_format[] image_formats,
+            out cl_uint num_image_formats);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetMemObjectInfo(cl_mem memobj, cl_mem_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetImageInfo(cl_mem image, cl_image_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         #endregion
 
         #region Kernel Object API
 
         // Kernel Object APIs
-        public abstract cl_kernel CreateKernel( cl_program program, string kernel_name, out ErrorCode errcode_ret );
-        public abstract ErrorCode CreateKernelsInProgram( cl_program program, cl_uint num_kernels, cl_kernel[] kernels, out cl_uint num_kernels_ret );
-        public abstract ErrorCode RetainKernel( cl_kernel kernel );
-        public abstract ErrorCode ReleaseKernel( cl_kernel kernel );
-        public abstract ErrorCode SetKernelArg( cl_kernel kernel, cl_uint arg_index, IntPtr arg_size, void* arg_value );
-        public abstract ErrorCode GetKernelInfo( cl_kernel kernel, cl_kernel_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
-        public abstract ErrorCode GetKernelWorkGroupInfo( cl_kernel kernel, cl_device_id device, cl_kernel_work_group_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
+        [DllImport(Configuration.Library)]
+        public extern static cl_kernel clCreateKernel(cl_program program, string kernel_name, out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clCreateKernelsInProgram(cl_program program,
+            cl_uint num_kernels,
+            [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)]cl_kernel[] kernels,
+            out cl_uint num_kernels_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clRetainKernel(cl_kernel kernel);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clReleaseKernel(cl_kernel kernel);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clSetKernelArg(cl_kernel kernel, cl_uint arg_index, IntPtr arg_size, void* arg_value);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetKernelInfo(cl_kernel kernel, cl_kernel_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetKernelWorkGroupInfo(cl_kernel kernel, cl_device_id device, cl_kernel_work_group_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         #endregion
 
         #region Enqueued Commands API
 
         // Enqueued Commands APIs
-        public abstract ErrorCode EnqueueReadBuffer( cl_command_queue command_queue,
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueReadBuffer(cl_command_queue command_queue,
             cl_mem buffer,
             cl_bool blocking_read,
             IntPtr offset,
             IntPtr cb,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
-            cl_event* _event );
-        public abstract ErrorCode EnqueueWriteBuffer( cl_command_queue command_queue,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueWriteBuffer(cl_command_queue command_queue,
             cl_mem buffer,
             cl_bool blocking_write,
             IntPtr offset,
             IntPtr cb,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
-        public abstract ErrorCode EnqueueCopyBuffer( cl_command_queue command_queue,
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueCopyBuffer(cl_command_queue command_queue,
             cl_mem src_buffer,
             cl_mem dst_buffer,
             IntPtr src_offset,
             IntPtr dst_offset,
             IntPtr cb,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
-        public abstract ErrorCode EnqueueReadImage( cl_command_queue command_queue,
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueReadImage(cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_read,
             IntPtr[] origin,
@@ -256,9 +292,10 @@ namespace OpenCLNet
             IntPtr slice_pitch,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
-        public abstract ErrorCode EnqueueWriteImage( cl_command_queue command_queue,
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueWriteImage(cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_write,
             IntPtr[] origin,
@@ -267,46 +304,51 @@ namespace OpenCLNet
             IntPtr input_slice_pitch,
             void* ptr,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
-        public abstract ErrorCode EnqueueCopyImage( cl_command_queue command_queue,
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueCopyImage(cl_command_queue command_queue,
             cl_mem src_image,
             cl_mem dst_image,
             IntPtr[] src_origin,
             IntPtr[] dst_origin,
             IntPtr[] region,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
-            cl_event* _event );
-        public abstract ErrorCode EnqueueCopyImageToBuffer( cl_command_queue command_queue,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueCopyImageToBuffer(cl_command_queue command_queue,
             cl_mem src_image,
             cl_mem dst_buffer,
             IntPtr[] src_origin,
             IntPtr[] region,
             IntPtr dst_offset,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
-            cl_event* _event );
-        public abstract ErrorCode EnqueueCopyBufferToImage( cl_command_queue command_queue,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueCopyBufferToImage(cl_command_queue command_queue,
             cl_mem src_buffer,
             cl_mem dst_image,
             IntPtr src_offset,
             IntPtr[] dst_origin,
             IntPtr[] region,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
-        public abstract void* EnqueueMapBuffer( cl_command_queue command_queue,
+        [DllImport(Configuration.Library)]
+        public extern static void* clEnqueueMapBuffer(cl_command_queue command_queue,
             cl_mem buffer,
             cl_bool blocking_map,
             cl_map_flags map_flags,
             IntPtr offset,
             IntPtr cb,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event,
-            out ErrorCode errcode_ret );
-        public abstract void* EnqueueMapImage( cl_command_queue command_queue,
+            out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static void* clEnqueueMapImage(cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_map,
             cl_map_flags map_flags,
@@ -315,92 +357,162 @@ namespace OpenCLNet
             out IntPtr image_row_pitch,
             out IntPtr image_slice_pitch,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event,
-            out ErrorCode errcode_ret );
-        public abstract ErrorCode EnqueueUnmapMemObject( cl_command_queue command_queue,
+            out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueUnmapMemObject(cl_command_queue command_queue,
             cl_mem memobj,
             void* mapped_ptr,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
-        public abstract ErrorCode EnqueueNDRangeKernel( cl_command_queue command_queue,
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueNDRangeKernel(cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint work_dim,
-            IntPtr[] global_work_offset,
-            IntPtr[] global_work_size,
-            IntPtr[] local_work_size,
+            [In] [MarshalAs(UnmanagedType.LPArray)] IntPtr[] global_work_offset,
+            [In] [MarshalAs(UnmanagedType.LPArray)] IntPtr[] global_work_size,
+            [In] [MarshalAs(UnmanagedType.LPArray)] IntPtr[] local_work_size,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
-        public abstract ErrorCode EnqueueTask( cl_command_queue command_queue,
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueTask(cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
-        public abstract ErrorCode EnqueueNativeKernel(cl_command_queue command_queue,
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueNativeKernel(cl_command_queue command_queue,
             NativeKernel user_func,
             void* args,
             IntPtr cb_args,
             cl_uint num_mem_objects,
-            cl_mem[] mem_list,
-            IntPtr[] args_mem_loc,
+            [In] cl_mem[] mem_list,
+            [Out] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] IntPtr[] args_mem_loc,
             cl_uint num_events_in_wait_list,
-            cl_event[] event_wait_list,
+            [In]cl_event[] event_wait_list,
             cl_event* _event);
-        public abstract ErrorCode EnqueueMarker(cl_command_queue command_queue, cl_event* _event);
-        public abstract ErrorCode EnqueueWaitForEvents( cl_command_queue command_queue, cl_uint num_events, cl_event[] _event_list );
-        public abstract ErrorCode EnqueueBarrier( cl_command_queue command_queue );
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueMarker(cl_command_queue command_queue, cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueWaitForEvents(cl_command_queue command_queue,
+            cl_uint num_events,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] _event_list);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueBarrier(cl_command_queue command_queue);
 
         #endregion
 
         #region Flush and Finish API
 
-        // Flush and Finish APIs
-        public abstract ErrorCode Flush( cl_command_queue command_queue );
-        public abstract ErrorCode Finish( cl_command_queue command_queue );
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clFlush(cl_command_queue command_queue);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clFinish(cl_command_queue command_queue);
 
         #endregion
 
         #region Event Object API
 
-        // Event Object APIs
-        public abstract ErrorCode WaitForEvents( cl_uint num_events, cl_event[] _event_list );
-        public abstract ErrorCode GetEventInfo( cl_event _event, cl_event_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
-        public abstract ErrorCode RetainEvent( cl_event _event );
-        public abstract ErrorCode ReleaseEvent( cl_event _event );
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clWaitForEvents(cl_uint num_events,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] _event_list);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetEventInfo(cl_event _event,
+            cl_event_info param_name,
+            IntPtr param_value_size,
+            void* param_value,
+            out IntPtr param_value_size_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clRetainEvent(cl_event _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clReleaseEvent(cl_event _event);
 
         #endregion
 
         #region Sampler API
-        
-        // Sampler APIs
-        public abstract cl_sampler CreateSampler( cl_context context, bool normalized_coords, cl_addressing_mode addressing_mode, cl_filter_mode filter_mode, out ErrorCode errcode_ret );
-        public abstract ErrorCode RetainSampler( cl_sampler sampler );
-        public abstract ErrorCode ReleaseSampler( cl_sampler sampler );
-        public abstract ErrorCode GetSamplerInfo( cl_sampler sampler, cl_sampler_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret );
 
-        #endregion            
+        // Sampler APIs
+        [DllImport(Configuration.Library)]
+        public extern static cl_sampler clCreateSampler(cl_context context, cl_bool normalized_coords, cl_addressing_mode addressing_mode, cl_filter_mode filter_mode, out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clRetainSampler(cl_sampler sampler);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clReleaseSampler(cl_sampler sampler);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetSamplerInfo(cl_sampler sampler, cl_sampler_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+
+        #endregion
 
         #region GLObject API
 
-        // There's no actual GLObject class. These functions are located in Context, Mem and CommandQueue
-        public abstract cl_mem CreateFromGLBuffer(cl_context context, cl_mem_flags flags, GLuint bufobj, out ErrorCode errcode_ret);
-        public abstract cl_mem CreateFromGLTexture2D(cl_context context, cl_mem_flags flags, GLenum target, GLint mipLevel, GLuint texture, out ErrorCode errcode_ret);
-        public abstract cl_mem CreateFromGLTexture3D(cl_context context, cl_mem_flags flags, GLenum target, GLint mipLevel, GLuint texture, out ErrorCode errcode_ret);
-        public abstract cl_mem CreateFromGLRenderbuffer(cl_context context, cl_mem_flags flags, GLuint renderBuffer, out ErrorCode errcode_ret);
-        public abstract ErrorCode GetGLObjectInfo(cl_mem memobj, out cl_gl_object_type gl_object_type, out GLuint gl_object_name);
-        public abstract ErrorCode GetGLTextureInfo(cl_mem memobj, cl_gl_texture_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
-        public abstract ErrorCode EnqueueAcquireGLObjects(cl_command_queue command_queue, cl_uint num_objects, cl_mem[] mem_objects, cl_uint num_events_in_wait_list, cl_event[] event_wait_list, cl_event* _event);
-        public abstract ErrorCode EnqueueReleaseGLObjects(cl_command_queue command_queue, cl_uint num_objects, cl_mem[] mem_objects, cl_uint num_events_in_wait_list, cl_event[] event_wait_list, cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static cl_mem clCreateFromGLBuffer(cl_context context,
+            cl_mem_flags flags,
+            GLuint bufobj,
+            out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_mem clCreateFromGLTexture2D(cl_context context,
+            cl_mem_flags flags,
+            GLenum target,
+            GLint mipLevel,
+            GLuint texture,
+            out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_mem clCreateFromGLTexture3D(cl_context context,
+            cl_mem_flags flags,
+            GLenum target,
+            GLint mipLevel,
+            GLuint texture,
+            out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_mem clCreateFromGLRenderbuffer(cl_context context,
+            cl_mem_flags flags,
+            GLuint renderBuffer,
+            out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetGLObjectInfo(cl_mem memobj,
+            out cl_gl_object_type gl_object_type,
+            out GLuint gl_object_name);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetGLTextureInfo(cl_mem memobj,
+            cl_gl_texture_info param_name,
+            IntPtr param_value_size,
+            void* param_value,
+            out IntPtr param_value_size_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueAcquireGLObjects(cl_command_queue command_queue,
+            cl_uint num_objects,
+            [In] cl_mem[] mem_objects,
+            cl_uint num_events_in_wait_list,
+            [In] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueReleaseGLObjects(cl_command_queue command_queue,
+            cl_uint num_objects,
+            [In] cl_mem[] mem_objects,
+            cl_uint num_events_in_wait_list,
+            [In] cl_event[] event_wait_list,
+            cl_event* _event);
 
         #endregion
 
 
         // Extension function access
-        public abstract IntPtr GetExtensionFunctionAddress(string func_name);
+        [DllImport(Configuration.Library)]
+        public extern static IntPtr clGetExtensionFunctionAddress(string func_name);
 
-        // Profiling APIs
-        public abstract ErrorCode GetEventProfilingInfo(cl_event _event, ProfilingInfo param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+
+#if false
+        _clCreateFromD3D10Buffer@20
+        _clCreateFromD3D9Buffer@24
+        _clCreateImageFromD3D10Resource@20
+        _clCreateImageFromD3D9Resource@24
+#endif
     }
+
 }

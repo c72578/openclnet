@@ -35,7 +35,6 @@ namespace OpenCLNet
 
     unsafe public class Platform : InteropTools.IPropertyContainer
     {
-        public OpenCLAPI CL { get; protected set; }
         public IntPtr PlatformID { get; protected set; }
         public string Profile { get { return InteropTools.ReadString( this, (uint)PlatformInfo.PROFILE ); } }
         public string Version { get { return InteropTools.ReadString( this, (uint)PlatformInfo.VERSION ); } }
@@ -49,9 +48,8 @@ namespace OpenCLNet
 
         protected HashSet<string> ExtensionHashSet = new HashSet<string>();
 
-        public Platform( OpenCLAPI cl, IntPtr platformID )
+        public Platform( IntPtr platformID )
         {
-            CL = cl;
             PlatformID = platformID;
 
             // Create a local representation of all devices
@@ -79,7 +77,7 @@ namespace OpenCLNet
             IntPtr contextID;
             ErrorCode result;
 
-            contextID = (IntPtr)CL.CreateContext( properties,
+            contextID = (IntPtr)OpenCL.CreateContext( properties,
                 (uint)DeviceIDs.Length,
                 DeviceIDs,
                 notify,
@@ -96,7 +94,7 @@ namespace OpenCLNet
             ErrorCode result;
 
             IntPtr[] deviceIDs = InteropTools.ConvertDevicesToDeviceIDs(devices);
-            contextID = (IntPtr)CL.CreateContext(contextProperties,
+            contextID = (IntPtr)OpenCL.CreateContext(contextProperties,
                 (uint)deviceIDs.Length,
                 deviceIDs,
                 notify,
@@ -112,7 +110,7 @@ namespace OpenCLNet
             IntPtr contextID;
             ErrorCode result;
 
-            contextID = (IntPtr)CL.CreateContextFromType(contextProperties,
+            contextID = (IntPtr)OpenCL.CreateContextFromType(contextProperties,
                 deviceType,
                 notify,
                 userData,
@@ -133,7 +131,7 @@ namespace OpenCLNet
             uint numberOfDevices;
             IntPtr[] deviceIDs;
 
-            result = (ErrorCode)CL.GetDeviceIDs( PlatformID, deviceType, 0, null, out numberOfDevices );
+            result = (ErrorCode)OpenCL.GetDeviceIDs( PlatformID, deviceType, 0, null, out numberOfDevices );
             if (result == ErrorCode.DEVICE_NOT_FOUND)
                 return new IntPtr[0];
 
@@ -141,7 +139,7 @@ namespace OpenCLNet
                 throw new OpenCLException( "GetDeviceIDs failed: "+((ErrorCode)result).ToString(), result);
 
             deviceIDs = new IntPtr[numberOfDevices];
-            result = (ErrorCode)CL.GetDeviceIDs( PlatformID, deviceType, numberOfDevices, deviceIDs, out numberOfDevices );
+            result = (ErrorCode)OpenCL.GetDeviceIDs( PlatformID, deviceType, numberOfDevices, deviceIDs, out numberOfDevices );
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "GetDeviceIDs failed: "+((ErrorCode)result).ToString(), result);
 
@@ -189,7 +187,7 @@ namespace OpenCLNet
             IntPtr propertySize;
             ErrorCode result;
 
-            result = (ErrorCode)CL.GetPlatformInfo( PlatformID, key, IntPtr.Zero, null, out propertySize );
+            result = (ErrorCode)OpenCL.GetPlatformInfo( PlatformID, key, IntPtr.Zero, null, out propertySize );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "Unable to get platform info for platform "+PlatformID+": "+result, result);
             return propertySize;
@@ -201,7 +199,7 @@ namespace OpenCLNet
             IntPtr propertySize;
             ErrorCode result;
 
-            result = (ErrorCode)CL.GetPlatformInfo( PlatformID, key, keyLength, (void*)pBuffer, out propertySize );
+            result = (ErrorCode)OpenCL.GetPlatformInfo( PlatformID, key, keyLength, (void*)pBuffer, out propertySize );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "Unable to get platform info for platform "+PlatformID+": "+result, result);
         }

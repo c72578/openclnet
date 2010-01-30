@@ -83,12 +83,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ATI.cs" />
     <Compile Include="CommandQueue.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="InteropTools.cs" />
     <Compile Include="Kernel.cs" />
     <Compile Include="Mem.cs" />
     <Compile Include="OpenCL.cs" />

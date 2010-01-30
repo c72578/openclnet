@@ -41,7 +41,6 @@ namespace UnitTests
 {
     public partial class Form1 : Form
     {
-        OpenCL     OpenCL;
         Platform[] Platforms;
         Regex ParseOpenCLVersion = new Regex(@"OpenCL (?<MajorVersion>\d+)\.(?<MinorVersion>\d+).*");
 
@@ -67,7 +66,6 @@ namespace UnitTests
 
         private void RunTests()
         {
-            OpenCL = new OpenCL(new ATI());
             TestOpenCLClass();
         }
 

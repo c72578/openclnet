@@ -1,4 +1,15 @@
-﻿January 12, 2010
+﻿January 31, 2010
+----------------
+Incompatible checkin. The original API used a plugin system where I had the option to load different DLLs for different OpenCL vendors. This is not needed any longer, as the OpenCL ICD is available, and it seems unlikely that I would be capable of doing workarounds for compatibility inside this library anyway. I have therefore collapsed the API into the OpenCL class, and made that class static. Changes required to applications should be extremely minor if one was using the high level API. Instead of Instantiating OpenCL, one instead uses the static enumeration methods/properties in the OpenCL class:
+
+Platform[] p =OpenCL.GetPlatforms();
+
+int platformCount = OpenCL.NumberOfPlatforms;
+Platform p = OpenCL.GetPlatform(0);
+
+Everything else remains the same.I've been thinking about doing this for a long time, but held off on doing it because of the incompatibility. However, I got a request to clean it up - so I figured it was about time. I don't expect to make any more breaking changes after this though.
+
+January 12, 2010
 ----------------
 Finally got some hardware! ^_^. Of course, not a single example worked out of the box, but at least the errors were in the examples and not in the api. The examples are fixed now, and the problem was me forgetting about having to copy back results. Also added Flush, Finish to the CommandQueue class as well as profiling support. When profiling functionality is turned on in the CommandQueue creation function, profiling counters can be read out using methods in the Event class.
 

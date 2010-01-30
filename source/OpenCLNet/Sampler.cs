@@ -43,7 +43,6 @@ namespace OpenCLNet
 
         public IntPtr SamplerID { get; protected set; }
         public Context Context { get; protected set; }
-        internal OpenCLAPI CL { get { return Context.CL; } }
 
         public uint ReferenceCount { get { return InteropTools.ReadUInt( this, (uint)SamplerInfo.REFERENCE_COUNT ); } }
         public AddressingMode AddressingMode { get { return (AddressingMode)InteropTools.ReadUInt( this, (uint)SamplerInfo.ADDRESSING_MODE ); } }
@@ -114,7 +113,7 @@ namespace OpenCLNet
                 // unmanaged resources here.
                 // If disposing is false,
                 // only the following code is executed.
-                CL.ReleaseSampler( SamplerID );
+                OpenCL.ReleaseSampler( SamplerID );
                 SamplerID = IntPtr.Zero;
 
                 // Note disposing has been done.
@@ -137,7 +136,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr size;
 
-            result = (ErrorCode)CL.GetSamplerInfo( SamplerID, key, IntPtr.Zero, null, out size );
+            result = (ErrorCode)OpenCL.GetSamplerInfo( SamplerID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "clGetSamplerInfo failed with error code "+result, result);
 
@@ -149,7 +148,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr size;
 
-            result = (ErrorCode)CL.GetSamplerInfo( SamplerID, key, keyLength, pBuffer, out size );
+            result = (ErrorCode)OpenCL.GetSamplerInfo( SamplerID, key, keyLength, pBuffer, out size );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "clGetSamplerInfo failed with error code "+result, result);
         }

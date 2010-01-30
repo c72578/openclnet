@@ -38,7 +38,6 @@ namespace OpenCLNet
     {
         public IntPtr ContextID { get; protected set; }
         public Platform Platform { get; protected set; }
-        internal OpenCLAPI CL { get { return Platform.CL; } }
         // Track whether Dispose has been called.
         private bool disposed = false;
 
@@ -63,7 +62,7 @@ namespace OpenCLNet
             for( int i=0; i<properties.Length; i++ )
                 intPtrProperties[i] = new IntPtr( (long)properties[i] );
 
-            ContextID = (IntPtr)CL.CreateContext( intPtrProperties,
+            ContextID = (IntPtr)OpenCL.CreateContext( intPtrProperties,
                 (uint)devices.Length,
                 deviceIDs,
                 null,
@@ -127,7 +126,7 @@ namespace OpenCLNet
                 // unmanaged resources here.
                 // If disposing is false,
                 // only the following code is executed.
-                CL.ReleaseContext( ContextID );
+                OpenCL.ReleaseContext( ContextID );
                 ContextID = IntPtr.Zero;
 
                 // Note disposing has been done.
@@ -150,14 +149,14 @@ namespace OpenCLNet
                 ErrorCode result;
                 IntPtr[] contextDevices;
 
-                result = (ErrorCode)CL.GetContextInfo( ContextID, (uint)ContextInfo.DEVICES, IntPtr.Zero, null, out contextDevicesSize );
+                result = (ErrorCode)OpenCL.GetContextInfo( ContextID, (uint)ContextInfo.DEVICES, IntPtr.Zero, null, out contextDevicesSize );
                 if( result!=ErrorCode.SUCCESS )
                     throw new OpenCLException( "Unable to get context info for context "+ContextID+" "+result, result);
 
                 contextDevices = new IntPtr[contextDevicesSize.ToInt64()/sizeof( IntPtr )];
                 fixed( IntPtr* pContextDevices = contextDevices )
                 {
-                    result = (ErrorCode)CL.GetContextInfo( ContextID, (uint)ContextInfo.DEVICES, contextDevicesSize, (void*)pContextDevices, out contextDevicesSize );
+                    result = (ErrorCode)OpenCL.GetContextInfo( ContextID, (uint)ContextInfo.DEVICES, contextDevicesSize, (void*)pContextDevices, out contextDevicesSize );
                     if( result!=ErrorCode.SUCCESS )
                         throw new OpenCLException( "Unable to get context info for context "+ContextID+" "+result, result);
                 }
@@ -185,7 +184,7 @@ namespace OpenCLNet
             IntPtr commandQueueID;
             ErrorCode result;
 
-            commandQueueID = (IntPtr)CL.CreateCommandQueue( ContextID, device.DeviceID, (ulong)properties, out result );
+            commandQueueID = (IntPtr)OpenCL.CreateCommandQueue( ContextID, device.DeviceID, (ulong)properties, out result );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateCommandQueue failed with error code "+result, result);
             return new CommandQueue( this, device, commandQueueID );
@@ -201,7 +200,7 @@ namespace OpenCLNet
             IntPtr memID;
             ErrorCode result;
 
-            memID = (IntPtr)CL.CreateBuffer( ContextID, (ulong)flags, new IntPtr(size), pHost, out result );
+            memID = (IntPtr)OpenCL.CreateBuffer( ContextID, (ulong)flags, new IntPtr(size), pHost, out result );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateBuffer failed with error code "+result, result);
             return new Mem( this, memID );
@@ -212,7 +211,7 @@ namespace OpenCLNet
             IntPtr memID;
             ErrorCode result;
 
-            memID = CL.CreateFromGLBuffer(ContextID, (ulong)flags, (uint)bufobj, out result);
+            memID = OpenCL.CreateFromGLBuffer(ContextID, (ulong)flags, (uint)bufobj, out result);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateFromGLBuffer failed with error code " + result, result);
             return new Mem(this, memID);
@@ -223,7 +222,7 @@ namespace OpenCLNet
             IntPtr memID;
             ErrorCode result;
 
-            memID = CL.CreateFromGLTexture2D(ContextID, (ulong)flags, target, mipLevel, (uint)texture, out result);
+            memID = OpenCL.CreateFromGLTexture2D(ContextID, (ulong)flags, target, mipLevel, (uint)texture, out result);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateFromGLTexture2D failed with error code " + result, result);
             return new Mem(this, memID);
@@ -234,7 +233,7 @@ namespace OpenCLNet
             IntPtr memID;
             ErrorCode result;
 
-            memID = CL.CreateFromGLTexture3D(ContextID, (ulong)flags, target, mipLevel, (uint)texture, out result);
+            memID = OpenCL.CreateFromGLTexture3D(ContextID, (ulong)flags, target, mipLevel, (uint)texture, out result);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateFromGLTexture3D failed with error code " + result, result);
             return new Mem(this, memID);
@@ -245,7 +244,7 @@ namespace OpenCLNet
             IntPtr memID;
             ErrorCode result;
 
-            memID = CL.CreateFromGLRenderbuffer(ContextID, (ulong)flags, (uint)renderbuffer, out result);
+            memID = OpenCL.CreateFromGLRenderbuffer(ContextID, (ulong)flags, (uint)renderbuffer, out result);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateFromGLTexture3D failed with error code " + result, result);
             return new Mem(this, memID);
@@ -266,7 +265,7 @@ namespace OpenCLNet
             IntPtr programID;
             ErrorCode result;
 
-            programID = (IntPtr)CL.CreateProgramWithSource( ContextID, (uint)source.Length, source, (IntPtr[])null, out result );
+            programID = (IntPtr)OpenCL.CreateProgramWithSource( ContextID, (uint)source.Length, source, (IntPtr[])null, out result );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateProgramWithSource failed with error code "+result, result);
             return new Program( this, programID );
@@ -281,7 +280,7 @@ namespace OpenCLNet
             lengths = new IntPtr[devices.Length];
             for (int i = 0; i < lengths.Length; i++)
                 lengths[i] = (IntPtr)binaries[i].Length;
-            programID = CL.CreateProgramWithBinary(ContextID,
+            programID = OpenCL.CreateProgramWithBinary(ContextID,
                 (uint)devices.Length,
                 InteropTools.ConvertDevicesToDeviceIDs(devices),
                 lengths,
@@ -297,7 +296,7 @@ namespace OpenCLNet
         {
             IntPtr samplerID;
             
-            samplerID = CL.CreateSampler( ContextID, normalizedCoords, (uint)addressingMode, (uint)filterMode, out result );
+            samplerID = OpenCL.CreateSampler( ContextID, normalizedCoords, (uint)addressingMode, (uint)filterMode, out result );
             return new Sampler( this, samplerID );
         }
 
@@ -306,12 +305,12 @@ namespace OpenCLNet
             Event[] event_list = new Event[1];
 
             event_list[0] = _event;
-            CL.WaitForEvents(1, InteropTools.ConvertEventsToEventIDs(event_list));
+            OpenCL.WaitForEvents(1, InteropTools.ConvertEventsToEventIDs(event_list));
         }
 
         public void WaitForEvents(int num_events, Event[] event_list)
         {
-            CL.WaitForEvents((uint)num_events, InteropTools.ConvertEventsToEventIDs(event_list));
+            OpenCL.WaitForEvents((uint)num_events, InteropTools.ConvertEventsToEventIDs(event_list));
         }
 
         public static implicit operator IntPtr( Context c )
@@ -326,7 +325,7 @@ namespace OpenCLNet
             IntPtr size;
             ErrorCode result;
 
-            result = (ErrorCode)CL.GetContextInfo( ContextID, key, IntPtr.Zero, null, out size );
+            result = (ErrorCode)OpenCL.GetContextInfo( ContextID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "GetContextInfo failed: "+result, result);
             return size;
@@ -337,7 +336,7 @@ namespace OpenCLNet
             IntPtr size;
             ErrorCode result;
 
-            result = (ErrorCode)CL.GetContextInfo( ContextID, key, keyLength, pBuffer, out size );
+            result = (ErrorCode)OpenCL.GetContextInfo( ContextID, key, keyLength, pBuffer, out size );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "GetContextInfo failed: "+result, result);
         }

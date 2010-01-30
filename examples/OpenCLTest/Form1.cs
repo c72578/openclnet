@@ -40,7 +40,6 @@ namespace OpenCLTest
 {
     public partial class Form1 : Form
     {
-        OpenCL OpenCL;
         Mandelbrot Mandelbrot;
         int FromSetPtr = 0;
         int ToSetPtr = 0;
@@ -62,8 +61,8 @@ namespace OpenCLTest
         {
             try
             {
-                OpenCL = new OpenCL();
-                Mandelbrot = new Mandelbrot(OpenCL, Width, Height);
+                Platform platform = OpenCL.GetPlatform(0);
+                Mandelbrot = new Mandelbrot(platform, Width, Height);
                 Mandelbrot.AllocBuffers();
                 UpdateMandelbrot();
             }

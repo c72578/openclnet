@@ -50,7 +50,6 @@ namespace OpenCLNet
         public Device Device { get; private set; }
         public uint ReferenceCount { get { return 0; } }
         public CommandQueueProperties Properties { get { return (CommandQueueProperties)0; } }
-        internal OpenCLAPI CL { get { return Context.CL; } }
 
         // Track whether Dispose has been called.
         private bool disposed = false;
@@ -118,7 +117,7 @@ namespace OpenCLNet
                 // unmanaged resources here.
                 // If disposing is false,
                 // only the following code is executed.
-                CL.ReleaseCommandQueue( CommandQueueID );
+                OpenCL.ReleaseCommandQueue( CommandQueueID );
                 CommandQueueID = IntPtr.Zero;
 
                 // Note disposing has been done.
@@ -151,7 +150,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = CL.EnqueueWriteBuffer(CommandQueueID,
+            result = OpenCL.EnqueueWriteBuffer(CommandQueueID,
                 buffer.MemID,
                 (uint)(blockingWrite ? Bool.TRUE : Bool.FALSE),
                 offset,
@@ -168,7 +167,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueWriteBuffer(CommandQueueID,
+            result = OpenCL.EnqueueWriteBuffer(CommandQueueID,
                 buffer.MemID,
                 (uint)(blockingWrite ? Bool.TRUE : Bool.FALSE),
                 offset,
@@ -184,7 +183,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueWriteBuffer(CommandQueueID,
+            result = OpenCL.EnqueueWriteBuffer(CommandQueueID,
                 buffer.MemID,
                 (uint)(blockingWrite ? Bool.TRUE : Bool.FALSE),
                 offset,
@@ -216,7 +215,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = CL.EnqueueReadBuffer(CommandQueueID,
+            result = OpenCL.EnqueueReadBuffer(CommandQueueID,
                 buffer.MemID,
                 (uint)(blockingRead ? Bool.TRUE : Bool.FALSE),
                 offset,
@@ -234,7 +233,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueReadBuffer(CommandQueueID,
+            result = OpenCL.EnqueueReadBuffer(CommandQueueID,
                 buffer.MemID,
                 (uint)(blockingRead ? Bool.TRUE : Bool.FALSE),
                 offset,
@@ -251,7 +250,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueReadBuffer(CommandQueueID,
+            result = OpenCL.EnqueueReadBuffer(CommandQueueID,
                 buffer.MemID,
                 (uint)(blockingRead ? Bool.TRUE : Bool.FALSE),
                 offset,
@@ -284,7 +283,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = CL.EnqueueCopyBuffer(CommandQueueID,
+            result = OpenCL.EnqueueCopyBuffer(CommandQueueID,
                 src_buffer.MemID,
                 dst_buffer.MemID,
                 src_offset,
@@ -302,7 +301,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueCopyBuffer(CommandQueueID,
+            result = OpenCL.EnqueueCopyBuffer(CommandQueueID,
                 src_buffer.MemID,
                 dst_buffer.MemID,
                 src_offset,
@@ -319,7 +318,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueCopyBuffer(CommandQueueID,
+            result = OpenCL.EnqueueCopyBuffer(CommandQueueID,
                 src_buffer.MemID,
                 dst_buffer.MemID,
                 src_offset,
@@ -341,7 +340,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = CL.EnqueueReadImage(CommandQueueID,
+            result = OpenCL.EnqueueReadImage(CommandQueueID,
                 image.MemID,
                 (uint)(blockingRead ? Bool.TRUE : Bool.FALSE),
                 origin,
@@ -361,7 +360,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueReadImage(CommandQueueID,
+            result = OpenCL.EnqueueReadImage(CommandQueueID,
                 image.MemID,
                 (uint)(blockingRead ? Bool.TRUE : Bool.FALSE),
                 origin,
@@ -380,7 +379,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueReadImage(CommandQueueID,
+            result = OpenCL.EnqueueReadImage(CommandQueueID,
                 image.MemID,
                 (uint)(blockingRead ? Bool.TRUE : Bool.FALSE),
                 origin,
@@ -404,7 +403,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = CL.EnqueueWriteImage(CommandQueueID,
+            result = OpenCL.EnqueueWriteImage(CommandQueueID,
                 image.MemID,
                 (uint)(blockingWrite ? Bool.TRUE : Bool.FALSE),
                 origin,
@@ -424,7 +423,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueWriteImage(CommandQueueID,
+            result = OpenCL.EnqueueWriteImage(CommandQueueID,
                 image.MemID,
                 (uint)(blockingWrite ? Bool.TRUE : Bool.FALSE),
                 origin,
@@ -443,7 +442,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueWriteImage(CommandQueueID,
+            result = OpenCL.EnqueueWriteImage(CommandQueueID,
                 image.MemID,
                 (uint)(blockingWrite ? Bool.TRUE : Bool.FALSE),
                 origin,
@@ -467,7 +466,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = CL.EnqueueCopyImage(CommandQueueID,
+            result = OpenCL.EnqueueCopyImage(CommandQueueID,
                 src_image,
                 dst_image,
                 src_origin,
@@ -485,7 +484,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueCopyImage(CommandQueueID,
+            result = OpenCL.EnqueueCopyImage(CommandQueueID,
                 src_image,
                 dst_image,
                 src_origin,
@@ -502,7 +501,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueCopyImage(CommandQueueID,
+            result = OpenCL.EnqueueCopyImage(CommandQueueID,
                 src_image,
                 dst_image,
                 src_origin,
@@ -524,7 +523,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = CL.EnqueueCopyImageToBuffer(CommandQueueID,
+            result = OpenCL.EnqueueCopyImageToBuffer(CommandQueueID,
                 src_image,
                 dst_buffer,
                 src_origin,
@@ -542,7 +541,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueCopyImageToBuffer(CommandQueueID,
+            result = OpenCL.EnqueueCopyImageToBuffer(CommandQueueID,
                 src_image,
                 dst_buffer,
                 src_origin,
@@ -559,7 +558,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueCopyImageToBuffer(CommandQueueID,
+            result = OpenCL.EnqueueCopyImageToBuffer(CommandQueueID,
                 src_image,
                 dst_buffer,
                 src_origin,
@@ -581,7 +580,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = CL.EnqueueCopyBufferToImage(CommandQueueID,
+            result = OpenCL.EnqueueCopyBufferToImage(CommandQueueID,
                 src_buffer,
                 dst_image,
                 src_offset,
@@ -599,7 +598,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueCopyBufferToImage(CommandQueueID,
+            result = OpenCL.EnqueueCopyBufferToImage(CommandQueueID,
                 src_buffer,
                 dst_image,
                 src_offset,
@@ -616,7 +615,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueCopyBufferToImage(CommandQueueID,
+            result = OpenCL.EnqueueCopyBufferToImage(CommandQueueID,
                 src_buffer,
                 dst_image,
                 src_offset,
@@ -639,7 +638,7 @@ namespace OpenCLNet
             IntPtr ptr;
             IntPtr tmpEvent;
 
-            ptr = (IntPtr)CL.EnqueueMapBuffer(CommandQueueID,
+            ptr = (IntPtr)OpenCL.EnqueueMapBuffer(CommandQueueID,
                 buffer,
                 (uint)(blockingMap ? Bool.TRUE : Bool.FALSE),
                 (ulong)map_flags,
@@ -661,7 +660,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr ptr;
 
-            ptr = (IntPtr)CL.EnqueueMapBuffer(CommandQueueID,
+            ptr = (IntPtr)OpenCL.EnqueueMapBuffer(CommandQueueID,
                 buffer,
                 (uint)(blockingMap ? Bool.TRUE : Bool.FALSE),
                 (ulong)map_flags,
@@ -682,7 +681,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr ptr;
 
-            ptr = (IntPtr)CL.EnqueueMapBuffer(CommandQueueID,
+            ptr = (IntPtr)OpenCL.EnqueueMapBuffer(CommandQueueID,
                 buffer,
                 (uint)(blockingMap ? Bool.TRUE : Bool.FALSE),
                 (ulong)map_flags,
@@ -725,7 +724,7 @@ namespace OpenCLNet
             IntPtr ptr;
             IntPtr tmpEvent;
             
-            ptr = (IntPtr)CL.EnqueueMapImage(CommandQueueID,
+            ptr = (IntPtr)OpenCL.EnqueueMapImage(CommandQueueID,
                 image,
                 (uint)(blockingMap ? Bool.TRUE : Bool.FALSE),
                 (ulong)map_flags,
@@ -747,7 +746,7 @@ namespace OpenCLNet
         {
             IntPtr ptr;
 
-            ptr = (IntPtr)CL.EnqueueMapImage(CommandQueueID,
+            ptr = (IntPtr)OpenCL.EnqueueMapImage(CommandQueueID,
                 image,
                 (uint)(blockingMap ? Bool.TRUE : Bool.FALSE),
                 (ulong)map_flags,
@@ -768,7 +767,7 @@ namespace OpenCLNet
         {
             IntPtr ptr;
 
-            ptr = (IntPtr)CL.EnqueueMapImage(CommandQueueID,
+            ptr = (IntPtr)OpenCL.EnqueueMapImage(CommandQueueID,
                 image,
                 (uint)(blockingMap ? Bool.TRUE : Bool.FALSE),
                 (ulong)map_flags,
@@ -802,7 +801,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = CL.EnqueueUnmapMemObject(CommandQueueID,
+            result = OpenCL.EnqueueUnmapMemObject(CommandQueueID,
                 memobj,
                 mapped_ptr.ToPointer(),
                 (uint)num_events_in_wait_list,
@@ -817,7 +816,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueUnmapMemObject(CommandQueueID,
+            result = OpenCL.EnqueueUnmapMemObject(CommandQueueID,
                 memobj,
                 mapped_ptr.ToPointer(),
                 (uint)num_events_in_wait_list,
@@ -831,7 +830,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueUnmapMemObject(CommandQueueID,
+            result = OpenCL.EnqueueUnmapMemObject(CommandQueueID,
                 memobj,
                 mapped_ptr.ToPointer(),
                 (uint)0,
@@ -861,7 +860,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = CL.EnqueueNDRangeKernel(CommandQueueID,
+            result = OpenCL.EnqueueNDRangeKernel(CommandQueueID,
                 kernel.KernelID,
                 workDim,
                 globalWorkOffset,
@@ -879,7 +878,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueNDRangeKernel(CommandQueueID,
+            result = OpenCL.EnqueueNDRangeKernel(CommandQueueID,
                 kernel.KernelID,
                 workDim,
                 globalWorkOffset,
@@ -896,7 +895,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueNDRangeKernel(CommandQueueID,
+            result = OpenCL.EnqueueNDRangeKernel(CommandQueueID,
                 kernel.KernelID,
                 workDim,
                 globalWorkOffset,
@@ -925,7 +924,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
 
-            result = (ErrorCode)CL.EnqueueTask(CommandQueueID,
+            result = (ErrorCode)OpenCL.EnqueueTask(CommandQueueID,
                 kernel.KernelID,
                 (uint)numEventsInWaitList,
                 InteropTools.ConvertEventsToEventIDs(event_wait_list),
@@ -945,7 +944,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.EnqueueTask(CommandQueueID,
+            result = (ErrorCode)OpenCL.EnqueueTask(CommandQueueID,
                 kernel.KernelID,
                 (uint)numEventsInWaitList,
                 InteropTools.ConvertEventsToEventIDs(event_wait_list),
@@ -962,7 +961,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.EnqueueTask(CommandQueueID,
+            result = (ErrorCode)OpenCL.EnqueueTask(CommandQueueID,
                 kernel.KernelID,
                 (uint)0,
                 null,
@@ -993,7 +992,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr tmpEvent;
             
-            result = CL.EnqueueNativeKernel(CommandQueueID,
+            result = OpenCL.EnqueueNativeKernel(CommandQueueID,
                 nativeKernel,
                 null,
                 IntPtr.Zero,
@@ -1024,7 +1023,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueNativeKernel(CommandQueueID,
+            result = OpenCL.EnqueueNativeKernel(CommandQueueID,
                 nativeKernel,
                 null,
                 IntPtr.Zero,
@@ -1052,7 +1051,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueNativeKernel(CommandQueueID,
+            result = OpenCL.EnqueueNativeKernel(CommandQueueID,
                 nativeKernel,
                 null,
                 IntPtr.Zero,
@@ -1075,7 +1074,7 @@ namespace OpenCLNet
             IntPtr tmpEvent;
             ErrorCode result;
 
-            result = CL.EnqueueAcquireGLObjects(CommandQueueID,
+            result = OpenCL.EnqueueAcquireGLObjects(CommandQueueID,
                 (uint)numObjects,
                 InteropTools.ConvertMemToMemIDs(memObjects),
                 (uint)numEventsInWaitList,
@@ -1090,7 +1089,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueAcquireGLObjects(CommandQueueID,
+            result = OpenCL.EnqueueAcquireGLObjects(CommandQueueID,
                 (uint)numObjects,
                 InteropTools.ConvertMemToMemIDs(memObjects),
                 (uint)numEventsInWaitList,
@@ -1104,7 +1103,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueAcquireGLObjects(CommandQueueID,
+            result = OpenCL.EnqueueAcquireGLObjects(CommandQueueID,
                 (uint)numObjects,
                 InteropTools.ConvertMemToMemIDs(memObjects),
                 (uint)0,
@@ -1123,7 +1122,7 @@ namespace OpenCLNet
             IntPtr tmpEvent;
             ErrorCode result;
 
-            result = CL.EnqueueReleaseGLObjects(CommandQueueID,
+            result = OpenCL.EnqueueReleaseGLObjects(CommandQueueID,
                 (uint)numObjects,
                 InteropTools.ConvertMemToMemIDs(memObjects),
                 (uint)numEventsInWaitList,
@@ -1138,7 +1137,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueReleaseGLObjects(CommandQueueID,
+            result = OpenCL.EnqueueReleaseGLObjects(CommandQueueID,
                 (uint)numObjects,
                 InteropTools.ConvertMemToMemIDs(memObjects),
                 (uint)numEventsInWaitList,
@@ -1152,7 +1151,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = CL.EnqueueReleaseGLObjects(CommandQueueID,
+            result = OpenCL.EnqueueReleaseGLObjects(CommandQueueID,
                 (uint)numObjects,
                 InteropTools.ConvertMemToMemIDs(memObjects),
                 (uint)0,
@@ -1170,7 +1169,7 @@ namespace OpenCLNet
         {
             IntPtr tmpEvent;
 
-            CL.EnqueueMarker(CommandQueueID, &tmpEvent);
+            OpenCL.EnqueueMarker(CommandQueueID, &tmpEvent);
             _event = new Event(Context, tmpEvent);
         }
 
@@ -1180,7 +1179,7 @@ namespace OpenCLNet
 
         public void EnqueueWaitForEvents( int num_events, Event[] _event_list )
         {
-            CL.EnqueueWaitForEvents( CommandQueueID, (uint)num_events, InteropTools.ConvertEventsToEventIDs(_event_list) );
+            OpenCL.EnqueueWaitForEvents( CommandQueueID, (uint)num_events, InteropTools.ConvertEventsToEventIDs(_event_list) );
         }
 
         #endregion
@@ -1189,7 +1188,7 @@ namespace OpenCLNet
 
         public void EnqueueBarrier()
         {
-            CL.EnqueueBarrier(CommandQueueID);
+            OpenCL.EnqueueBarrier(CommandQueueID);
         }
 
         #endregion
@@ -1198,7 +1197,7 @@ namespace OpenCLNet
 
         public void Flush()
         {
-            CL.Flush(CommandQueueID);
+            OpenCL.Flush(CommandQueueID);
         }
 
         #endregion
@@ -1207,7 +1206,7 @@ namespace OpenCLNet
 
         public void Finish()
         {
-            CL.Finish(CommandQueueID);
+            OpenCL.Finish(CommandQueueID);
         }
 
         #endregion
@@ -1217,7 +1216,7 @@ namespace OpenCLNet
             ErrorCode result;
             ulong returnedProperties = 0;
 
-            result = (ErrorCode)CL.SetCommandQueueProperty( CommandQueueID,
+            result = (ErrorCode)OpenCL.SetCommandQueueProperty( CommandQueueID,
                 (ulong)properties,
                 enable,
                 out returnedProperties );

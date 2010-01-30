@@ -60,8 +60,6 @@ namespace OpenCLNet
         public Program Program { get { throw new NotImplementedException(); } }
         public IntPtr KernelID { get; set; }
 
-        internal OpenCLAPI CL { get { return Context.CL; } }
-
         internal Kernel( Context context, IntPtr kernelID )
         {
             Context = context;
@@ -112,7 +110,7 @@ namespace OpenCLNet
                 // unmanaged resources here.
                 // If disposing is false,
                 // only the following code is executed.
-                CL.ReleaseKernel( KernelID );
+                OpenCL.ReleaseKernel( KernelID );
                 KernelID = IntPtr.Zero;
 
                 // Note disposing has been done.
@@ -127,7 +125,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg( KernelID, (uint)argIndex, argSize, argValue.ToPointer() );
+            result = (ErrorCode)OpenCL.SetKernelArg( KernelID, (uint)argIndex, argSize, argValue.ToPointer() );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
@@ -141,7 +139,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(int)), &c);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(int)), &c);
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
@@ -155,7 +153,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(long)), &c);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(long)), &c);
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
@@ -169,7 +167,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(float)), &c);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(float)), &c);
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
@@ -183,7 +181,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(double)), &c);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(double)), &c);
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
@@ -197,7 +195,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &c);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &c);
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
@@ -208,7 +206,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(int)), &c);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(int)), &c);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }
@@ -217,7 +215,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(long)), &c);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(long)), &c);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }
@@ -226,7 +224,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(float)), &c);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(float)), &c);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }
@@ -235,7 +233,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(double)), &c);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(double)), &c);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }
@@ -244,7 +242,7 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)CL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &c);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &c);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }
@@ -263,7 +261,7 @@ namespace OpenCLNet
             IntPtr size;
             ErrorCode result;
 
-            result = (ErrorCode)CL.GetKernelInfo( KernelID, key, IntPtr.Zero, null, out size );
+            result = (ErrorCode)OpenCL.GetKernelInfo( KernelID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "Unable to get kernel info for kernel "+KernelID, result);
             return size;
@@ -274,7 +272,7 @@ namespace OpenCLNet
             IntPtr size;
             ErrorCode result;
 
-            result = (ErrorCode)CL.GetKernelInfo( KernelID, (uint)key, keyLength, pBuffer, out size );
+            result = (ErrorCode)OpenCL.GetKernelInfo( KernelID, (uint)key, keyLength, pBuffer, out size );
             if( result!=(int)ErrorCode.SUCCESS )
                 throw new OpenCLException( "Unable to get kernel info for kernel "+KernelID, result);
         }

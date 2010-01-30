@@ -48,7 +48,6 @@ namespace OpenCLNet
 
         #region Properties
 
-        internal OpenCLAPI CL { get { return Platform.CL; } }
         public IntPtr DeviceID { get; protected set; }
 
         public DeviceType DeviceType { get { return (DeviceType) InteropTools.ReadULong( this, (uint)DeviceInfo.TYPE ); } }
@@ -286,7 +285,7 @@ namespace OpenCLNet
             IntPtr size;
             ErrorCode result;
 
-            result = (ErrorCode)CL.GetDeviceInfo( DeviceID, key, IntPtr.Zero, null, out size );
+            result = (ErrorCode)OpenCL.GetDeviceInfo( DeviceID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "Unable to get device info for device "+DeviceID, result);
             return size;
@@ -297,7 +296,7 @@ namespace OpenCLNet
             IntPtr size;
             ErrorCode result;
 
-            result = (ErrorCode)CL.GetDeviceInfo( DeviceID, (uint)key, keyLength, pBuffer, out size );
+            result = (ErrorCode)OpenCL.GetDeviceInfo( DeviceID, (uint)key, keyLength, pBuffer, out size );
             if( result!=(int)ErrorCode.SUCCESS )
                 throw new OpenCLException( "Unable to get device info for device "+DeviceID, result);
         }

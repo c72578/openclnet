@@ -4,7 +4,6 @@ Imports OpenCLNet
 
 
 Public Class Form1
-    Dim openCL As OpenCLNet.OpenCL
     Dim platform As OpenCLNet.Platform
     Dim context As OpenCLNet.Context
     Dim program As OpenCLNet.Program
@@ -16,8 +15,7 @@ Public Class Form1
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Try
-            openCL = New OpenCLNet.OpenCL()
-            platform = openCL.GetPlatform(0)
+            platform = OpenCLNet.OpenCL.GetPlatform(0)
             devices = platform.QueryDevices(DeviceType.ALL)
             context = platform.CreateDefaultContext(Nothing, Nothing)
             cq = context.CreateCommandQueue(devices(0), 0)
@@ -72,9 +70,6 @@ Public Class Form1
 
     Private Sub Form1_Paint(ByVal sender As System.Object, ByVal e As System.Windows.Forms.PaintEventArgs) Handles MyBase.Paint
         Try
-            If IsNothing(openCL) Then
-                Return
-            End If
             DrawMandelbrot(e.Graphics)
 
         Catch ex As Exception

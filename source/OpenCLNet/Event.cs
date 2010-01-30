@@ -34,7 +34,6 @@ namespace OpenCLNet
     {
         public IntPtr EventID { get; protected set; }
         public Context Context { get; protected set; }
-        OpenCLAPI CL { get { return Context.CL; } }
 
         // Track whether Dispose has been called.
         private bool disposed = false;
@@ -101,7 +100,7 @@ namespace OpenCLNet
                 // unmanaged resources here.
                 // If disposing is false,
                 // only the following code is executed.
-                CL.ReleaseEvent( EventID );
+                OpenCL.ReleaseEvent( EventID );
                 EventID = IntPtr.Zero;
 
                 // Note disposing has been done.
@@ -118,7 +117,7 @@ namespace OpenCLNet
             IntPtr size;
             ErrorCode result;
 
-            result = (ErrorCode)CL.GetEventInfo( EventID, key, IntPtr.Zero, null, out size );
+            result = (ErrorCode)OpenCL.GetEventInfo( EventID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "GetEventInfo failed; "+result, result);
             return size;
@@ -129,7 +128,7 @@ namespace OpenCLNet
             IntPtr size;
             ErrorCode result;
 
-            result = (ErrorCode)CL.GetEventInfo( EventID, key, keyLength, pBuffer, out size );
+            result = (ErrorCode)OpenCL.GetEventInfo( EventID, key, keyLength, pBuffer, out size );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "GetEventInfo failed; "+result, result);
         }
@@ -142,7 +141,7 @@ namespace OpenCLNet
             ulong v;
             ErrorCode errorCode;
 
-            errorCode = CL.GetEventProfilingInfo(EventID, paramName, (IntPtr)sizeof(ulong), &v, out paramValueSizeRet);
+            errorCode = OpenCL.GetEventProfilingInfo(EventID, paramName, (IntPtr)sizeof(ulong), &v, out paramValueSizeRet);
             if (errorCode != ErrorCode.SUCCESS)
                 throw new OpenCLException("GetEventProfilingInfo failed with error code "+errorCode, errorCode );
             paramValue = v;

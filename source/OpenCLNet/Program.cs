@@ -42,7 +42,6 @@ namespace OpenCLNet
 
         #region Properties
 
-        internal OpenCLAPI CL { get { return Context.CL; } }
         public Context Context { get; protected set; }
         public IntPtr ProgramID { get; protected set; }
         public string Source { get { return InteropTools.ReadString( this, (uint)ProgramInfo.SOURCE ); } }
@@ -167,7 +166,7 @@ namespace OpenCLNet
                 // unmanaged resources here.
                 // If disposing is false,
                 // only the following code is executed.
-                ErrorCode result = (ErrorCode)CL.ReleaseProgram( ProgramID );
+                ErrorCode result = (ErrorCode)OpenCL.ReleaseProgram( ProgramID );
                 if( result!=ErrorCode.SUCCESS )
                     throw new OpenCLException( "ReleaseProgram failed: "+result, result);
 
@@ -199,7 +198,7 @@ namespace OpenCLNet
                 deviceLength = devices.Length;
 
             deviceIDs = InteropTools.ConvertDevicesToDeviceIDs(devices);
-            result = (ErrorCode)CL.BuildProgram(ProgramID,
+            result = (ErrorCode)OpenCL.BuildProgram(ProgramID,
                 (uint)deviceLength,
                 deviceIDs,
                 options,
@@ -214,7 +213,7 @@ namespace OpenCLNet
             IntPtr kernelID;
             ErrorCode result;
 
-            kernelID = (IntPtr)CL.CreateKernel( ProgramID, kernelName, out result );
+            kernelID = (IntPtr)OpenCL.CreateKernel( ProgramID, kernelName, out result );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateKernel failed with error code "+result, result);
             return new Kernel( Context, kernelID );
@@ -225,12 +224,12 @@ namespace OpenCLNet
             uint numKernels;
             ErrorCode result;
 
-            result = (ErrorCode)CL.CreateKernelsInProgram( ProgramID, 0, null, out numKernels );
+            result = (ErrorCode)OpenCL.CreateKernelsInProgram( ProgramID, 0, null, out numKernels );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateKernels failed with error code "+result, result);
 
             IntPtr[] kernelIDs = new IntPtr[numKernels];
-            result = (ErrorCode)CL.CreateKernelsInProgram( ProgramID, numKernels, kernelIDs, out numKernels );
+            result = (ErrorCode)OpenCL.CreateKernelsInProgram( ProgramID, numKernels, kernelIDs, out numKernels );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateKernels failed with error code "+result, result);
 
@@ -283,7 +282,6 @@ namespace OpenCLNet
 
         class BuildInfo : InteropTools.IPropertyContainer
         {
-            internal OpenCLAPI CL { get { return Program.CL; } }
             Program Program;
             Device Device;
 
@@ -300,7 +298,7 @@ namespace OpenCLNet
                 ErrorCode result;
                 IntPtr size;
 
-                result = (ErrorCode)CL.GetProgramBuildInfo( Program.ProgramID, Device.DeviceID, key, IntPtr.Zero, null, out size );
+                result = (ErrorCode)OpenCL.GetProgramBuildInfo( Program.ProgramID, Device.DeviceID, key, IntPtr.Zero, null, out size );
                 if( result!=ErrorCode.SUCCESS )
                     throw new OpenCLException( "clGetProgramBuildInfo failed with error code "+result, result);
 
@@ -312,7 +310,7 @@ namespace OpenCLNet
                 ErrorCode result;
                 IntPtr size;
 
-                result = (ErrorCode)CL.GetProgramBuildInfo( Program.ProgramID, Device.DeviceID, key, keyLength, pBuffer, out size );
+                result = (ErrorCode)OpenCL.GetProgramBuildInfo( Program.ProgramID, Device.DeviceID, key, keyLength, pBuffer, out size );
                 if( result!=ErrorCode.SUCCESS )
                     throw new OpenCLException( "clGetProgramBuildInfo failed with error code "+result, result);
             }
@@ -327,7 +325,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr size;
 
-            result = (ErrorCode)CL.GetProgramInfo( ProgramID, key, IntPtr.Zero, null, out size );
+            result = (ErrorCode)OpenCL.GetProgramInfo( ProgramID, key, IntPtr.Zero, null, out size );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "clGetProgramInfo failed with error code "+result, result);
 
@@ -339,7 +337,7 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr size;
 
-            result = (ErrorCode)CL.GetProgramInfo( ProgramID, key, keyLength, pBuffer, out size );
+            result = (ErrorCode)OpenCL.GetProgramInfo( ProgramID, key, keyLength, pBuffer, out size );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "clGetProgramInfo failed with error code "+result, result);
         }
