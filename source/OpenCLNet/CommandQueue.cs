@@ -35,10 +35,6 @@ namespace OpenCLNet
     /// <summary>
     /// The CommandQueue class wraps an OpenCL command queue reference.
     /// 
-    /// The class implements IDisposable and will release its OpenCL resources automatically,
-    /// however, it may be advantegous to explicitly call Dispose() or wrap its usage in a
-    /// "using" section to make sure resources are cleaned up as early as possible.
-    /// 
     /// This class contains methods that correspond to all OpenCL functions that take
     /// a command queue as their first parameter. Most notably, all the Enqueue() functions.
     /// In effect, it makes this class into the workhorse of most OpenCL applications.
