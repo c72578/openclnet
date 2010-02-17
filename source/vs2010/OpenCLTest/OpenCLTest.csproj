@@ -74,9 +74,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\examples\OpenCLTest\AlignedArray.cs">
-      <Link>AlignedArray.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\examples\OpenCLTest\Form1.cs">
       <Link>Form1.cs</Link>
       <SubType>Form</SubType>

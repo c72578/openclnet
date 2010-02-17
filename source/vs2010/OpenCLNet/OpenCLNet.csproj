@@ -81,6 +81,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\OpenCLNet\AlignedArray.cs">
+      <Link>AlignedArray.cs</Link>
+    </Compile>
     <Compile Include="..\..\OpenCLNet\ATI.cs">
       <Link>ATI.cs</Link>
     </Compile>
@@ -125,6 +128,9 @@
     </Compile>
     <Compile Include="..\..\OpenCLNet\Sampler.cs">
       <Link>Sampler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\OpenCLNet\SimpleOCLHelper.cs">
+      <Link>SimpleOCLHelper.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

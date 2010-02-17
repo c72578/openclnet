@@ -86,9 +86,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\examples\OpenCLTest\AlignedArray.cs">
-      <Link>AlignedArray.cs</Link>
-    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
