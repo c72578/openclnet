@@ -23,7 +23,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-__constant uint Palette[17][4] = 
+constant uint Palette[17][4] = 
 {
     { 0x00, 0x00, 0x00, 0xFF},
     { 0x00, 0xA8, 0x76, 0xFF},
@@ -53,11 +53,11 @@ __constant uint Palette[17][4] =
 #define MAXITER 100
 #define PALETTELENGTH 16
 
-__constant   int8 i8_01234567 = (int8)( 0, 1, 2, 3, 4, 5, 6, 7 );
-__constant   int8 i8_00000000 = (int8)( 0, 1, 2, 3, 4, 5, 6, 7 );
-__constant   int8 i8_11111111 = (int8)( 0, 1, 2, 3, 4, 5, 6, 7 );
+constant   int8 i8_01234567 = (int8)( 0, 1, 2, 3, 4, 5, 6, 7 );
+constant   int8 i8_00000000 = (int8)( 0, 1, 2, 3, 4, 5, 6, 7 );
+constant   int8 i8_11111111 = (int8)( 0, 1, 2, 3, 4, 5, 6, 7 );
 
-__kernel void Mandelbrot( float left, float top, float right, float bottom, int stride, __global uchar4* pOutput )
+kernel void Mandelbrot( float left, float top, float right, float bottom, int stride, global uchar4* pOutput )
 {
   size_t width = get_global_size(0);
   size_t height = get_global_size(1);
@@ -91,51 +91,3 @@ __kernel void Mandelbrot( float left, float top, float right, float bottom, int 
   mixfc = color0*mixFactors+color1*((float4)(1.0f)-mixFactors);
   pOutput[stride*cy+cx] = convert_uchar4( mixfc );
 }
-
-#if 0
-__kernel void MandelbrotVectorized( float left, float top, float right, float bottom, int stride, __global uchar4* pOutput )
-{
-  size_t width = get_global_size(0);
-  size_t height = get_global_size(1);
-  size_t cx = get_global_id(0);
-  size_t cy = get_global_id(1);
-  float dx = (right-left)/(float)width;
-  float dy = (bottom-top)/(float)height;
-
-  float8 dxs = (float8)(dxs)*i8_01234567;
-  int8 cxs = (int8)(cx)*(int8)(8)+i8_01234567;
-  float8 x0s = (float8)(left)+(float8)(cx)+dxs;
-  float8 xs = i8_00000000;
-  float8 ys = i8_00000000;
-  
-  float x0 = left+dx*(float)cx;
-  float y0 = top+dy*(float)cy;
-  float x = 0.0f;
-  float y = 0.0f;
-  int8 iterations = (int8)(0);
-  int8 max_iterations = (int8)(255);
-
-loop:
-  float8 doneflags = (float8)(0);
-  float8 looptest = (xs*xs-ys*ys)<=(float8)(2*2);
-  doneflags |= ~loopTest;
-  
-  if( !any( (xs*xs-ys*ys)<=(float8)(2*2) ) && all( iterations<max_iterations ) )
-    goto done;
-    
-  float8 xtemp = xs*xs-ys*ys+x0s;
-  float8 ytemp = 2*xs*ys+y0s;
-  xs = select( xs, xtemp, doneflags );
-  ys = select( ys, ytemp, doneflags );
-
-  iterations = select( iterations, iterations+i8_11111111, doneflags );
-  goto loop;
-
-done:
-
-  int index;
-  color = iteration==max_iteration?0.0f: (float)iteration/255.0f;
-  index = clamp( iteration, 0.0f, 255.0f )/64;
-  pOutput[width*cy+cx] = (uchar4)(Palette[index][0],Palette[index][1],Palette[index][2],Palette[index][3]);
-}
-#endif
