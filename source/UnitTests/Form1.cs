@@ -142,25 +142,58 @@ namespace UnitTests
             Output("");
             Output("");
 
-            Output("Testing Platform.CreateContext()");
-            using (Context c = p.CreateContext(null, cpuDevices, new ContextNotify(ContextNotifyFunc), (IntPtr)0x01234567))
+            if (cpuDevices.Length > 0)
             {
-                Output("Testing context" + c);
-                TestContext(c);
+                Output("Testing Platform.CreateContext()");
+                using (Context c = p.CreateContext(null, cpuDevices, new ContextNotify(ContextNotifyFunc), (IntPtr)0x01234567))
+                {
+                    Output("Testing context" + c);
+                    TestContext(c);
+                }
+                Output("");
+                Output("");
             }
-            Output("");
-            Output("");
 
-            Output("Testing Platform.CreateContextFromType()");
-            IntPtr[] contextProperties = new IntPtr[]
+            if (gpuDevices.Length > 0)
             {
-                (IntPtr)ContextProperties.PLATFORM, p.PlatformID,
-                IntPtr.Zero
-            };
-            using (Context c = p.CreateContextFromType(contextProperties, DeviceType.CPU, new ContextNotify(ContextNotifyFunc), (IntPtr)0x01234567))
+                Output("Testing Platform.CreateContext()");
+                using (Context c = p.CreateContext(null, gpuDevices, new ContextNotify(ContextNotifyFunc), (IntPtr)0x01234567))
+                {
+                    Output("Testing context" + c);
+                    TestContext(c);
+                }
+                Output("");
+                Output("");
+            }
+
+            if (cpuDevices.Length > 0)
             {
-                Output("Testing context" + c);
-                TestContext(c);
+                Output("Testing Platform.CreateContextFromType()");
+                IntPtr[] contextProperties = new IntPtr[]
+                {
+                    (IntPtr)ContextProperties.PLATFORM, p.PlatformID,
+                    IntPtr.Zero
+                };
+                using (Context c = p.CreateContextFromType(contextProperties, DeviceType.CPU, new ContextNotify(ContextNotifyFunc), (IntPtr)0x01234567))
+                {
+                    Output("Testing context" + c);
+                    TestContext(c);
+                }
+            }
+
+            if (gpuDevices.Length > 0)
+            {
+                Output("Testing Platform.CreateContextFromType()");
+                IntPtr[] contextProperties = new IntPtr[]
+                {
+                    (IntPtr)ContextProperties.PLATFORM, p.PlatformID,
+                    IntPtr.Zero
+                };
+                using (Context c = p.CreateContextFromType(contextProperties, DeviceType.GPU, new ContextNotify(ContextNotifyFunc), (IntPtr)0x01234567))
+                {
+                    Output("Testing context" + c);
+                    TestContext(c);
+                }
             }
         }
 
@@ -422,7 +455,7 @@ namespace UnitTests
                     SetAAF(aafDst, 3.0f);
 
                     cq.EnqueueCopyBuffer(memSrc, memDst, IntPtr.Zero, IntPtr.Zero, (IntPtr)aafSrc.ByteLength);
-                    cq.EnqueueBarrier();
+                    cq.Finish();
 
                     if (!TestAAF(aafSrc, 2.0f))
                         Error("Memory copy destroyed src buffer");
@@ -430,6 +463,7 @@ namespace UnitTests
                         Error("Memory copy destroyed dst buffer");
 
                     cq.EnqueueReadBuffer(memDst, true, IntPtr.Zero, (IntPtr)aafDst.ByteLength, aafDst);
+                    cq.Finish();
                     if (!TestAAF(aafDst, 0.0f))
                         Error("Memory copy failed");
                 }

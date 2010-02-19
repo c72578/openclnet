@@ -25,18 +25,18 @@
 
 #pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable
 
-__constant char TestMemory[] = "TestMemory";
+constant char TestMemory[] = "TestMemory";
 
-__kernel void MemoryCopy( __global float* pSrc, __global float* pDst, size_t length )
+kernel void MemoryCopy( global float* pSrc, global float* pDst, size_t length )
 {
-	__global float* pEnd;
+	global float* pEnd;
 	
 	pEnd = pSrc+length;
 	while( pSrc<pEnd )
 		*pDst++ = *pSrc++;
 }
 
-__kernel void LoopAndDoNothing( int iterations )
+kernel void LoopAndDoNothing( int iterations )
 {
 	for( int i=0; i<iterations; i++ )
 		;
@@ -50,11 +50,11 @@ struct IOKernelArgs
     intptr_t outIntPtr;
 };
 
-__kernel void ArgIO( int i,
+kernel void ArgIO( int i,
   long l,
   float s,
   intptr_t p,
-  __global struct IOKernelArgs* pA)
+  global struct IOKernelArgs* pA)
 {
 	pA->outInt = i;
 	pA->outLong = l;
@@ -62,7 +62,7 @@ __kernel void ArgIO( int i,
 	pA->outIntPtr = p;
 }
 
-__kernel void TestReadMemory( __global char* pData, size_t length )
+kernel void TestReadMemory( global char* pData, size_t length )
 {
 	int sum;
 	
@@ -70,13 +70,13 @@ __kernel void TestReadMemory( __global char* pData, size_t length )
 		sum += pData[i];
 }
 
-__kernel void TestWriteMemory( __global char* pData, size_t length )
+kernel void TestWriteMemory( global char* pData, size_t length )
 {
 	for( size_t i=0; i<length; i++ )
 		pData[i] = 1;
 }
 
-__kernel void TestReadWriteMemory( __global char* pData, size_t length )
+kernel void TestReadWriteMemory( global char* pData, size_t length )
 {
 	for( size_t i=0; i<length; i++ )
 		pData[length-1-i] = pData[i];
