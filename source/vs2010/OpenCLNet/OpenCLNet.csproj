@@ -84,9 +84,6 @@
     <Compile Include="..\..\OpenCLNet\AlignedArray.cs">
       <Link>AlignedArray.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\ATI.cs">
-      <Link>ATI.cs</Link>
-    </Compile>
     <Compile Include="..\..\OpenCLNet\CommandQueue.cs">
       <Link>CommandQueue.cs</Link>
     </Compile>
