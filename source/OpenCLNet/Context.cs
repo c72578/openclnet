@@ -38,6 +38,13 @@ namespace OpenCLNet
     {
         public IntPtr ContextID { get; protected set; }
         public Platform Platform { get; protected set; }
+
+        /// <summary>
+        /// True if there is at least one 64 bit device in the context.
+        /// This guarantees that variables such as intptr_t, size_t etc are 64 bit
+        /// </summary>
+        public bool Is64BitContext { get; protected set; }
+
         // Track whether Dispose has been called.
         private bool disposed = false;
 
@@ -47,6 +54,7 @@ namespace OpenCLNet
         {
             Platform = platform;
             ContextID = contextID;
+            Is64BitContext = ContainsA64BitDevice();
         }
 
         internal Context( Platform platform, ContextProperties[] properties, Device[] devices )
@@ -70,6 +78,7 @@ namespace OpenCLNet
                 out result );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateContext failed: "+result , result);
+            Is64BitContext = ContainsA64BitDevice();
         }
 
         // Use C# destructor syntax for finalization code.
@@ -83,6 +92,14 @@ namespace OpenCLNet
             // Calling Dispose(false) is optimal in terms of
             // readability and maintainability.
             Dispose( false );
+        }
+
+        protected bool ContainsA64BitDevice()
+        {
+            for (int i = 0; i < Devices.Length; i++)
+                if (Devices[i].AddressBits == 64)
+                    return true;
+            return false;
         }
 
         #endregion

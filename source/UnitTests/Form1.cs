@@ -274,7 +274,7 @@ namespace UnitTests
             argIOKernel.SetLongArg(1, 65);
             argIOKernel.SetSingleArg(2, 38.4f);
             argIOKernel.SetIntPtrArg(3, new IntPtr(0x01234567));
-            argIOKernel.SetIntPtrArg(4, outArgBuffer);
+            argIOKernel.SetIntPtrArg(4, outArgBuffer.MemID);
 
             cq.EnqueueTask(argIOKernel);
 

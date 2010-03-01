@@ -57,12 +57,13 @@ namespace OpenCLNet
         public uint NumArgs { get { return InteropTools.ReadUInt( this, (uint)KernelInfo.NUM_ARGS ); } }
         public uint ReferenceCount { get { return InteropTools.ReadUInt( this, (uint)KernelInfo.REFERENCE_COUNT ); } }
         public Context Context { get; protected set; }
-        public Program Program { get { throw new NotImplementedException(); } }
+        public Program Program { get; protected set; }
         public IntPtr KernelID { get; set; }
 
-        internal Kernel( Context context, IntPtr kernelID )
+        internal Kernel( Context context, Program program, IntPtr kernelID )
         {
             Context = context;
+            Program = program;
             KernelID = kernelID;
         }
 
@@ -120,6 +121,8 @@ namespace OpenCLNet
 
 
         #endregion
+
+        #region SetArg functions
 
         public void SetArg( int argIndex, IntPtr argSize, IntPtr argValue )
         {
@@ -195,10 +198,50 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &c);
+            if (Context.Is64BitContext)
+            {
+                long l = c.ToInt64();
+                result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(8), &l);
+            }
+            else
+            {
+                int i = c.ToInt32();
+                result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(4), &i);
+            }
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
+
+        /// <summary>
+        /// Set argument argIndex to mem
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="mem"></param>
+        public void SetArg(int argIndex, Mem mem)
+        {
+            ErrorCode result;
+            IntPtr p = mem.MemID;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &p);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        /// <summary>
+        /// Set argument argIndex to sampler
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="sampler"></param>
+        public void SetArg(int argIndex, Sampler sampler)
+        {
+            ErrorCode result;
+            IntPtr p = sampler.SamplerID;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &p);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+        #endregion
 
         #region Setargs with explicit function names(For VB mostly)
 
@@ -242,7 +285,36 @@ namespace OpenCLNet
         {
             ErrorCode result;
 
-            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &c);
+            if (Context.Is64BitContext)
+            {
+                long l = c.ToInt64();
+                result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(8), &l);
+            }
+            else
+            {
+                int i = c.ToInt32();
+                result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(4), &i);
+            }
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetMemArg(int argIndex, Mem mem)
+        {
+            ErrorCode result;
+            IntPtr p = mem.MemID;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &p);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetSamplerArg(int argIndex, Sampler sampler)
+        {
+            ErrorCode result;
+            IntPtr p = sampler.SamplerID;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &p);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }

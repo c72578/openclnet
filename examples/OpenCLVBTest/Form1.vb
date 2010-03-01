@@ -54,7 +54,7 @@ Public Class Form1
         kernel.SetSingleArg(2, _Right)
         kernel.SetSingleArg(3, _Bottom)
         kernel.SetIntArg(4, bitmap.Width)
-        kernel.SetIntPtrArg(5, mandelbrotMemBuffer)
+        kernel.SetMemArg(5, mandelbrotMemBuffer)
 
         clEvent = Nothing
         globalWorkSize(0) = New IntPtr(CType(bd.Width, Long))

@@ -1,12 +1,12 @@
 ﻿kernel void CrossFade( float ratio,
                          size_t width,
-                         size_t height,
+                         intptr_t height,
                          global uchar* pInput0,
-                         size_t inputStride0,
+                         intptr_t inputStride0,
                          global uchar* pInput1,
-                         size_t inputStride1,
+                         intptr_t inputStride1,
                          global uchar* pOutput,
-                         size_t outputStride )
+                         intptr_t outputStride )
 {
 	size_t x = get_global_id(0);
 	size_t y = get_global_id(1);

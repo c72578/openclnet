@@ -87,7 +87,7 @@ namespace OpenCLNet
 
             memIDs = new IntPtr[mems.Length];
             for (int i = 0; i < mems.Length; i++)
-                memIDs[i] = mems[i];
+                memIDs[i] = mems[i].MemID;
             return memIDs;
         }
 

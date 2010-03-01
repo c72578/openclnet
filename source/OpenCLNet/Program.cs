@@ -216,7 +216,7 @@ namespace OpenCLNet
             kernelID = (IntPtr)OpenCL.CreateKernel( ProgramID, kernelName, out result );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateKernel failed with error code "+result, result);
-            return new Kernel( Context, kernelID );
+            return new Kernel( Context, this, kernelID );
         }
 
         public Kernel[] CreateKernels()
@@ -235,7 +235,7 @@ namespace OpenCLNet
 
             Kernel[] kernels = new Kernel[numKernels];
             for( int i=0; i<kernels.Length; i++ )
-                kernels[i] = new Kernel( Context, kernelIDs[i] );
+                kernels[i] = new Kernel( Context, this, kernelIDs[i] );
             return kernels;
         }
 

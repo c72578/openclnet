@@ -257,7 +257,7 @@ namespace OpenCLNet
         public string Version { get { return InteropTools.ReadString( this, (uint)DeviceInfo.VERSION ); } }
         /// <summary>
         /// Returns a space separated list of extension names (the extension names themselves do not contain any spaces).
-        /// The list of extension names returnedcurrently can include one or more of
+        /// The list of extension names returned currently can include one or more of
         /// the following approved extension names:
         /// cl_khr_fp64
         /// cl_khr_select_fprounding_mode

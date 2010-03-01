@@ -87,7 +87,12 @@ namespace ImageFilter
 
             string source = File.ReadAllText(@"OpenCLFunctions.cl");
 
-            OCLHelper = new SimpleOCLHelper(OpenCL.GetPlatform(0), DeviceType.DEFAULT, source );
+            OCLHelper = new SimpleOCLHelper(OpenCL.GetPlatform(0), DeviceType.ALL, source );
+            
+            for (int i = 0; i < OCLHelper.Devices.Length; i++)
+                comboBoxDeviceSelector.Items.Add(OCLHelper.Devices[i].Name);
+            comboBoxDeviceSelector.SelectedIndex = 0;
+
             CrossFadeKernel = OCLHelper.GetKernel("CrossFade");
         }
 
@@ -115,6 +120,8 @@ namespace ImageFilter
         {
             Mem outputBuffer;
 
+            int deviceIndex = comboBoxDeviceSelector.SelectedIndex;
+
             outputBuffer = OCLHelper.Context.CreateBuffer(MemFlags.USE_HOST_PTR, output.Stride * output.Height, output.Scan0);
 
             CrossFadeGlobalWorkSize[0] = (IntPtr)width;
@@ -128,11 +135,12 @@ namespace ImageFilter
             CrossFadeKernel.SetArg(6, (IntPtr)inputStride1);
             CrossFadeKernel.SetArg(7, outputBuffer);
             CrossFadeKernel.SetArg(8, (IntPtr)output.Stride);
-            OCLHelper.CQ.EnqueueNDRangeKernel(CrossFadeKernel, 2, null, CrossFadeGlobalWorkSize, null);
-            OCLHelper.CQ.EnqueueBarrier();
-            IntPtr p = OCLHelper.CQ.EnqueueMapBuffer(outputBuffer, true, MapFlags.READ, IntPtr.Zero, (IntPtr)(output.Stride * output.Height));
-            OCLHelper.CQ.EnqueueUnmapMemObject(outputBuffer, p);
-            OCLHelper.CQ.Finish();
+            
+            OCLHelper.CQs[deviceIndex].EnqueueNDRangeKernel(CrossFadeKernel, 2, null, CrossFadeGlobalWorkSize, null);
+            OCLHelper.CQs[deviceIndex].EnqueueBarrier();
+            IntPtr p = OCLHelper.CQs[deviceIndex].EnqueueMapBuffer(outputBuffer, true, MapFlags.READ, IntPtr.Zero, (IntPtr)(output.Stride * output.Height));
+            OCLHelper.CQs[deviceIndex].EnqueueUnmapMemObject(outputBuffer, p);
+            OCLHelper.CQs[deviceIndex].Finish();
             outputBuffer.Dispose();
         }
 
@@ -167,6 +175,11 @@ namespace ImageFilter
                 bd);
             OutputBitmap.UnlockBits(bd);
             Refresh();
+        }
+
+        private void comboBoxDeviceSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

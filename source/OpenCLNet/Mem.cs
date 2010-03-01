@@ -125,10 +125,6 @@ namespace OpenCLNet
 
         #endregion
 
-        public static implicit operator IntPtr( Mem mem )
-        {
-            return mem.MemID;
-        }
 
         public void GetGLObjectInfo(out CLGLObjectType glObjectType, out IntPtr glObjectName)
         {

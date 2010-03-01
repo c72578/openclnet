@@ -123,11 +123,6 @@ namespace OpenCLNet
 
         #endregion
 
-        public static implicit operator IntPtr( Sampler sampler )
-        {
-            return sampler.SamplerID;
-        }
-
         #region IPropertyContainer Members
 
 
