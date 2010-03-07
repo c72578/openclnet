@@ -8,8 +8,8 @@
     <ProjectGuid>{F7D24581-6EA3-4D20-A722-1BACC34B94AA}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImageFilter</RootNamespace>
-    <AssemblyName>ImageFilter</AssemblyName>
+    <RootNamespace>ImageCrossFade</RootNamespace>
+    <AssemblyName>ImageCrossFade</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -100,6 +100,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="OpenCLFunctions.cl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

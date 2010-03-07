@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using OpenCLNet;
 
-namespace ImageFilter
+namespace ImageCrossFade
 {
     public partial class Form1 : Form
     {
@@ -90,7 +90,7 @@ namespace ImageFilter
             OCLHelper = new SimpleOCLHelper(OpenCL.GetPlatform(0), DeviceType.ALL, source );
             
             for (int i = 0; i < OCLHelper.Devices.Length; i++)
-                comboBoxDeviceSelector.Items.Add(OCLHelper.Devices[i].Name);
+                comboBoxDeviceSelector.Items.Add(OCLHelper.Devices[i].Vendor+":"+OCLHelper.Devices[i].Name);
             comboBoxDeviceSelector.SelectedIndex = 0;
 
             CrossFadeKernel = OCLHelper.GetKernel("CrossFade");
@@ -127,14 +127,14 @@ namespace ImageFilter
             CrossFadeGlobalWorkSize[0] = (IntPtr)width;
             CrossFadeGlobalWorkSize[1] = (IntPtr)height;
             CrossFadeKernel.SetArg(0, ratio);
-            CrossFadeKernel.SetArg(1, (IntPtr)width);
-            CrossFadeKernel.SetArg(2, (IntPtr)height);
+            CrossFadeKernel.SetArg(1, width);
+            CrossFadeKernel.SetArg(2, height);
             CrossFadeKernel.SetArg(3, input0);
-            CrossFadeKernel.SetArg(4, (IntPtr)inputStride0);
+            CrossFadeKernel.SetArg(4, inputStride0);
             CrossFadeKernel.SetArg(5, input1);
-            CrossFadeKernel.SetArg(6, (IntPtr)inputStride1);
+            CrossFadeKernel.SetArg(6, inputStride1);
             CrossFadeKernel.SetArg(7, outputBuffer);
-            CrossFadeKernel.SetArg(8, (IntPtr)output.Stride);
+            CrossFadeKernel.SetArg(8, output.Stride);
             
             OCLHelper.CQs[deviceIndex].EnqueueNDRangeKernel(CrossFadeKernel, 2, null, CrossFadeGlobalWorkSize, null);
             OCLHelper.CQs[deviceIndex].EnqueueBarrier();

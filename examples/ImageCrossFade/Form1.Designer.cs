@@ -1,4 +1,4 @@
-﻿namespace ImageFilter
+﻿namespace ImageCrossFade
 {
     partial class Form1
     {

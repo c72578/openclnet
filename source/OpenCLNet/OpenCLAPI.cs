@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Security;
 
 namespace OpenCLNet
 {
@@ -101,6 +102,7 @@ namespace OpenCLNet
     /// <summary>
     /// OpenCLAPI - native bindings
     /// </summary>
+    [SuppressUnmanagedCodeSecurity()]
     unsafe public static class OpenCLAPI
     {
         internal static class Configuration
