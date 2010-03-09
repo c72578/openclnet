@@ -1,4 +1,8 @@
-﻿March 7, 2010
+﻿March 9, 2010
+-------------
+Added preliminary image support. As ATI don't officially support it yet, you have to set the environment variable GPU_IMAGES_SUPPORT=1 to turn it on in the driver.(If you don't turn it on all the functions will probably just fail miserably, and either way - their behavior is undefined unless you check the ImageSupport property in the devices you're using.) Images are created using the various "Create.." methods in the Context class. I've decided to depart slightly from the usual straight mapping to OpenCL types, and created an OCLImage subclass for the Mem objects created with the image creation functions. This makes it easier to access image specific properties in the debugger.
+
+March 7, 2010
 -------------
 Added the possibility of changing which device is used in the CrossFade
 example. Also decided to change the arguments in the OpenCL function from
