@@ -89,6 +89,7 @@
     <Compile Include="Device.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="Image.cs" />
     <Compile Include="InteropTools.cs" />
     <Compile Include="Kernel.cs" />
     <Compile Include="Mem.cs" />

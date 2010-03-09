@@ -142,7 +142,7 @@ namespace OpenCLNet
 
         #region IPropertyContainer Members
 
-        unsafe public IntPtr GetPropertySize( uint key )
+        unsafe public virtual IntPtr GetPropertySize( uint key )
         {
             IntPtr size;
             ErrorCode result;
@@ -153,7 +153,7 @@ namespace OpenCLNet
             return size;
         }
 
-        unsafe public void ReadProperty( uint key, IntPtr keyLength, void* pBuffer )
+        unsafe public virtual void ReadProperty( uint key, IntPtr keyLength, void* pBuffer )
         {
             IntPtr size;
             ErrorCode result;

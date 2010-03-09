@@ -90,10 +90,129 @@ namespace OpenCLNet
     #endregion
 
     [StructLayout(LayoutKind.Sequential,Pack=1)]
-    public struct cl_image_format
+    public struct OCLImageFormat
     {
-        public cl_channel_order image_channel_order;
-        public cl_channel_type  image_channel_data_type;
+        internal cl_channel_order image_channel_order;
+        internal cl_channel_type image_channel_data_type;
+
+        public static readonly OCLImageFormat RGB8U = new OCLImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT8);
+        public static readonly OCLImageFormat RGB8S = new OCLImageFormat(ChannelOrder.RGB, ChannelType.SIGNED_INT8);
+        public static readonly OCLImageFormat RGB16U = new OCLImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT16);
+        public static readonly OCLImageFormat RGB16S = new OCLImageFormat(ChannelOrder.RGB, ChannelType.SIGNED_INT16);
+        public static readonly OCLImageFormat RGB32U = new OCLImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT32);
+        public static readonly OCLImageFormat RGB32S = new OCLImageFormat(ChannelOrder.RGB, ChannelType.SIGNED_INT32);
+        public static readonly OCLImageFormat RGBFloat = new OCLImageFormat(ChannelOrder.RGB, ChannelType.FLOAT);
+        public static readonly OCLImageFormat RGBHalf = new OCLImageFormat(ChannelOrder.RGB, ChannelType.HALF_FLOAT);
+
+        public static readonly OCLImageFormat RG8U = new OCLImageFormat(ChannelOrder.RG, ChannelType.UNSIGNED_INT8);
+        public static readonly OCLImageFormat RG8S = new OCLImageFormat(ChannelOrder.RG, ChannelType.SIGNED_INT8);
+        public static readonly OCLImageFormat RG16U = new OCLImageFormat(ChannelOrder.RG, ChannelType.UNSIGNED_INT16);
+        public static readonly OCLImageFormat RG16S = new OCLImageFormat(ChannelOrder.RG, ChannelType.SIGNED_INT16);
+        public static readonly OCLImageFormat RG32U = new OCLImageFormat(ChannelOrder.RG, ChannelType.UNSIGNED_INT32);
+        public static readonly OCLImageFormat RG32S = new OCLImageFormat(ChannelOrder.RG, ChannelType.SIGNED_INT32);
+        public static readonly OCLImageFormat RGFloat = new OCLImageFormat(ChannelOrder.RG, ChannelType.FLOAT);
+        public static readonly OCLImageFormat RGHalf = new OCLImageFormat(ChannelOrder.RG, ChannelType.HALF_FLOAT);
+
+        public static readonly OCLImageFormat R8U = new OCLImageFormat(ChannelOrder.R, ChannelType.UNSIGNED_INT8);
+        public static readonly OCLImageFormat R8S = new OCLImageFormat(ChannelOrder.R, ChannelType.SIGNED_INT8);
+        public static readonly OCLImageFormat R16U = new OCLImageFormat(ChannelOrder.R, ChannelType.UNSIGNED_INT16);
+        public static readonly OCLImageFormat R16S = new OCLImageFormat(ChannelOrder.R, ChannelType.SIGNED_INT16);
+        public static readonly OCLImageFormat R32U = new OCLImageFormat(ChannelOrder.R, ChannelType.UNSIGNED_INT32);
+        public static readonly OCLImageFormat R32S = new OCLImageFormat(ChannelOrder.R, ChannelType.SIGNED_INT32);
+        public static readonly OCLImageFormat RFloat = new OCLImageFormat(ChannelOrder.R, ChannelType.FLOAT);
+        public static readonly OCLImageFormat RHalf = new OCLImageFormat(ChannelOrder.R, ChannelType.HALF_FLOAT);
+
+        public static readonly OCLImageFormat RA8U = new OCLImageFormat(ChannelOrder.RA, ChannelType.UNSIGNED_INT8);
+        public static readonly OCLImageFormat RA8S = new OCLImageFormat(ChannelOrder.RA, ChannelType.SIGNED_INT8);
+        public static readonly OCLImageFormat RA16U = new OCLImageFormat(ChannelOrder.RA, ChannelType.UNSIGNED_INT16);
+        public static readonly OCLImageFormat RA16S = new OCLImageFormat(ChannelOrder.RA, ChannelType.SIGNED_INT16);
+        public static readonly OCLImageFormat RA32U = new OCLImageFormat(ChannelOrder.RA, ChannelType.UNSIGNED_INT32);
+        public static readonly OCLImageFormat RA32S = new OCLImageFormat(ChannelOrder.RA, ChannelType.SIGNED_INT32);
+        public static readonly OCLImageFormat RAFloat = new OCLImageFormat(ChannelOrder.RA, ChannelType.FLOAT);
+        public static readonly OCLImageFormat RAHalf = new OCLImageFormat(ChannelOrder.RA, ChannelType.HALF_FLOAT);
+
+        public static readonly OCLImageFormat RGBA8U = new OCLImageFormat(ChannelOrder.RGBA, ChannelType.UNSIGNED_INT8);
+        public static readonly OCLImageFormat RGBA8S = new OCLImageFormat(ChannelOrder.RGBA, ChannelType.SIGNED_INT8);
+        public static readonly OCLImageFormat RGBA16U = new OCLImageFormat(ChannelOrder.RGBA, ChannelType.UNSIGNED_INT16);
+        public static readonly OCLImageFormat RGBA16S = new OCLImageFormat(ChannelOrder.RGBA, ChannelType.SIGNED_INT16);
+        public static readonly OCLImageFormat RGBA32U = new OCLImageFormat(ChannelOrder.RGBA, ChannelType.UNSIGNED_INT32);
+        public static readonly OCLImageFormat RGBA32S = new OCLImageFormat(ChannelOrder.RGBA, ChannelType.SIGNED_INT32);
+        public static readonly OCLImageFormat RGBAFloat = new OCLImageFormat(ChannelOrder.RGBA, ChannelType.FLOAT);
+        public static readonly OCLImageFormat RGBAHalf = new OCLImageFormat(ChannelOrder.RGBA, ChannelType.HALF_FLOAT);
+
+        public static readonly OCLImageFormat BGRA8U = new OCLImageFormat(ChannelOrder.BGRA, ChannelType.UNSIGNED_INT8);
+        public static readonly OCLImageFormat BGRA8S = new OCLImageFormat(ChannelOrder.BGRA, ChannelType.SIGNED_INT8);
+        public static readonly OCLImageFormat BGRA16U = new OCLImageFormat(ChannelOrder.BGRA, ChannelType.UNSIGNED_INT16);
+        public static readonly OCLImageFormat BGRA16S = new OCLImageFormat(ChannelOrder.BGRA, ChannelType.SIGNED_INT16);
+        public static readonly OCLImageFormat BGRA32U = new OCLImageFormat(ChannelOrder.BGRA, ChannelType.UNSIGNED_INT32);
+        public static readonly OCLImageFormat BGRA32S = new OCLImageFormat(ChannelOrder.BGRA, ChannelType.SIGNED_INT32);
+        public static readonly OCLImageFormat BGRAFloat = new OCLImageFormat(ChannelOrder.BGRA, ChannelType.FLOAT);
+        public static readonly OCLImageFormat BGRAHalf = new OCLImageFormat(ChannelOrder.BGRA, ChannelType.HALF_FLOAT);
+
+        public static readonly OCLImageFormat ARGB8U = new OCLImageFormat(ChannelOrder.ARGB, ChannelType.UNSIGNED_INT8);
+        public static readonly OCLImageFormat ARGB8S = new OCLImageFormat(ChannelOrder.ARGB, ChannelType.SIGNED_INT8);
+        public static readonly OCLImageFormat ARGB16U = new OCLImageFormat(ChannelOrder.ARGB, ChannelType.UNSIGNED_INT16);
+        public static readonly OCLImageFormat ARGB16S = new OCLImageFormat(ChannelOrder.ARGB, ChannelType.SIGNED_INT16);
+        public static readonly OCLImageFormat ARGB32U = new OCLImageFormat(ChannelOrder.ARGB, ChannelType.UNSIGNED_INT32);
+        public static readonly OCLImageFormat ARGB32S = new OCLImageFormat(ChannelOrder.ARGB, ChannelType.SIGNED_INT32);
+        public static readonly OCLImageFormat ARGBFloat = new OCLImageFormat(ChannelOrder.ARGB, ChannelType.FLOAT);
+        public static readonly OCLImageFormat ARGBHalf = new OCLImageFormat(ChannelOrder.ARGB, ChannelType.HALF_FLOAT);
+
+        public static readonly OCLImageFormat A8U = new OCLImageFormat(ChannelOrder.A, ChannelType.UNSIGNED_INT8);
+        public static readonly OCLImageFormat A8S = new OCLImageFormat(ChannelOrder.A, ChannelType.SIGNED_INT8);
+        public static readonly OCLImageFormat A16U = new OCLImageFormat(ChannelOrder.A, ChannelType.UNSIGNED_INT16);
+        public static readonly OCLImageFormat A16S = new OCLImageFormat(ChannelOrder.A, ChannelType.SIGNED_INT16);
+        public static readonly OCLImageFormat A32U = new OCLImageFormat(ChannelOrder.A, ChannelType.UNSIGNED_INT32);
+        public static readonly OCLImageFormat A32S = new OCLImageFormat(ChannelOrder.A, ChannelType.SIGNED_INT32);
+        public static readonly OCLImageFormat AFloat = new OCLImageFormat(ChannelOrder.A, ChannelType.FLOAT);
+        public static readonly OCLImageFormat AHalf = new OCLImageFormat(ChannelOrder.A, ChannelType.HALF_FLOAT);
+
+        public static readonly OCLImageFormat INTENSITY8U = new OCLImageFormat(ChannelOrder.INTENSITY, ChannelType.UNSIGNED_INT8);
+        public static readonly OCLImageFormat INTENSITY8S = new OCLImageFormat(ChannelOrder.INTENSITY, ChannelType.SIGNED_INT8);
+        public static readonly OCLImageFormat INTENSITY16U = new OCLImageFormat(ChannelOrder.INTENSITY, ChannelType.UNSIGNED_INT16);
+        public static readonly OCLImageFormat INTENSITY16S = new OCLImageFormat(ChannelOrder.INTENSITY, ChannelType.SIGNED_INT16);
+        public static readonly OCLImageFormat INTENSITY32U = new OCLImageFormat(ChannelOrder.INTENSITY, ChannelType.UNSIGNED_INT32);
+        public static readonly OCLImageFormat INTENSITY32S = new OCLImageFormat(ChannelOrder.INTENSITY, ChannelType.SIGNED_INT32);
+        public static readonly OCLImageFormat INTENSITYFloat = new OCLImageFormat(ChannelOrder.INTENSITY, ChannelType.FLOAT);
+        public static readonly OCLImageFormat INTENSITYHalf = new OCLImageFormat(ChannelOrder.INTENSITY, ChannelType.HALF_FLOAT);
+
+        public static readonly OCLImageFormat LUMINANCE8U = new OCLImageFormat(ChannelOrder.LUMINANCE, ChannelType.UNSIGNED_INT8);
+        public static readonly OCLImageFormat LUMINANCE8S = new OCLImageFormat(ChannelOrder.LUMINANCE, ChannelType.SIGNED_INT8);
+        public static readonly OCLImageFormat LUMINANCE16U = new OCLImageFormat(ChannelOrder.LUMINANCE, ChannelType.UNSIGNED_INT16);
+        public static readonly OCLImageFormat LUMINANCE16S = new OCLImageFormat(ChannelOrder.LUMINANCE, ChannelType.SIGNED_INT16);
+        public static readonly OCLImageFormat LUMINANCE32U = new OCLImageFormat(ChannelOrder.LUMINANCE, ChannelType.UNSIGNED_INT32);
+        public static readonly OCLImageFormat LUMINANCE32S = new OCLImageFormat(ChannelOrder.LUMINANCE, ChannelType.SIGNED_INT32);
+        public static readonly OCLImageFormat LUMINANCEFloat = new OCLImageFormat(ChannelOrder.LUMINANCE, ChannelType.FLOAT);
+        public static readonly OCLImageFormat LUMINANCEHalf = new OCLImageFormat(ChannelOrder.LUMINANCE, ChannelType.HALF_FLOAT);
+
+        public OCLImageFormat(ChannelOrder channelOrder, ChannelType channelType)
+        {
+            image_channel_order = (cl_channel_order)channelOrder;
+            image_channel_data_type = (cl_channel_type)channelType;
+        }
+
+        public ChannelOrder ChannelOrder
+        {
+            get
+            {
+                return (ChannelOrder)image_channel_order;
+            }
+            set
+            {
+                image_channel_order = (cl_channel_order)value;
+            }
+        }
+        public ChannelType ChannelType
+        {
+            get
+            {
+                return (ChannelType)image_channel_data_type;
+            }
+            set
+            {
+                image_channel_data_type = (cl_channel_type)value;
+            }
+        }
     }
 
     public enum ErrorCode: int

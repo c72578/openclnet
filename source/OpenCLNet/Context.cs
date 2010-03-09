@@ -223,6 +223,8 @@ namespace OpenCLNet
             return new Mem( this, memID );
         }
 
+        #region GL Interop
+
         public Mem CreateFromGLBuffer(MemFlags flags, IntPtr bufobj)
         {
             IntPtr memID;
@@ -267,6 +269,10 @@ namespace OpenCLNet
             return new Mem(this, memID);
         }
 
+        #endregion
+
+        #region Create Program
+
         public Program CreateProgramFromFile(string path)
         {
             return CreateProgramWithSource(File.ReadAllText(path));
@@ -309,14 +315,117 @@ namespace OpenCLNet
             return new Program(this, programID);
         }
 
-        public Sampler CreateSampler( bool normalizedCoords, AddressingMode addressingMode, FilterMode filterMode, out ErrorCode result )
+        #endregion
+
+        public Sampler CreateSampler( bool normalizedCoords, AddressingMode addressingMode, FilterMode filterMode )
         {
             IntPtr samplerID;
+            ErrorCode result;
             
             samplerID = OpenCL.CreateSampler( ContextID, normalizedCoords, (uint)addressingMode, (uint)filterMode, out result );
-            return new Sampler( this, samplerID );
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateSampler failed with error code " + result, result);
+            return new Sampler(this, samplerID);
         }
 
+        #region Image2D
+
+        public OCLImage CreateImage2D(MemFlags flags, OCLImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch)
+        {
+            return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, IntPtr.Zero);
+        }
+
+        public OCLImage CreateImage2D(MemFlags flags, OCLImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch, IntPtr pHost)
+        {
+            return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, pHost);
+        }
+
+        public OCLImage CreateImage2D(MemFlags flags, OCLImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageRowPitch, IntPtr pHost)
+        {
+            IntPtr memID;
+            ErrorCode result;
+
+            memID = (IntPtr)OpenCL.CreateImage2D(ContextID, (ulong)flags, imageFormat, imageWidth, imageHeight, imageRowPitch, pHost.ToPointer(), out result);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateImage2D failed with error code " + result, result);
+            return new OCLImage(this, memID);
+        }
+
+        #endregion
+
+        #region Image3D
+
+        public OCLImage CreateImage3D(MemFlags flags, OCLImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch)
+        {
+            return CreateImage3D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageDepth, (IntPtr)imageRowPitch, (IntPtr)imageSlicePitch, IntPtr.Zero);
+        }
+
+        public OCLImage CreateImage3D(MemFlags flags, OCLImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch, IntPtr pHost)
+        {
+            return CreateImage3D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageDepth, (IntPtr)imageRowPitch, (IntPtr)imageSlicePitch, pHost);
+        }
+
+        public OCLImage CreateImage3D(MemFlags flags, OCLImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageDepth, IntPtr imageRowPitch, IntPtr imageSlicePitch, IntPtr pHost)
+        {
+            IntPtr memID;
+            ErrorCode result;
+
+            memID = (IntPtr)OpenCL.CreateImage3D(ContextID, (ulong)flags, imageFormat, imageWidth, imageHeight, imageDepth, imageRowPitch, imageSlicePitch, pHost.ToPointer(), out result);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateImage3D failed with error code " + result, result);
+            return new OCLImage(this, memID);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Query which ImageFormats are supported by this context
+        /// </summary>
+        /// <param name="flags"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public OCLImageFormat[] GetSupportedImageFormats(MemFlags flags, MemObjectType type)
+        {
+            uint numImageFormats;
+            OCLImageFormat[] imageFormats;
+            ErrorCode result;
+
+            result = OpenCL.GetSupportedImageFormats(ContextID, (ulong)flags, (uint)type, (uint)0, null, out numImageFormats);
+            if( result!=ErrorCode.SUCCESS )
+                throw new OpenCLException("GetSupportedImageFormats failed with error code " + result, result);
+
+            imageFormats = new OCLImageFormat[numImageFormats];
+
+            result = OpenCL.GetSupportedImageFormats(ContextID, (ulong)flags, (uint)type, numImageFormats, imageFormats, out numImageFormats);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("GetSupportedImageFormats failed with error code " + result, result);
+            
+            return imageFormats;
+        }
+
+        /// <summary>
+        /// Convenience function. Checks if a context supports a specific image format
+        /// </summary>
+        /// <param name="flags"></param>
+        /// <param name="type"></param>
+        /// <param name="channelOrder"></param>
+        /// <param name="channelType"></param>
+        /// <returns>true if the image format is supported, false otherwise</returns>
+        public bool SupportsImageFormat(MemFlags flags, MemObjectType type, ChannelOrder channelOrder, ChannelType channelType)
+        {
+            OCLImageFormat[] imageFormats = GetSupportedImageFormats(flags, type);
+            foreach (OCLImageFormat imageFormat in imageFormats)
+            {
+                if (imageFormat.ChannelOrder == channelOrder && imageFormat.ChannelType == channelType)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Block until the event fires
+        /// </summary>
+        /// <param name="_event"></param>
         public void WaitForEvent(Event _event)
         {
             Event[] event_list = new Event[1];
@@ -325,6 +434,11 @@ namespace OpenCLNet
             OpenCL.WaitForEvents(1, InteropTools.ConvertEventsToEventIDs(event_list));
         }
 
+        /// <summary>
+        /// Block until all events in the array have fired
+        /// </summary>
+        /// <param name="num_events"></param>
+        /// <param name="event_list"></param>
         public void WaitForEvents(int num_events, Event[] event_list)
         {
             OpenCL.WaitForEvents((uint)num_events, InteropTools.ConvertEventsToEventIDs(event_list));

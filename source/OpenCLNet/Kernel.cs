@@ -122,8 +122,6 @@ namespace OpenCLNet
 
         #endregion
 
-        #region SetArg functions
-
         public void SetArg( int argIndex, IntPtr argSize, IntPtr argValue )
         {
             ErrorCode result;
@@ -133,18 +131,20 @@ namespace OpenCLNet
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
 
+        #region SetArg functions
+
         /// <summary>
         /// Set argument argIndex to c
         /// </summary>
         /// <param name="argIndex"></param>
         /// <param name="c"></param>
-        public void SetArg( int argIndex, int c )
+        public void SetArg(int argIndex, sbyte c)
         {
             ErrorCode result;
 
-            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(int)), &c);
-            if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "SetArg failed with error code "+result, result);
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(sbyte)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
         }
 
         /// <summary>
@@ -152,13 +152,97 @@ namespace OpenCLNet
         /// </summary>
         /// <param name="argIndex"></param>
         /// <param name="c"></param>
-        public void SetArg( int argIndex, long c )
+        public void SetArg(int argIndex, byte c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(byte)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
+        public void SetArg(int argIndex, short c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(short)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
+        public void SetArg(int argIndex, ushort c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(ushort)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
+        public void SetArg(int argIndex, int c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(int)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
+        public void SetArg(int argIndex, uint c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(uint)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
+        public void SetArg(int argIndex, long c)
         {
             ErrorCode result;
 
             result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(long)), &c);
-            if( result!=ErrorCode.SUCCESS )
-                throw new OpenCLException( "SetArg failed with error code "+result, result);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        /// <summary>
+        /// Set argument argIndex to c
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
+        public void SetArg(int argIndex, ulong c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(ulong)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
         }
 
         /// <summary>
@@ -241,9 +325,46 @@ namespace OpenCLNet
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }
+
         #endregion
 
         #region Setargs with explicit function names(For VB mostly)
+
+        public void SetSByteArg(int argIndex, sbyte c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(sbyte)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetByteArg(int argIndex, byte c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(byte)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetShortArg(int argIndex, short c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(short)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetUShortArg(int argIndex, ushort c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(ushort)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
 
         public void SetIntArg(int argIndex, int c)
         {
@@ -254,11 +375,29 @@ namespace OpenCLNet
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }
 
+        public void SetUIntArg(int argIndex, uint c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(uint)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
         public void SetLongArg(int argIndex, long c)
         {
             ErrorCode result;
 
             result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(long)), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetULongArg(int argIndex, ulong c)
+        {
+            ErrorCode result;
+
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(ulong)), &c);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }
@@ -321,6 +460,164 @@ namespace OpenCLNet
 
         #endregion
 
+#if false
+        // Have to add some endian checking before compiling these into the library
+
+        #region Set Char vectors
+        
+        public void SetChar2Arg(int argIndex, sbyte s0, sbyte s1)
+        {
+            sbyte* pBuffer = stackalloc sbyte[2];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            SetArg(argIndex, (IntPtr)(sizeof(sbyte) * 2), (IntPtr)pBuffer);
+        }
+
+        public void SetChar4Arg(int argIndex, sbyte s0, sbyte s1, sbyte s2, sbyte s3)
+        {
+            sbyte* pBuffer = stackalloc sbyte[4];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            pBuffer[2] = s2;
+            pBuffer[3] = s3;
+            SetArg(argIndex, (IntPtr)(sizeof(sbyte) * 4), (IntPtr)pBuffer);
+        }
+
+        #endregion
+        
+        #region Set UChar vectors
+
+        public void SetUChar2Arg(int argIndex, byte s0, byte s1)
+        {
+            byte* pBuffer = stackalloc byte[2];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            SetArg(argIndex, (IntPtr)(sizeof(byte) * 2), (IntPtr)pBuffer);
+        }
+
+        public void SetUChar4Arg(int argIndex, byte s0, byte s1, byte s2, byte s3)
+        {
+            byte* pBuffer = stackalloc byte[4];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            pBuffer[2] = s2;
+            pBuffer[3] = s3;
+            SetArg(argIndex, (IntPtr)(sizeof(byte) * 4), (IntPtr)pBuffer);
+        }
+
+        #endregion
+
+        #region Set Int vectors
+
+        public void SetInt2Arg(int argIndex, int s0, int s1)
+        {
+            int* pBuffer = stackalloc int[2];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            SetArg(argIndex, (IntPtr)(sizeof(int) * 2), (IntPtr)pBuffer);
+        }
+
+        public void SetInt4Arg(int argIndex, int s0, int s1, int s2, int s3)
+        {
+            int* pBuffer = stackalloc int[4];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            pBuffer[2] = s2;
+            pBuffer[3] = s3;
+            SetArg(argIndex, (IntPtr)(sizeof(int) * 4), (IntPtr)pBuffer);
+        }
+
+        #endregion
+
+        #region Set UInt vectors
+
+        public void SetUInt2Arg(int argIndex, uint s0, uint s1)
+        {
+            uint* pBuffer = stackalloc uint[2];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            SetArg(argIndex, (IntPtr)(sizeof(uint) * 2), (IntPtr)pBuffer);
+        }
+
+        public void SetUInt4Arg(int argIndex, uint s0, uint s1, uint s2, uint s3)
+        {
+            uint* pBuffer = stackalloc uint[4];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            pBuffer[2] = s2;
+            pBuffer[3] = s3;
+            SetArg(argIndex, (IntPtr)(sizeof(uint) * 4), (IntPtr)pBuffer);
+        }
+
+        #endregion
+
+        #region Set Long vectors
+
+        public void SetLong2Arg(int argIndex, long s0, long s1)
+        {
+            long* pBuffer = stackalloc long[2];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            SetArg(argIndex, (IntPtr)(sizeof(long) * 2), (IntPtr)pBuffer);
+        }
+
+        public void SetLong4Arg(int argIndex, long s0, long s1, long s2, long s3)
+        {
+            long* pBuffer = stackalloc long[4];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            pBuffer[2] = s2;
+            pBuffer[3] = s3;
+            SetArg(argIndex, (IntPtr)(sizeof(long) * 4), (IntPtr)pBuffer);
+        }
+
+        #endregion
+
+        #region Set ULong vectors
+
+        public void SetULong2Arg(int argIndex, ulong s0, ulong s1)
+        {
+            ulong* pBuffer = stackalloc ulong[2];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            SetArg(argIndex, (IntPtr)(sizeof(ulong) * 2), (IntPtr)pBuffer);
+        }
+
+        public void SetULong4Arg(int argIndex, ulong s0, ulong s1, ulong s2, ulong s3)
+        {
+            ulong* pBuffer = stackalloc ulong[4];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            pBuffer[2] = s2;
+            pBuffer[3] = s3;
+            SetArg(argIndex, (IntPtr)(sizeof(ulong) * 4), (IntPtr)pBuffer);
+        }
+
+        #endregion
+
+        #region Set Float vectors
+
+        public void SetFloat2Arg(int argIndex, float s0, float s1)
+        {
+            float* pBuffer = stackalloc float[2];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            SetArg(argIndex, (IntPtr)(sizeof(float) * 2), (IntPtr)pBuffer);
+        }
+
+        public void SetFloat4Arg(int argIndex, float s0, float s1, float s2, float s3)
+        {
+            float* pBuffer = stackalloc float[4];
+            pBuffer[0] = s0;
+            pBuffer[1] = s1;
+            pBuffer[2] = s2;
+            pBuffer[3] = s3;
+            SetArg(argIndex, (IntPtr)(sizeof(float) * 4), (IntPtr)pBuffer);
+        }
+
+        #endregion
+
+#endif
         public static implicit operator IntPtr( Kernel k )
         {
             return k.KernelID;
