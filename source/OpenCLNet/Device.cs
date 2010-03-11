@@ -34,10 +34,14 @@ namespace OpenCLNet
 {
     unsafe public class Device : InteropTools.IPropertyContainer
     {
-        internal Device( Platform platform, IntPtr deviceID )
+        protected HashSet<string> ExtensionHashSet = new HashSet<string>();
+
+        internal Device(Platform platform, IntPtr deviceID)
         {
             Platform = platform;
             DeviceID = deviceID;
+
+            InitializeExtensionHashSet();
         }
 
         //  User-defined conversion from double to Digit
@@ -302,6 +306,27 @@ namespace OpenCLNet
         }
 
         #endregion
+
+        protected void InitializeExtensionHashSet()
+        {
+            string[] ext = Extensions.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string s in ext)
+                ExtensionHashSet.Add(s);
+        }
+
+        public bool HasExtension(string extension)
+        {
+            return ExtensionHashSet.Contains(extension);
+        }
+
+        public bool HasExtensions(string[] extensions)
+        {
+            foreach (string s in extensions)
+                if (!ExtensionHashSet.Contains(s))
+                    return false;
+            return true;
+        }
 
         public override string ToString()
         {
