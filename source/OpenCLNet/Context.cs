@@ -191,6 +191,8 @@ namespace OpenCLNet
 
         #endregion
 
+        #region Create Command Queue
+
         public CommandQueue CreateCommandQueue(Device device)
         {
             return CreateCommandQueue(device, (CommandQueueProperties)0);
@@ -207,6 +209,10 @@ namespace OpenCLNet
             return new CommandQueue( this, device, commandQueueID );
         }
 
+        #endregion
+
+        #region Create Buffer
+
         public Mem CreateBuffer( MemFlags flags, long size, IntPtr pHost )
         {
             return CreateBuffer( flags, size, pHost.ToPointer() );
@@ -222,6 +228,8 @@ namespace OpenCLNet
                 throw new OpenCLException( "CreateBuffer failed with error code "+result, result);
             return new Mem( this, memID );
         }
+
+        #endregion
 
         #region GL Interop
 
@@ -317,6 +325,8 @@ namespace OpenCLNet
 
         #endregion
 
+        #region Create Sampler
+
         public Sampler CreateSampler( bool normalizedCoords, AddressingMode addressingMode, FilterMode filterMode )
         {
             IntPtr samplerID;
@@ -327,6 +337,8 @@ namespace OpenCLNet
                 throw new OpenCLException("CreateSampler failed with error code " + result, result);
             return new Sampler(this, samplerID);
         }
+
+        #endregion
 
         #region Image2D
 
@@ -378,6 +390,8 @@ namespace OpenCLNet
 
         #endregion
 
+        #region Image format queries
+
         /// <summary>
         /// Query which ImageFormats are supported by this context
         /// </summary>
@@ -422,6 +436,10 @@ namespace OpenCLNet
             return false;
         }
 
+        #endregion
+
+        #region WaitForEvents
+
         /// <summary>
         /// Block until the event fires
         /// </summary>
@@ -443,6 +461,28 @@ namespace OpenCLNet
         {
             OpenCL.WaitForEvents((uint)num_events, InteropTools.ConvertEventsToEventIDs(event_list));
         }
+
+        #endregion
+
+        #region HasExtension
+
+        public bool HasExtension(string extension)
+        {
+            foreach (Device d in Devices)
+                if (!d.HasExtension(extension))
+                    return false;
+            return true;
+        }
+
+        public bool HasExtensions(string[] extensions)
+        {
+            foreach (Device d in Devices)
+                if (!d.HasExtensions(extensions))
+                    return false;
+            return true;
+        }
+
+        #endregion
 
         public static implicit operator IntPtr( Context c )
         {
