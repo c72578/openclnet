@@ -99,6 +99,9 @@
     <Compile Include="..\..\OpenCLNet\Event.cs">
       <Link>Event.cs</Link>
     </Compile>
+    <Compile Include="..\..\OpenCLNet\Exceptions.cs">
+      <Link>Exceptions.cs</Link>
+    </Compile>
     <Compile Include="..\..\OpenCLNet\Image.cs">
       <Link>Image.cs</Link>
     </Compile>
