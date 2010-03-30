@@ -94,6 +94,7 @@ namespace OpenCLNet
     using cl_gl_object_type=UInt32;
     using cl_gl_texture_info=UInt32;
     using cl_gl_platform_info=UInt32;
+    using cl_gl_context_info=UInt32;
     using GLuint=UInt32;
     using GLint=Int32;
     using GLenum=Int32;
@@ -207,9 +208,9 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, IntPtr size, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
-        public extern static cl_mem clCreateImage2D(cl_context context, cl_mem_flags flags, OCLImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret);
+        public extern static cl_mem clCreateImage2D(cl_context context, cl_mem_flags flags, ImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
-        public extern static cl_mem clCreateImage3D(cl_context context, cl_mem_flags flags, OCLImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret);
+        public extern static cl_mem clCreateImage3D(cl_context context, cl_mem_flags flags, ImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clRetainMemObject(cl_mem memobj);
         [DllImport(Configuration.Library)]
@@ -219,7 +220,7 @@ namespace OpenCLNet
             cl_mem_flags flags,
             cl_mem_object_type image_type,
             cl_uint num_entries,
-            [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] OCLImageFormat[] image_formats,
+            [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] ImageFormat[] image_formats,
             out cl_uint num_image_formats);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clGetMemObjectInfo(cl_mem memobj, cl_mem_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
@@ -508,13 +509,6 @@ namespace OpenCLNet
 
         [DllImport(Configuration.Library)]
         public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
-
-#if false
-        _clCreateFromD3D10Buffer@20
-        _clCreateFromD3D9Buffer@24
-        _clCreateImageFromD3D10Resource@20
-        _clCreateImageFromD3D9Resource@24
-#endif
     }
 
 }

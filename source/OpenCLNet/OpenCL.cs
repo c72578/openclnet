@@ -320,12 +320,12 @@ namespace OpenCLNet
             return OpenCLAPI.clCreateBuffer(context, flags, size, host_ptr, out errcode_ret);
         }
 
-        public static IntPtr CreateImage2D(IntPtr context, ulong flags, OCLImageFormat image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret)
+        public static IntPtr CreateImage2D(IntPtr context, ulong flags, ImageFormat image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clCreateImage2D(context, flags, &image_format, image_width, image_height, image_row_pitch, host_ptr, out errcode_ret);
         }
 
-        public static IntPtr CreateImage3D(IntPtr context, ulong flags, OCLImageFormat image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret)
+        public static IntPtr CreateImage3D(IntPtr context, ulong flags, ImageFormat image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clCreateImage3D(context, flags, &image_format, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch, host_ptr, out errcode_ret);
         }
@@ -340,7 +340,7 @@ namespace OpenCLNet
             return OpenCLAPI.clReleaseMemObject(memobj);
         }
 
-        public static ErrorCode GetSupportedImageFormats(IntPtr context, ulong flags, uint image_type, uint num_entries, OCLImageFormat[] image_formats, out uint num_image_formats)
+        public static ErrorCode GetSupportedImageFormats(IntPtr context, ulong flags, uint image_type, uint num_entries, ImageFormat[] image_formats, out uint num_image_formats)
         {
             return OpenCLAPI.clGetSupportedImageFormats(context, flags, image_type, num_entries, image_formats, out num_image_formats);
         }
@@ -614,43 +614,4 @@ namespace OpenCLNet
             return (ErrorCode)OpenCLAPI.clGetEventProfilingInfo(_event, (uint)param_name, param_value_size, param_value, out param_value_size_ret);
         }
     }
-
-
-    public class OpenCLException : Exception
-    {
-        public ErrorCode ErrorCode = ErrorCode.SUCCESS;
-
-        public OpenCLException()
-        {
-        }
-
-        public OpenCLException(ErrorCode errorCode)
-        {
-            ErrorCode = errorCode;
-        }
-
-        public OpenCLException(string errorMessage)
-            : base(errorMessage)
-        {
-        }
-
-        public OpenCLException(string errorMessage, ErrorCode errorCode)
-            : base(errorMessage)
-        {
-            ErrorCode = errorCode;
-        }
-
-        public OpenCLException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        public OpenCLException(string message, ErrorCode errorCode, Exception innerException)
-            : base(message, innerException)
-        {
-            ErrorCode = errorCode;
-        }
-    }
-
-
 }

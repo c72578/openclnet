@@ -307,6 +307,8 @@ namespace OpenCLNet
 
         #endregion
 
+        #region HasExtension
+
         protected void InitializeExtensionHashSet()
         {
             string[] ext = Extensions.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -327,6 +329,10 @@ namespace OpenCLNet
                     return false;
             return true;
         }
+
+        #endregion
+
+        #region ToString
 
         public override string ToString()
         {
@@ -386,5 +392,7 @@ namespace OpenCLNet
             sb.AppendLine( "QueueProperties: "+QueueProperties );
             return sb.ToString();
         }
+
+        #endregion
     }
 }

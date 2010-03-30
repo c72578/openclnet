@@ -205,7 +205,7 @@ namespace OpenCLNet
                 notify,
                 userData);
             if (result != ErrorCode.SUCCESS)
-                throw new OpenCLException("Build failed with error code " + result, result);
+                throw new OpenCLBuildException(this, result);
         }
 
         public Kernel CreateKernel( string kernelName )

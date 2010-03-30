@@ -342,17 +342,17 @@ namespace OpenCLNet
 
         #region Image2D
 
-        public OCLImage CreateImage2D(MemFlags flags, OCLImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch)
+        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, IntPtr.Zero);
         }
 
-        public OCLImage CreateImage2D(MemFlags flags, OCLImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch, IntPtr pHost)
+        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch, IntPtr pHost)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, pHost);
         }
 
-        public OCLImage CreateImage2D(MemFlags flags, OCLImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageRowPitch, IntPtr pHost)
+        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageRowPitch, IntPtr pHost)
         {
             IntPtr memID;
             ErrorCode result;
@@ -360,24 +360,24 @@ namespace OpenCLNet
             memID = (IntPtr)OpenCL.CreateImage2D(ContextID, (ulong)flags, imageFormat, imageWidth, imageHeight, imageRowPitch, pHost.ToPointer(), out result);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateImage2D failed with error code " + result, result);
-            return new OCLImage(this, memID);
+            return new Image(this, memID);
         }
 
         #endregion
 
         #region Image3D
 
-        public OCLImage CreateImage3D(MemFlags flags, OCLImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch)
+        public Image CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch)
         {
             return CreateImage3D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageDepth, (IntPtr)imageRowPitch, (IntPtr)imageSlicePitch, IntPtr.Zero);
         }
 
-        public OCLImage CreateImage3D(MemFlags flags, OCLImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch, IntPtr pHost)
+        public Image CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch, IntPtr pHost)
         {
             return CreateImage3D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageDepth, (IntPtr)imageRowPitch, (IntPtr)imageSlicePitch, pHost);
         }
 
-        public OCLImage CreateImage3D(MemFlags flags, OCLImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageDepth, IntPtr imageRowPitch, IntPtr imageSlicePitch, IntPtr pHost)
+        public Image CreateImage3D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageDepth, IntPtr imageRowPitch, IntPtr imageSlicePitch, IntPtr pHost)
         {
             IntPtr memID;
             ErrorCode result;
@@ -385,7 +385,7 @@ namespace OpenCLNet
             memID = (IntPtr)OpenCL.CreateImage3D(ContextID, (ulong)flags, imageFormat, imageWidth, imageHeight, imageDepth, imageRowPitch, imageSlicePitch, pHost.ToPointer(), out result);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateImage3D failed with error code " + result, result);
-            return new OCLImage(this, memID);
+            return new Image(this, memID);
         }
 
         #endregion
@@ -398,17 +398,17 @@ namespace OpenCLNet
         /// <param name="flags"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public OCLImageFormat[] GetSupportedImageFormats(MemFlags flags, MemObjectType type)
+        public ImageFormat[] GetSupportedImageFormats(MemFlags flags, MemObjectType type)
         {
             uint numImageFormats;
-            OCLImageFormat[] imageFormats;
+            ImageFormat[] imageFormats;
             ErrorCode result;
 
             result = OpenCL.GetSupportedImageFormats(ContextID, (ulong)flags, (uint)type, (uint)0, null, out numImageFormats);
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException("GetSupportedImageFormats failed with error code " + result, result);
 
-            imageFormats = new OCLImageFormat[numImageFormats];
+            imageFormats = new ImageFormat[numImageFormats];
 
             result = OpenCL.GetSupportedImageFormats(ContextID, (ulong)flags, (uint)type, numImageFormats, imageFormats, out numImageFormats);
             if (result != ErrorCode.SUCCESS)
@@ -427,8 +427,8 @@ namespace OpenCLNet
         /// <returns>true if the image format is supported, false otherwise</returns>
         public bool SupportsImageFormat(MemFlags flags, MemObjectType type, ChannelOrder channelOrder, ChannelType channelType)
         {
-            OCLImageFormat[] imageFormats = GetSupportedImageFormats(flags, type);
-            foreach (OCLImageFormat imageFormat in imageFormats)
+            ImageFormat[] imageFormats = GetSupportedImageFormats(flags, type);
+            foreach (ImageFormat imageFormat in imageFormats)
             {
                 if (imageFormat.ChannelOrder == channelOrder && imageFormat.ChannelType == channelType)
                     return true;

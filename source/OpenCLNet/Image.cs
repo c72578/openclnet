@@ -31,16 +31,16 @@ using System.Runtime.InteropServices;
 
 namespace OpenCLNet
 {
-    public unsafe class OCLImage : Mem
+    public unsafe class Image : Mem
     {
-        internal OCLImage(Context context, IntPtr memID)
+        internal Image(Context context, IntPtr memID)
             : base(context,memID)
         {
         }
 
         #region Properties
 
-        public OCLImageFormat ImageFormat
+        public ImageFormat ImageFormat
         {
             get
             {
@@ -48,7 +48,7 @@ namespace OpenCLNet
                 byte* pBuffer = stackalloc byte[(int)size];
 
                 ReadProperty((uint)ImageInfo.FORMAT, size, pBuffer);
-                return (OCLImageFormat)Marshal.PtrToStructure((IntPtr)pBuffer, typeof(OCLImageFormat));
+                return (ImageFormat)Marshal.PtrToStructure((IntPtr)pBuffer, typeof(ImageFormat));
             }
         }
         public IntPtr ElementSize { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.ELEMENT_SIZE); } }
