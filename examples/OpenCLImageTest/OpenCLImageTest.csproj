@@ -127,7 +127,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="gatolkogatol.jpg">
+    <Content Include="..\..\shared\Input0.png">
+      <Link>Input0.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

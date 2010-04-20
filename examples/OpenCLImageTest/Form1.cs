@@ -161,7 +161,7 @@ namespace OpenCLImageTest
 
         public void Setup()
         {
-            TestImage = (Bitmap)Bitmap.FromFile(@"gatolkogatol.jpg");
+            TestImage = (Bitmap)Bitmap.FromFile(@"Input0.png");
             TestImage = new Bitmap(TestImage, 256, 256);
             TestImageOutput = new Bitmap(panelScaled.Width, panelScaled.Height, PixelFormat.Format32bppArgb);
 

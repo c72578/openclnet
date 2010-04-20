@@ -122,10 +122,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Input0.png">
+    <Content Include="..\..\shared\Input0.png">
+      <Link>Input0.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Input1.png">
+    <Content Include="..\..\shared\Input1.png">
+      <Link>Input1.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
