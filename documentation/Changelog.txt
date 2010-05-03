@@ -1,4 +1,9 @@
-﻿March 9, 2010
+﻿May 3, 2010
+-----------
+ATI's SDK now officially supports images, and I did some testing/bugfixing
+to make sure the example works with the release.
+
+March 9, 2010
 -------------
 Added preliminary image support. As ATI don't officially support it yet,
 you have to set the environment variable GPU_IMAGES_SUPPORT=1 to turn it
