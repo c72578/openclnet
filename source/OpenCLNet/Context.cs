@@ -302,11 +302,12 @@ namespace OpenCLNet
             return new Program( this, programID );
         }
 
-        public Program CreateProgramWithBinary( Device[] devices, byte[][] binaries, int[] binaryStatus )
+        public Program CreateProgramWithBinary( Device[] devices, byte[][] binaries, ErrorCode[] binaryStatus )
         {
             IntPtr programID; 
             ErrorCode result;
             IntPtr[] lengths;
+            int[] binStatus = new int[binaryStatus.Length];
 
             lengths = new IntPtr[devices.Length];
             for (int i = 0; i < lengths.Length; i++)
@@ -316,8 +317,10 @@ namespace OpenCLNet
                 InteropTools.ConvertDevicesToDeviceIDs(devices),
                 lengths,
                 binaries,
-                binaryStatus,
+                binStatus,
                 out result );
+            for( int i=0; i<binaryStatus.Length; i++ )
+                binaryStatus[i] = (ErrorCode)binStatus[i];
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateProgramWithBinary failed with error code " + result, result);
             return new Program(this, programID);

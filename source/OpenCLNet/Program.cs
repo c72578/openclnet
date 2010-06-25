@@ -98,18 +98,11 @@ namespace OpenCLNet
                     return null;
 
                 IntPtr[] binarySizes = BinarySizes;
-                byte[] data = InteropTools.ReadBytes( this, (uint)ProgramInfo.BINARIES );
                 byte[][] binaries = new byte[numDevices][];
-                fixed( byte* pData = data )
-                {
-                    byte** pBinaries = (byte**)pData;
-                    for( int i=0; i<numDevices; i++ )
-                    {
-                        binaries[i] = new byte[(int)binarySizes[i]];
-                        if( pBinaries[i]!=null && binaries[i]!=null  )
-                            Marshal.Copy( new IntPtr(pBinaries[i]), binaries[i], 0, (int)binarySizes[i] );
-                    }
-                }
+                for( int i=0; i<numDevices; i++ )
+                    binaries[i] = new byte[binarySizes[i].ToInt64()];
+
+                InteropTools.ReadPreAllocatedBytePtrArray(this, (uint)ProgramInfo.BINARIES, binaries);
                 return binaries;
             }
         }

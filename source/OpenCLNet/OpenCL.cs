@@ -248,7 +248,20 @@ namespace OpenCLNet
         {
             IntPtr program;
 
-            program = OpenCLAPI.clCreateProgramWithBinary(context, num_devices, device_list, lengths, binaries, binary_status, out errcode_ret);
+            GCHandle[] pinnedArrays = new GCHandle[binaries.Length];
+            // Pin arrays
+            for (int i = 0; i < binaries.Length; i++)
+                pinnedArrays[i] = GCHandle.Alloc(binaries[i], GCHandleType.Pinned);
+
+            IntPtr[] pointerArray = new IntPtr[binaries.Length];
+            for (int i = 0; i < binaries.Length; i++)
+                pointerArray[i] = pinnedArrays[i].AddrOfPinnedObject();
+
+            program = OpenCLAPI.clCreateProgramWithBinary(context, num_devices, device_list, lengths, pointerArray, binary_status, out errcode_ret);
+
+            for (int i = 0; i < binaries.Length; i++)
+                pinnedArrays[i].Free();
+
             return program;
         }
 

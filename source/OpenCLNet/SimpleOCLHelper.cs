@@ -49,7 +49,7 @@ namespace OpenCLNet
         /// Alias for CQs[0]
         /// </summary>
         public CommandQueue CQ;
-        protected Program Program;
+        public Program Program;
         protected Dictionary<string, Kernel> Kernels;
 
         public SimpleOCLHelper(Platform platform, DeviceType deviceType, string source)

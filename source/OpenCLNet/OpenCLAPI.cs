@@ -163,7 +163,7 @@ namespace OpenCLNet
             cl_uint num_devices,
             [In] cl_device_id[] device_list,
             [In] IntPtr[] lengths,
-            [In] byte[][] binaries,
+            [In] IntPtr[] pBinaries,
             [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] cl_int[] binary_status,
             [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]

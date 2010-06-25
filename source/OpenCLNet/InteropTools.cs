@@ -200,6 +200,23 @@ namespace OpenCLNet
             return ptrs;
         }
 
+        unsafe public static void ReadPreAllocatedBytePtrArray(IPropertyContainer propertyContainer, uint key, byte[][] buffers)
+        {
+            GCHandle[] pinnedArrays = new GCHandle[buffers.Length];
+            
+            // Pin arrays
+            for( int i=0; i<buffers.Length; i++ )
+                pinnedArrays[i] = GCHandle.Alloc( buffers[i], GCHandleType.Pinned );
+
+            byte** pointerArray = stackalloc byte*[buffers.Length];
+            for( int i=0; i<buffers.Length; i++ )
+                pointerArray[i] = (byte*)(pinnedArrays[i].AddrOfPinnedObject().ToPointer());
+
+            propertyContainer.ReadProperty(key, new IntPtr(sizeof(IntPtr) * buffers.Length), pointerArray);
+
+            for (int i = 0; i < buffers.Length; i++)
+                pinnedArrays[i].Free();
+        }
         #endregion
 
     }
