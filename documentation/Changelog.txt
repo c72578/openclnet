@@ -1,4 +1,18 @@
-﻿May 3, 2010
+﻿June 30, 2010
+-------------
+Releasing a version 0.5. I finally had the time to check/fix code
+associated with saving and loading binary images. The original code
+couldn't be tested because of lack of support in ATI's drivers. However,
+now it works. I've also started work on an OpenCLManager component.
+It's not completely done yet designwise, but the one in this release is
+capable of automatically maintaining cached binary versions of source
+files. It may be worth having a look at, even though it will undoubtedly
+change in the future. I'm a bit unsure if it makes sense to create a full
+blown component that's configurable from the GUI in Visual Studio or if
+I should strip it down to a simple source/binary manager that can be
+hooked onto a Context.
+
+May 3, 2010
 -----------
 ATI's SDK now officially supports images, and I did some testing/bugfixing
 to make sure the example works with the release.
