@@ -70,13 +70,21 @@ namespace OpenCLNet
     {
         public List<string> BuildLogs = new List<string>();
 
-        public OpenCLBuildException( Program program, ErrorCode result )
-            : base( "Build failed with error code "+result, result )
+        public OpenCLBuildException(Program program, ErrorCode result)
+            : base("Build failed with error code " + result, result)
         {
             foreach (Device d in program.Devices)
             {
-                BuildLogs.Add( program.GetBuildLog(d) );
+                BuildLogs.Add(program.GetBuildLog(d));
             }
+        }
+    }
+
+    public class OpenCLNotAvailableException : OpenCLException
+    {
+        public OpenCLNotAvailableException()
+            : base("OpenCL not available")
+        {
         }
     }
 }
