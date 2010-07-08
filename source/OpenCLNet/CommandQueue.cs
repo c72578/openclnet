@@ -1207,11 +1207,12 @@ namespace OpenCLNet
 
         #endregion
 
+        [Obsolete("Function deprecated in OpenCL 1.1 due to being inherently unsafe", false)]
         public void SetProperty(CommandQueueProperties properties, bool enable, out CommandQueueProperties oldProperties)
         {
             ErrorCode result;
             ulong returnedProperties = 0;
-
+#pragma warning disable 618
             result = (ErrorCode)OpenCL.SetCommandQueueProperty( CommandQueueID,
                 (ulong)properties,
                 enable,
@@ -1219,6 +1220,7 @@ namespace OpenCLNet
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "SetCommandQueueProperty failed with error code "+result , result);
             oldProperties = (CommandQueueProperties)returnedProperties;
+#pragma warning restore 618
         }
 
         public static implicit operator IntPtr( CommandQueue cq )

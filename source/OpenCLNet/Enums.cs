@@ -217,7 +217,7 @@ namespace OpenCLNet
 
     public enum ErrorCode: int
     {
-        SUCCESS                            =      0,
+        SUCCESS                            =       0,
         DEVICE_NOT_FOUND                   =      -1,
         DEVICE_NOT_AVAILABLE               =      -2,
         COMPILER_NOT_AVAILABLE             =      -3,
@@ -230,6 +230,8 @@ namespace OpenCLNet
         IMAGE_FORMAT_NOT_SUPPORTED         =      -10,
         BUILD_PROGRAM_FAILURE              =      -11,
         MAP_FAILURE                        =      -12,
+        MISALIGNED_SUB_BUFFER_OFFSET       =      -13,
+        EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST=-14,
 
         INVALID_VALUE                      =      -30,
         INVALID_DEVICE_TYPE                =      -31,
@@ -264,6 +266,8 @@ namespace OpenCLNet
         INVALID_GL_OBJECT                  =      -60,
         INVALID_BUFFER_SIZE                =      -61,
         INVALID_MIP_LEVEL                  =      -62,
+        INVALID_GLOBAL_WORK_SIZE           =      -63,
+
 
         // CL_GL Error Codes
         INVALID_GL_SHAREGROUP_REFERENCE_KHR=      -1000,
@@ -347,6 +351,18 @@ namespace OpenCLNet
         VERSION                          = 0x102F,
         EXTENSIONS                       = 0x1030,
         PLATFORM                         = 0x1031,
+/* 0x1032 reserved for CL_DEVICE_DOUBLE_FP_CONFIG */
+/* 0x1033 reserved for CL_DEVICE_HALF_FP_CONFIG */
+        PREFERRED_VECTOR_WIDTH_HALF      = 0x1034,
+        HOST_UNIFIED_MEMORY              = 0x1035,
+        NATIVE_VECTOR_WIDTH_CHAR         = 0x1036,
+        NATIVE_VECTOR_WIDTH_SHORT        = 0x1037,
+        NATIVE_VECTOR_WIDTH_INT          = 0x1038,
+        NATIVE_VECTOR_WIDTH_LONG         = 0x1039,
+        NATIVE_VECTOR_WIDTH_FLOAT        = 0x103A,
+        NATIVE_VECTOR_WIDTH_DOUBLE       = 0x103B,
+        NATIVE_VECTOR_WIDTH_HALF         = 0x103C,
+        OPENCL_C_VERSION                 = 0x103D,
     };	
 
     // cl_device_fp_config - bitfield
@@ -358,6 +374,7 @@ namespace OpenCLNet
         ROUND_TO_ZERO                        = (1 << 3),
         ROUND_TO_INF                         = (1 << 4),
         FMA                                  = (1 << 5),
+        SOFT_FLOAT                           = (1 << 6)
     };
 
     // cl_device_mem_cache_type
@@ -396,6 +413,7 @@ namespace OpenCLNet
         REFERENCE_COUNT = 0x1080,
         DEVICES = 0x1081,
         PROPERTIES = 0x1082,
+        NUM_DEVICES = 0x1083,
     };
 
     // cl_gl_context_info
@@ -451,6 +469,9 @@ namespace OpenCLNet
         ARGB                                    = 0x10B7,
         INTENSITY                               = 0x10B8,
         LUMINANCE                               = 0x10B9,
+        Rx                                      = 0x10BA,
+        RGx                                     = 0x10BB,
+        RGBx                                    = 0x10BC,
     };
 
     // cl_channel_type
@@ -491,6 +512,8 @@ namespace OpenCLNet
         MAP_COUNT                           = 0x1104,
         REFERENCE_COUNT                     = 0x1105,
         CONTEXT                             = 0x1106,
+        ASSOCIATED_MEMOBJECT                = 0x1107,
+        OFFSET                              = 0x1108,
     };
 
     // cl_image_info
@@ -512,6 +535,7 @@ namespace OpenCLNet
         CLAMP_TO_EDGE                   = 0x1131,
         CLAMP                           = 0x1132,
         REPEAT                          = 0x1133,
+        MIRRORED_REPEAT                 = 0x1134
     };
 
     // cl_filter_mode
@@ -580,9 +604,11 @@ namespace OpenCLNet
     // cl_kernel_work_group_info
     public enum KernelWorkGroupInfo
     {
-        WORK_GROUP_SIZE                  = 0x11B0,
-        COMPILE_WORK_GROUP_SIZE          = 0x11B1,
-        LOCAL_MEM_SIZE                   = 0x11B2,
+        WORK_GROUP_SIZE                    = 0x11B0,
+        COMPILE_WORK_GROUP_SIZE            = 0x11B1,
+        LOCAL_MEM_SIZE                     = 0x11B2,
+        PREFERRED_WORK_GROUP_SIZE_MULTIPLE = 0x11B3,
+        PRIVATE_MEM_SIZE                   = 0x11B4,
     };
 
     // cl_event_info
@@ -592,6 +618,7 @@ namespace OpenCLNet
         COMMAND_TYPE                      = 0x11D1,
         REFERENCE_COUNT                   = 0x11D2,
         COMMAND_EXECUTION_STATUS          = 0x11D3,
+        CONTEXT                           = 0x11D4,
     };
 
     // cl_command_type
@@ -614,6 +641,10 @@ namespace OpenCLNet
         MARKER                          = 0x11FE,
         ACQUIRE_GL_OBJECTS              = 0x11FF,
         RELEASE_GL_OBJECTS              = 0x1200,
+        READ_BUFFER_RECT                = 0x1201,
+        WRITE_BUFFER_RECT               = 0x1202,
+        COPY_BUFFER_RECT                = 0x1203,
+        USER                            = 0x1204,
     };
 
     // command execution status
@@ -623,6 +654,11 @@ namespace OpenCLNet
         RUNNING                                 = 0x1,
         SUBMITTED                               = 0x2,
         QUEUED                                  = 0x3,
+    };
+
+    public enum BufferCreateType
+    {
+        REGION = 0x1220,
     };
 
     // cl_profiling_info

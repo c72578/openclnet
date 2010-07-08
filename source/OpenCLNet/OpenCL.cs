@@ -319,9 +319,12 @@ namespace OpenCLNet
             return OpenCLAPI.clGetCommandQueueInfo(command_queue, param_name, param_value_size, param_value, out param_value_size_ret);
         }
 
+        [Obsolete("Function deprecated in OpenCL 1.1 due to being inherently unsafe", false)]
         public static ErrorCode SetCommandQueueProperty(IntPtr command_queue, ulong properties, bool enable, out ulong old_properties)
         {
+#pragma warning disable 618
             return OpenCLAPI.clSetCommandQueueProperty(command_queue, properties, enable, out old_properties);
+#pragma warning restore 618
         }
 
         #endregion

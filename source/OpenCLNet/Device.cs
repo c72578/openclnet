@@ -55,6 +55,9 @@ namespace OpenCLNet
         public IntPtr DeviceID { get; protected set; }
 
         public DeviceType DeviceType { get { return (DeviceType) InteropTools.ReadULong( this, (uint)DeviceInfo.TYPE ); } }
+        /// <summary>
+        /// A unique device vendor identifier. An example of a unique device identifier could be the PCIe ID.
+        /// </summary>
         public uint VendorID { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.VENDOR_ID ); } }
         /// <summary>
         /// The number of parallel compute cores on the OpenCL device. The minimum value is 1.
@@ -87,7 +90,8 @@ namespace OpenCLNet
         public uint PreferredVectorWidthInt { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_INT ); } }
         public uint PreferredVectorWidthLong { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_LONG ); } }
         public uint PreferredVectorWidthFloat { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_FLOAT ); } }
-        public uint PreferredVectorWidthDouble { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_DOUBLE ); } }
+        public uint PreferredVectorWidthDouble { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_DOUBLE); } }
+        public uint PreferredVectorWidthHalf { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_HALF); } }
         /// <summary>
         /// Maximum configured clock frequency of the device in MHz.
         /// </summary>

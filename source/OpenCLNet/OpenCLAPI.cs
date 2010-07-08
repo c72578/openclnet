@@ -198,6 +198,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clGetCommandQueueInfo(cl_command_queue command_queue, cl_command_queue_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
         [DllImport(Configuration.Library)]
+        [Obsolete("Function deprecated in OpenCL 1.1 due to being inherently unsafe",false)]
         public extern static ErrorCode clSetCommandQueueProperty(cl_command_queue command_queue, cl_command_queue_properties properties, [MarshalAs(UnmanagedType.I4)]bool enable, out cl_command_queue_properties old_properties);
 
         #endregion
@@ -227,6 +228,11 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clGetImageInfo(cl_mem image, cl_image_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
+        // OpenCL 1.1
+        [DllImport(Configuration.Library)]
+        public extern static cl_mem clCreateSubBuffer(cl_mem buffer, cl_mem_flags flags, BufferCreateType buffer_create_type, void* buffer_create_info, out ErrorCode errcode_ret );
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clSetMemObjectDestructorCallback(cl_mem memobj, void* pfn_notify, void* user_data);
         #endregion
 
         #region Kernel Object API
@@ -395,7 +401,7 @@ namespace OpenCLNet
             [In] cl_mem[] mem_list,
             [Out] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] IntPtr[] args_mem_loc,
             cl_uint num_events_in_wait_list,
-            [In]cl_event[] event_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueMarker(cl_command_queue command_queue, cl_event* _event);
@@ -406,6 +412,53 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueBarrier(cl_command_queue command_queue);
 
+        // OpenCL 1.1
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueReadBufferRect(cl_command_queue command_queue,
+                                cl_mem buffer,
+                                cl_bool blocking_read,
+                                [In] IntPtr[] buffer_offset,
+                                [In] IntPtr[] host_offset,
+                                [In] IntPtr[] region,
+                                IntPtr buffer_row_pitch,
+                                IntPtr buffer_slice_pitch,
+                                IntPtr host_row_pitch,
+                                IntPtr host_slice_pitch,
+                                void* ptr,
+                                cl_uint num_events_in_wait_list,
+                                [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
+                                cl_event* _event);
+
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueWriteBufferRect(cl_command_queue command_queue,
+                                 cl_mem buffer,
+                                 cl_bool blocking_read,
+                                 [In] IntPtr[] buffer_offset,
+                                 [In] IntPtr[] host_offset,
+                                 [In] IntPtr[] region,
+                                 IntPtr buffer_row_pitch,
+                                 IntPtr buffer_slice_pitch,
+                                 IntPtr host_row_pitch,
+                                 IntPtr host_slice_pitch,
+                                 void* ptr,
+                                 cl_uint num_events_in_wait_list,
+                                 [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] _event_wait_list,
+                                 cl_event* _event);
+
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueCopyBufferRect(cl_command_queue command_queue,
+                                cl_mem src_buffer,
+                                cl_mem dst_buffer,
+                                [In] IntPtr[] src_origin,
+                                [In] IntPtr[] dst_origin,
+                                [In] IntPtr[] region,
+                                IntPtr src_row_pitch,
+                                IntPtr src_slice_pitch,
+                                IntPtr dst_row_pitch,
+                                IntPtr dst_slice_pitch,
+                                cl_uint num_events_in_wait_list,
+                                [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] _event_wait_list,
+                                cl_event* _event);
         #endregion
 
         #region Flush and Finish API
@@ -433,6 +486,13 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clReleaseEvent(cl_event _event);
 
+        // OpenCL 1.1
+        [DllImport(Configuration.Library)]
+        public extern static cl_event clCreateUserEvent(cl_context context, out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clSetUserEventStatus(cl_event _event, ExecutionStatus execution_status);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clSetEventCallback( cl_event _event, cl_int command_exec_callback_type, void* pfn_notify, void* user_data);
         #endregion
 
         #region Sampler API
@@ -510,5 +570,25 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
     }
+#if false
+    unsafe public static class CLGLExtension
+    {
+        delegate int CFuncDelegate(IntPtr Obj, IntPtr Arg);
 
+        public static void Function(IntPtr CFunc, IntPtr Obj, IntPtr Arg)
+        {
+            CFuncDelegate func = (CFuncDelegate)Marshal.GetDelegateForFunctionPointer(CFunc, typeof(CFuncDelegate));
+            int rc = func(Obj, Arg);
+        }
+
+        public delegate cl_int clGetGLContextInfoKHR ( cl_context_properties *properties,
+        cl_gl_context_info param_name,
+        IntPtr param_value_size,
+        void *param_value,
+        size_t *param_value_size_ret);
+
+        IntPtr test = OpenCLAPI.clGetExtensionFunctionAddress("clGetGLContextInfoKHR");
+
+    }
+#endif
 }
