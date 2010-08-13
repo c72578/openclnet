@@ -30,6 +30,7 @@ using System.Text;
 
 namespace OpenCLNet
 {
+    [Obsolete("SimpleOCLHelper is superseded by OpenCLManager")]
     public class SimpleOCLHelper
     {
         public Platform Platform;

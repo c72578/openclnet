@@ -303,12 +303,7 @@ namespace OpenCLNet
         /// <param name="mem"></param>
         public void SetArg(int argIndex, Mem mem)
         {
-            ErrorCode result;
-            IntPtr p = mem.MemID;
-
-            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &p);
-            if (result != ErrorCode.SUCCESS)
-                throw new OpenCLException("SetArg failed with error code " + result, result);
+            SetArg(argIndex, mem.MemID);
         }
 
         /// <summary>
@@ -318,13 +313,482 @@ namespace OpenCLNet
         /// <param name="sampler"></param>
         public void SetArg(int argIndex, Sampler sampler)
         {
-            ErrorCode result;
-            IntPtr p = sampler.SamplerID;
+            SetArg(argIndex, sampler.SamplerID);
+        }
 
-            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &p);
+        #region Vector Set functions
+
+        #region Vector2
+
+        public void SetArg(int argIndex, Char2 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Char2), &c);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }
+
+        public void SetArg(int argIndex, UChar2 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UChar2), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Short2 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Short2), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UShort2 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UShort2), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Int2 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Int2), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UInt2 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UInt2), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Long2 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Long2), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, ULong2 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(ULong2), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Float2 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Float2), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Double2 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Double2), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        #endregion
+
+        #region Vector3
+
+        public void SetArg(int argIndex, Char3 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Char3), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UChar3 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UChar3), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Short3 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Short3), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UShort3 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UShort3), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Int3 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Int3), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UInt3 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UInt3), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Long3 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Long3), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, ULong3 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(ULong3), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Float3 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Float3), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Double3 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Double3), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        #endregion
+
+        #region Vector4
+
+        public void SetArg(int argIndex, Char4 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Char4), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UChar4 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UChar4), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Short4 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Short4), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UShort4 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UShort4), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Int4 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Int4), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UInt4 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UInt4), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Long4 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Long4), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, ULong4 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(ULong4), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Float4 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Float4), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Double4 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Double4), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        #endregion
+
+        #region Vector8
+
+        public void SetArg(int argIndex, Char8 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Char8), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UChar8 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UChar8), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Short8 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Short8), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UShort8 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UShort8), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Int8 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Int8), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UInt8 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UInt8), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Long8 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Long8), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, ULong8 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(ULong8), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Float8 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Float8), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Double8 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Double8), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        #endregion
+
+        #region Vector16
+
+        public void SetArg(int argIndex, Char16 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Char16), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UChar16 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UChar16), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Short16 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Short16), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UShort16 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UShort16), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Int16 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Int16), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, UInt16 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(UInt16), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Long16 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Long16), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, ULong16 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(ULong16), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Float16 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Float16), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetArg(int argIndex, Double16 c)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(Double16), &c);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        #endregion
+
+        #endregion
 
         #endregion
 
@@ -440,22 +904,12 @@ namespace OpenCLNet
 
         public void SetMemArg(int argIndex, Mem mem)
         {
-            ErrorCode result;
-            IntPtr p = mem.MemID;
-
-            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &p);
-            if (result != ErrorCode.SUCCESS)
-                throw new OpenCLException("SetArg failed with error code " + result, result);
+            SetIntPtrArg(argIndex, mem.MemID);
         }
 
         public void SetSamplerArg(int argIndex, Sampler sampler)
         {
-            ErrorCode result;
-            IntPtr p = sampler.SamplerID;
-
-            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(sizeof(IntPtr)), &p);
-            if (result != ErrorCode.SUCCESS)
-                throw new OpenCLException("SetArg failed with error code " + result, result);
+            SetIntPtrArg(argIndex, sampler.SamplerID);
         }
 
         #endregion

@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.IO;
 
 namespace OpenCLNet
 {
@@ -38,6 +39,55 @@ namespace OpenCLNet
         {
             IntPtr GetPropertySize(uint key);
             void ReadProperty(uint key, IntPtr keyLength, void* pBuffer);
+        }
+
+        public static unsafe void IntPtrToIntPtr(int num, IntPtr[] a, IntPtr* b)
+        {
+            if (a == null)
+                return;
+
+            if (num > a.Length)
+                throw new ArgumentOutOfRangeException();
+            for (int i = 0; i < num; i++)
+                b[i] = a[i];
+        }
+
+        public static unsafe void A3ToIntPtr3(int[] a, IntPtr* b)
+        {
+            if (a == null || b == null)
+                return;
+
+            b[0] = (IntPtr)a[0];
+            b[1] = (IntPtr)a[1];
+            b[2] = (IntPtr)a[2];
+        }
+
+        public static unsafe void A3ToIntPtr3(long[] a, IntPtr* b)
+        {
+            if (a == null || b == null)
+                return;
+
+            b[0] = (IntPtr)a[0];
+            b[1] = (IntPtr)a[1];
+            b[2] = (IntPtr)a[2];
+        }
+
+        public static unsafe void AToIntPtr(int count, int[] a, IntPtr* b)
+        {
+            if (a == null || b==null )
+                return;
+
+            for (int i = 0; i < count; i++)
+                b[i] = (IntPtr)a[i];
+        }
+
+        public static unsafe void AToIntPtr(int count, long[] a, IntPtr* b)
+        {
+            if (a == null || b == null)
+                return;
+
+            for (int i = 0; i < count; i++)
+                b[i] = (IntPtr)a[i];
         }
 
         public static byte[] CreateNullTerminatedString(string s)
@@ -102,6 +152,17 @@ namespace OpenCLNet
             for (int i = 0; i < events.Length; i++)
                 eventIDs[i] = events[i];
             return eventIDs;
+        }
+
+        public unsafe static void ConvertEventsToEventIDs(int num, Event[] events, IntPtr* pHandles)
+        {
+            if (events == null)
+                return;
+            if (num > events.Length)
+                throw new ArgumentOutOfRangeException();
+
+            for (int i = 0; i < num; i++)
+                pHandles[i] = events[i].EventID;
         }
 
         #region Helper functions to read properties
@@ -219,5 +280,51 @@ namespace OpenCLNet
         }
         #endregion
 
+        public static void HexDump(string filename, byte[] array, int width)
+        {
+            StreamWriter sw = new StreamWriter(filename);
+
+            HexDump(sw, array, width);
+            sw.Close();
+        }
+
+        public static void HexDump(TextWriter tw, byte[] array, int width)
+        {
+            int hexWidth = width*3;
+            int charWidth = width;
+            int bytePtr = 0;
+            int linePos;
+
+            while (bytePtr < array.Length)
+            {
+                int dataLen = Math.Min(width, array.Length - bytePtr);
+
+                tw.Write( string.Format("{0:x8} ", bytePtr) );
+                // Output hex
+                for (linePos = 0; linePos < dataLen; linePos++)
+                {
+                    byte b = array[bytePtr + linePos];
+
+                    tw.Write(string.Format("{0:x2} ", (int)b));
+                }
+                for (; linePos < width; linePos++)
+                    tw.Write("   ");
+
+                // Output characters
+                for (linePos = 0; linePos < dataLen; linePos++)
+                {
+                    byte b = array[bytePtr + linePos];
+                    char c = (char)b;
+                    if (Char.IsControl(c))
+                        c = '.';
+                    tw.Write(c);
+                }
+                for (; linePos < width; linePos++)
+                    tw.Write(" ");
+
+                tw.WriteLine();
+                bytePtr += dataLen;
+            }
+        }
     }
 }

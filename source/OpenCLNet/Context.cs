@@ -213,9 +213,14 @@ namespace OpenCLNet
 
         #region Create Buffer
 
-        public Mem CreateBuffer( MemFlags flags, long size, IntPtr pHost )
+        public Mem CreateBuffer(MemFlags flags, long size)
         {
-            return CreateBuffer( flags, size, pHost.ToPointer() );
+            return CreateBuffer(flags, size, IntPtr.Zero);
+        }
+
+        public Mem CreateBuffer(MemFlags flags, long size, IntPtr pHost)
+        {
+            return CreateBuffer(flags, size, pHost.ToPointer());
         }
 
         public Mem CreateBuffer( MemFlags flags, long size, void* pHost )
@@ -345,12 +350,20 @@ namespace OpenCLNet
 
         #region Image2D
 
-        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch)
+        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight)
         {
-            return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, IntPtr.Zero);
+            return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, IntPtr.Zero, IntPtr.Zero);
+        }
+        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, long imageWidth, long imageHeight)
+        {
+            return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, IntPtr.Zero, IntPtr.Zero);
         }
 
         public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch, IntPtr pHost)
+        {
+            return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, pHost);
+        }
+        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, long imageWidth, long imageHeight, long imageRowPitch, IntPtr pHost)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, pHost);
         }
@@ -483,6 +496,24 @@ namespace OpenCLNet
                 if (!d.HasExtensions(extensions))
                     return false;
             return true;
+        }
+
+        #endregion
+
+        #region User Events
+        /// <summary>
+        /// OpenCL 1.1
+        /// </summary>
+        /// <returns></returns>
+        public Event CreateUserEvent()
+        {
+            ErrorCode result;
+            IntPtr eventID;
+
+            eventID = OpenCL.CreateUserEvent(ContextID, out result);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateUserEvent failed with error code " + result, result);
+            return new Event(this, null, eventID);
         }
 
         #endregion

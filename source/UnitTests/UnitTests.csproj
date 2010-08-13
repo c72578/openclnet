@@ -108,7 +108,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="MemoryTests.cl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Mandelbrot.cl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

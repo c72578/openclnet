@@ -125,6 +125,197 @@ namespace OpenCLNet
 
         #endregion
 
+        #region Utility functions
+
+        #region Write
+
+        public virtual void Write(CommandQueue cq, long dstOffset, byte[] srcData, int srcStartIndex, int count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, dstOffset, count);
+            byte* pBlock = (byte*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = srcData[i + srcStartIndex];
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void Write(CommandQueue cq, long dstOffset, short[] srcData, int srcStartIndex, int count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, dstOffset, (long)count * sizeof(short));
+            short* pBlock = (short*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = srcData[i + srcStartIndex];
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void Write(CommandQueue cq, long dstOffset, int[] srcData, int srcStartIndex, int count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, dstOffset, (long)count * sizeof(int));
+            int* pBlock = (int*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = srcData[i + srcStartIndex];
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void Write(CommandQueue cq, long dstOffset, float[] srcData, int srcStartIndex, int count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, dstOffset, (long)count * sizeof(float));
+            float* pBlock = (float*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = srcData[i + srcStartIndex];
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void Write(CommandQueue cq, long dstOffset, double[] srcData, int srcStartIndex, int count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, dstOffset, (long)count * sizeof(double));
+            double* pBlock = (double*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = srcData[i + srcStartIndex];
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+        
+        #endregion
+
+        #region Read
+
+        public virtual void Read(CommandQueue cq, long srcOffset, byte[] dstData, int dstStartIndex, int count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.READ, srcOffset, count);
+            byte* pBlock = (byte*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                dstData[dstStartIndex + i] = pBlock[i];
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void Read(CommandQueue cq, long srcOffset, short[] dstData, int dstStartIndex, int count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.READ, srcOffset, count * sizeof(short));
+            short* pBlock = (short*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                dstData[dstStartIndex + i] = pBlock[i];
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void Read(CommandQueue cq, long srcOffset, int[] dstData, int dstStartIndex, int count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.READ, srcOffset, count * sizeof(int));
+            int* pBlock = (int*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                dstData[dstStartIndex + i] = pBlock[i];
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void Read(CommandQueue cq, long srcOffset, float[] dstData, int dstStartIndex, int count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.READ, srcOffset, count * sizeof(float));
+            float* pBlock = (float*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                dstData[dstStartIndex + i] = pBlock[i];
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void Read(CommandQueue cq, long srcOffset, double[] dstData, int dstStartIndex, int count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.READ, srcOffset, count * sizeof(double));
+            double* pBlock = (double*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                dstData[dstStartIndex+i] = pBlock[i];
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        #endregion
+
+        #region MemSet
+
+        public virtual void MemSet(CommandQueue cq, long dstByteOffset, byte value, long count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, dstByteOffset, count);
+            byte* pBlock = (byte*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = value;
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void MemSet(CommandQueue cq, long dstByteOffset, short value, long count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, dstByteOffset, count * sizeof(short));
+            short* pBlock = (short*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = value;
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void MemSet(CommandQueue cq, long dstByteOffset, int value, long count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, dstByteOffset, count * sizeof(int));
+            int* pBlock = (int*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = value;
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void MemSet(CommandQueue cq, long dstByteOffset, float value, long count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, dstByteOffset, count * sizeof(float));
+            float* pBlock = (float*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = value;
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void MemSet(CommandQueue cq, long dstByteOffset, double value, long count)
+        {
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, dstByteOffset, count * sizeof(double));
+            double* pBlock = (double*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = value;
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        public virtual void MemSet(CommandQueue cq, byte value)
+        {
+            long offset = 0;
+            long count = MemSize.ToInt64();
+            IntPtr p = cq.EnqueueMapBuffer(this, true, MapFlags.WRITE, offset, count);
+            byte* pBlock = (byte*)p.ToPointer();
+            for (long i = 0; i < count; i++)
+                pBlock[i] = value;
+            cq.EnqueueUnmapMemObject(this, p);
+            cq.Finish();
+        }
+
+        #endregion
+
+        #endregion
+
+        /// <summary>
+        /// OpenCL 1.1
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="flags"></param>
+        /// <param name="buffer_create_info"></param>
+        /// <param name="errcode_ret"></param>
+        /// <returns></returns>
+        public Mem CreateSubBuffer(Mem buffer, MemFlags flags, BufferRegion buffer_create_info, out ErrorCode errcode_ret)
+        {
+            IntPtr memID = OpenCL.CreateSubBuffer(buffer.MemID, flags, buffer_create_info, out errcode_ret);
+            return new Mem(buffer.Context, memID);
+        }
 
         public void GetGLObjectInfo(out CLGLObjectType glObjectType, out IntPtr glObjectName)
         {
@@ -165,6 +356,10 @@ namespace OpenCLNet
 
         #endregion
 
+        public static implicit operator IntPtr(Mem m)
+        {
+            return m.MemID;
+        }
 
         class TextureInfo : InteropTools.IPropertyContainer
         {

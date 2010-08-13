@@ -212,6 +212,10 @@ namespace OpenCLNet
             return new Kernel( Context, this, kernelID );
         }
 
+        /// <summary>
+        /// Create all kernels in the program and return them as an array
+        /// </summary>
+        /// <returns></returns>
         public Kernel[] CreateKernels()
         {
             uint numKernels;
@@ -232,6 +236,11 @@ namespace OpenCLNet
             return kernels;
         }
 
+        /// <summary>
+        /// Create all kernels in the program and return them as a Dictionary.
+        /// Its keys are the kernel names, its values are the kernels themselves.
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, Kernel> CreateKernelDictionary()
         {
             Kernel[] kernels = CreateKernels();
@@ -247,7 +256,6 @@ namespace OpenCLNet
         {
             return p.ProgramID;
         }
-
 
         public string GetBuildOptions( Device device )
         {

@@ -139,7 +139,7 @@ namespace OpenCLNet
 
         public void Extract( long index, byte[] destinationArray, long destinationIndex, long length )
         {
-            if( index+length>Length || index+length<0 )
+            if( index+length>=Length || index+length<0 )
                 throw new IndexOutOfRangeException();
 
             for( long i=0; i<length; i++ )
@@ -148,7 +148,7 @@ namespace OpenCLNet
 
         public void Insert( long index, byte[] sourceArray, long sourceIndex, long length )
         {
-            if( index+length>Length || index+length<0 )
+            if( index+length>=Length || index+length<0 )
                 throw new IndexOutOfRangeException();
 
             for( long i=0; i<length; i++ )
@@ -159,14 +159,14 @@ namespace OpenCLNet
         {
             get
             {
-                if( index<0 || index>Length )
+                if( index<0 || index>=Length )
                     throw new IndexOutOfRangeException();
 
                 return pAlignedArray[index];
             }
             set
             {
-                if( index<0 || index>Length )
+                if( index<0 || index>=Length )
                     throw new IndexOutOfRangeException();
 
                 pAlignedArray[index] = value;
@@ -206,7 +206,7 @@ namespace OpenCLNet
 
         public void Extract(long index, int[] destinationArray, long destinationIndex, long length)
         {
-            if (index + length > Length || index + length < 0)
+            if (index + length >= Length || index + length < 0)
                 throw new IndexOutOfRangeException();
 
             for (long i = 0; i < length; i++)
@@ -215,7 +215,7 @@ namespace OpenCLNet
 
         public void Insert(long index, int[] sourceArray, long sourceIndex, long length)
         {
-            if (index + length > Length || index + length < 0)
+            if (index + length >= Length || index + length < 0)
                 throw new IndexOutOfRangeException();
 
             for (long i = 0; i < length; i++)
@@ -226,14 +226,14 @@ namespace OpenCLNet
         {
             get
             {
-                if (index < 0 || index > Length)
+                if (index < 0 || index >= Length)
                     throw new IndexOutOfRangeException();
 
                 return pAlignedArray[index];
             }
             set
             {
-                if (index < 0 || index > Length)
+                if (index < 0 || index >= Length)
                     throw new IndexOutOfRangeException();
 
                 pAlignedArray[index] = value;
@@ -273,7 +273,7 @@ namespace OpenCLNet
 
         public void Extract(long index, long[] destinationArray, long destinationIndex, long length)
         {
-            if (index + length > Length || index + length < 0)
+            if (index + length >= Length || index + length < 0)
                 throw new IndexOutOfRangeException();
 
             for (long i = 0; i < length; i++)
@@ -282,7 +282,7 @@ namespace OpenCLNet
 
         public void Insert(long index, long[] sourceArray, long sourceIndex, long length)
         {
-            if (index + length > Length || index + length < 0)
+            if (index + length >= Length || index + length < 0)
                 throw new IndexOutOfRangeException();
 
             for (long i = 0; i < length; i++)
@@ -293,14 +293,14 @@ namespace OpenCLNet
         {
             get
             {
-                if (index < 0 || index > Length)
+                if (index < 0 || index >= Length)
                     throw new IndexOutOfRangeException();
 
                 return pAlignedArray[index];
             }
             set
             {
-                if (index < 0 || index > Length)
+                if (index < 0 || index >= Length)
                     throw new IndexOutOfRangeException();
 
                 pAlignedArray[index] = value;
@@ -340,7 +340,7 @@ namespace OpenCLNet
 
         public void Extract(long index, float[] destinationArray, long destinationIndex, long length)
         {
-            if (index + length > Length || index + length < 0)
+            if (index + length >= Length || index + length < 0)
                 throw new IndexOutOfRangeException();
 
             for (long i = 0; i < length; i++)
@@ -349,7 +349,7 @@ namespace OpenCLNet
 
         public void Insert(long index, float[] sourceArray, long sourceIndex, long length)
         {
-            if (index + length > Length || index + length < 0)
+            if (index + length >= Length || index + length < 0)
                 throw new IndexOutOfRangeException();
 
             for (long i = 0; i < length; i++)
@@ -360,14 +360,14 @@ namespace OpenCLNet
         {
             get
             {
-                if (index < 0 || index > Length)
+                if (index < 0 || index >= Length)
                     throw new IndexOutOfRangeException();
 
                 return pAlignedArray[index];
             }
             set
             {
-                if (index < 0 || index > Length)
+                if (index < 0 || index >= Length)
                     throw new IndexOutOfRangeException();
 
                 pAlignedArray[index] = value;

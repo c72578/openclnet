@@ -98,7 +98,9 @@ namespace OpenCLNet
     using GLuint=UInt32;
     using GLint=Int32;
     using GLenum=Int32;
+    using cl_device_partition_property_ext=UInt64;
     #endregion
+
 
     /// <summary>
     /// OpenCLAPI - native bindings
@@ -272,6 +274,18 @@ namespace OpenCLNet
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueReadBuffer(cl_command_queue command_queue,
+            cl_mem buffer,
+            cl_bool blocking_read,
+            IntPtr offset,
+            IntPtr cb,
+            void* ptr,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event);
+
+
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWriteBuffer(cl_command_queue command_queue,
             cl_mem buffer,
             cl_bool blocking_write,
@@ -281,6 +295,17 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueWriteBuffer(cl_command_queue command_queue,
+            cl_mem buffer,
+            cl_bool blocking_write,
+            IntPtr offset,
+            IntPtr cb,
+            void* ptr,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event);
+
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueCopyBuffer(cl_command_queue command_queue,
             cl_mem src_buffer,
@@ -292,13 +317,49 @@ namespace OpenCLNet
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueCopyBuffer(cl_command_queue command_queue,
+            cl_mem src_buffer,
+            cl_mem dst_buffer,
+            IntPtr src_offset,
+            IntPtr dst_offset,
+            IntPtr cb,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event);
+
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueReadImage(cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_read,
-            IntPtr[] origin,
-            IntPtr[] region,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] origin,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] region,
             IntPtr row_pitch,
             IntPtr slice_pitch,
+            void* ptr,
+            cl_uint num_events_in_wait_list,
+            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
+            cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueReadImage(cl_command_queue command_queue,
+            cl_mem image,
+            cl_bool blocking_read,
+            IntPtr* origin,
+            IntPtr* region,
+            IntPtr row_pitch,
+            IntPtr slice_pitch,
+            void* ptr,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event);
+
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueWriteImage(cl_command_queue command_queue,
+            cl_mem image,
+            cl_bool blocking_write,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] origin,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] region,
+            IntPtr input_row_pitch,
+            IntPtr input_slice_pitch,
             void* ptr,
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
@@ -307,11 +368,22 @@ namespace OpenCLNet
         public extern static ErrorCode clEnqueueWriteImage(cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_write,
-            IntPtr[] origin,
-            IntPtr[] region,
+            IntPtr* origin,
+            IntPtr* region,
             IntPtr input_row_pitch,
             IntPtr input_slice_pitch,
             void* ptr,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event);
+
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueCopyImage(cl_command_queue command_queue,
+            cl_mem src_image,
+            cl_mem dst_image,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] src_origin,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] dst_origin,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] region,
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
@@ -319,9 +391,21 @@ namespace OpenCLNet
         public extern static ErrorCode clEnqueueCopyImage(cl_command_queue command_queue,
             cl_mem src_image,
             cl_mem dst_image,
-            IntPtr[] src_origin,
-            IntPtr[] dst_origin,
-            IntPtr[] region,
+            IntPtr* src_origin,
+            IntPtr* dst_origin,
+            IntPtr* region,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event);
+
+
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueCopyImageToBuffer(cl_command_queue command_queue,
+            cl_mem src_image,
+            cl_mem dst_buffer,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] src_origin,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] region,
+            IntPtr dst_offset,
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
@@ -329,9 +413,20 @@ namespace OpenCLNet
         public extern static ErrorCode clEnqueueCopyImageToBuffer(cl_command_queue command_queue,
             cl_mem src_image,
             cl_mem dst_buffer,
-            IntPtr[] src_origin,
-            IntPtr[] region,
+            IntPtr* src_origin,
+            IntPtr* region,
             IntPtr dst_offset,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event);
+
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueCopyBufferToImage(cl_command_queue command_queue,
+            cl_mem src_buffer,
+            cl_mem dst_image,
+            IntPtr src_offset,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] dst_origin,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] region,
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
@@ -340,11 +435,13 @@ namespace OpenCLNet
             cl_mem src_buffer,
             cl_mem dst_image,
             IntPtr src_offset,
-            IntPtr[] dst_origin,
-            IntPtr[] region,
+            IntPtr* dst_origin,
+            IntPtr* region,
             cl_uint num_events_in_wait_list,
-            [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
+            IntPtr* event_wait_list,
             cl_event* _event);
+
+
         [DllImport(Configuration.Library)]
         public extern static void* clEnqueueMapBuffer(cl_command_queue command_queue,
             cl_mem buffer,
@@ -357,12 +454,24 @@ namespace OpenCLNet
             cl_event* _event,
             out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
+        public extern static void* clEnqueueMapBuffer(cl_command_queue command_queue,
+            cl_mem buffer,
+            cl_bool blocking_map,
+            cl_map_flags map_flags,
+            IntPtr offset,
+            IntPtr cb,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event,
+            out ErrorCode errcode_ret);
+
+        [DllImport(Configuration.Library)]
         public extern static void* clEnqueueMapImage(cl_command_queue command_queue,
             cl_mem image,
             cl_bool blocking_map,
             cl_map_flags map_flags,
-            IntPtr[] origin,
-            IntPtr[] region,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] origin,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] region,
             out IntPtr image_row_pitch,
             out IntPtr image_slice_pitch,
             cl_uint num_events_in_wait_list,
@@ -370,12 +479,34 @@ namespace OpenCLNet
             cl_event* _event,
             out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
+        public extern static void* clEnqueueMapImage(cl_command_queue command_queue,
+            cl_mem image,
+            cl_bool blocking_map,
+            cl_map_flags map_flags,
+            IntPtr* origin,
+            IntPtr* region,
+            out IntPtr image_row_pitch,
+            out IntPtr image_slice_pitch,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event,
+            out ErrorCode errcode_ret);
+
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueUnmapMemObject(cl_command_queue command_queue,
             cl_mem memobj,
             void* mapped_ptr,
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueUnmapMemObject(cl_command_queue command_queue,
+            cl_mem memobj,
+            void* mapped_ptr,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event);
+
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueNDRangeKernel(cl_command_queue command_queue,
             cl_kernel kernel,
@@ -387,11 +518,29 @@ namespace OpenCLNet
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
         [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueNDRangeKernel(cl_command_queue command_queue,
+            cl_kernel kernel,
+            cl_uint work_dim,
+            IntPtr* global_work_offset,
+            IntPtr* global_work_size,
+            IntPtr* local_work_size,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event);
+
+        [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueTask(cl_command_queue command_queue,
             cl_kernel kernel,
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueTask(cl_command_queue command_queue,
+            cl_kernel kernel,
+            cl_uint num_events_in_wait_list,
+            IntPtr* event_wait_list,
+            cl_event* _event);
+
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueNativeKernel(cl_command_queue command_queue,
             NativeKernel user_func,
@@ -403,12 +552,19 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
+
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueMarker(cl_command_queue command_queue, cl_event* _event);
+
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWaitForEvents(cl_command_queue command_queue,
             cl_uint num_events,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] _event_list);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueWaitForEvents(cl_command_queue command_queue,
+            cl_uint num_events,
+            IntPtr* _event_list);
+        
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueBarrier(cl_command_queue command_queue);
 
@@ -428,11 +584,26 @@ namespace OpenCLNet
                                 cl_uint num_events_in_wait_list,
                                 [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
                                 cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueReadBufferRect(cl_command_queue command_queue,
+                                cl_mem buffer,
+                                cl_bool blocking_read,
+                                IntPtr* buffer_offset,
+                                IntPtr* host_offset,
+                                IntPtr* region,
+                                IntPtr buffer_row_pitch,
+                                IntPtr buffer_slice_pitch,
+                                IntPtr host_row_pitch,
+                                IntPtr host_slice_pitch,
+                                void* ptr,
+                                cl_uint num_events_in_wait_list,
+                                cl_event* event_wait_list,
+                                cl_event* _event);
 
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWriteBufferRect(cl_command_queue command_queue,
                                  cl_mem buffer,
-                                 cl_bool blocking_read,
+                                 cl_bool blocking_write,
                                  [In] IntPtr[] buffer_offset,
                                  [In] IntPtr[] host_offset,
                                  [In] IntPtr[] region,
@@ -443,6 +614,21 @@ namespace OpenCLNet
                                  void* ptr,
                                  cl_uint num_events_in_wait_list,
                                  [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] _event_wait_list,
+                                 cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueWriteBufferRect(cl_command_queue command_queue,
+                                 cl_mem buffer,
+                                 cl_bool blocking_write,
+                                 IntPtr* buffer_offset,
+                                 IntPtr* host_offset,
+                                 IntPtr* region,
+                                 IntPtr buffer_row_pitch,
+                                 IntPtr buffer_slice_pitch,
+                                 IntPtr host_row_pitch,
+                                 IntPtr host_slice_pitch,
+                                 void* ptr,
+                                 cl_uint num_events_in_wait_list,
+                                 cl_event* _event_wait_list,
                                  cl_event* _event);
 
         [DllImport(Configuration.Library)]
@@ -458,6 +644,20 @@ namespace OpenCLNet
                                 IntPtr dst_slice_pitch,
                                 cl_uint num_events_in_wait_list,
                                 [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] _event_wait_list,
+                                cl_event* _event);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueCopyBufferRect(cl_command_queue command_queue,
+                                cl_mem src_buffer,
+                                cl_mem dst_buffer,
+                                IntPtr* src_origin,
+                                IntPtr* dst_origin,
+                                IntPtr* region,
+                                IntPtr src_row_pitch,
+                                IntPtr src_slice_pitch,
+                                IntPtr dst_row_pitch,
+                                IntPtr dst_slice_pitch,
+                                cl_uint num_events_in_wait_list,
+                                cl_event* _event_wait_list,
                                 cl_event* _event);
         #endregion
 
@@ -492,7 +692,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clSetUserEventStatus(cl_event _event, ExecutionStatus execution_status);
         [DllImport(Configuration.Library)]
-        public extern static ErrorCode clSetEventCallback( cl_event _event, cl_int command_exec_callback_type, void* pfn_notify, void* user_data);
+        public extern static ErrorCode clSetEventCallback(cl_event _event, cl_int command_exec_callback_type, EventNotifyInternal pfn_notify, IntPtr user_data);
         #endregion
 
         #region Sampler API
@@ -570,25 +770,107 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
     }
+
 #if false
-    unsafe public static class CLGLExtension
+    unsafe public static class GLSharing
     {
-        delegate int CFuncDelegate(IntPtr Obj, IntPtr Arg);
-
-        public static void Function(IntPtr CFunc, IntPtr Obj, IntPtr Arg)
-        {
-            CFuncDelegate func = (CFuncDelegate)Marshal.GetDelegateForFunctionPointer(CFunc, typeof(CFuncDelegate));
-            int rc = func(Obj, Arg);
-        }
-
-        public delegate cl_int clGetGLContextInfoKHR ( cl_context_properties *properties,
+        public delegate cl_int clGetGLContextInfoKHRDelegate(cl_context_properties* properties,
         cl_gl_context_info param_name,
         IntPtr param_value_size,
-        void *param_value,
-        size_t *param_value_size_ret);
+        void* param_value,
+        IntPtr* param_value_size_ret);
 
-        IntPtr test = OpenCLAPI.clGetExtensionFunctionAddress("clGetGLContextInfoKHR");
+        public static readonly clGetGLContextInfoKHRDelegate clGetGLContextInfoKHR;
+        static GLSharing()
+        {
+            IntPtr func = OpenCLAPI.clGetExtensionFunctionAddress("clGetGLContextInfoKHR");
+            clGetGLContextInfoKHR = (clGetGLContextInfoKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clGetGLContextInfoKHRDelegate));
+        }
+    }
 
+    unsafe public static class DeviceFission
+    {
+
+        public enum DevicePartition
+        {
+            EQUALLY = 0x4050,
+            BY_COUNTS = 0x4051,
+            BY_NAMES = 0x4052,
+            BY_AFFINITY_DOMAIN = 0x4053,
+        }
+
+        public enum AffinityDomain
+        {
+            L1_CACHE = 0x1,
+            L2_CACHE = 0x2,
+            L3_CACHE = 0x3,
+            L4_CACHE = 0x4,
+            NUMA = 0x10,
+            NEXT_FISSIONABLE = 0x100,
+        }
+
+        public enum DeviceInfoPropertyNames
+        {
+            PARENT_DEVICE    =  0x4054,
+            PARITION_TYPES   =  0x4055,
+            AFFINITY_DOMAINS =  0x4056,
+            REFERENCE_COUNT  =  0x4057,
+            PARTITION_STYLE  =  0x4058,
+        }
+
+        public enum ListTerminators
+        {
+            CL_PROPERTIES_LIST_END          =  0x0,
+            CL_PARTITION_BY_COUNTS_LIST_END =  0x0,
+            CL_PARTITION_BY_NAMES_LIST_END  = -1,
+        }
+
+        public enum ErrorCodes
+        {
+            CL_DEVICE_PARTITION_FAILED = -1057,
+            CL_INVALID_PARTITION_COUNT = -1058,
+            CL_INVALID_PARTITION_NAME  = -1059,
+        }
+
+        public delegate cl_int clReleaseDeviceEXTDelegate(cl_device_id device);
+        public delegate cl_int clRetainDeviceEXTDelegate(cl_device_id device);
+        public delegate cl_int clCreateSubDevicesEXTDelegate(cl_device_id in_device,
+        [In] cl_device_partition_property_ext[] properties,
+        cl_uint num_entries,
+        [In] [Out] [MarshalAs(UnmanagedType.LPArray)] cl_device_id[] out_devices,
+        [Out] cl_uint *num_devices );
+
+
+        public static readonly clReleaseDeviceEXTDelegate clReleaseDeviceEXT;
+        public static readonly clRetainDeviceEXTDelegate clRetainDeviceEXT;
+        public static readonly clCreateSubDevicesEXTDelegate clCreateSubDevicesEX;
+        static DeviceFission()
+        {
+            IntPtr func;
+
+            func = OpenCLAPI.clGetExtensionFunctionAddress("clReleaseDeviceEXTDelegate");
+            clReleaseDeviceEXT = (clReleaseDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clReleaseDeviceEXTDelegate));
+
+            func = OpenCLAPI.clGetExtensionFunctionAddress("clRetainDeviceEXT");
+            clRetainDeviceEXT = (clRetainDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clRetainDeviceEXTDelegate));
+
+            func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateSubDevicesEX");
+            clCreateSubDevicesEX = (clCreateSubDevicesEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateSubDevicesEXTDelegate));
+        }
+    }
+
+    unsafe public static class GLEvent
+    {
+        static GLEvent()
+        {
+        }
+    }
+
+    unsafe public static class D3D10Sharing
+    {
+        static D3D10Sharing()
+        {
+        }
     }
 #endif
 }

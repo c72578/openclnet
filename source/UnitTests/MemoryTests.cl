@@ -42,6 +42,10 @@ kernel void LoopAndDoNothing( int iterations )
 		;
 }
 
+kernel void EmptyKernel( )
+{
+}
+
 struct IOKernelArgs
 {
     long outLong;
@@ -62,7 +66,7 @@ kernel void ArgIO( int i,
 	pA->outIntPtr = p;
 }
 
-kernel void TestReadMemory( global char* pData, size_t length )
+kernel void TestReadMemory( global read_only char* pData, size_t length )
 {
 	int sum;
 	
@@ -70,7 +74,7 @@ kernel void TestReadMemory( global char* pData, size_t length )
 		sum += pData[i];
 }
 
-kernel void TestWriteMemory( global char* pData, size_t length )
+kernel void TestWriteMemory( global write_only char* pData, size_t length )
 {
 	for( size_t i=0; i<length; i++ )
 		pData[i] = 1;
@@ -78,6 +82,17 @@ kernel void TestWriteMemory( global char* pData, size_t length )
 
 kernel void TestReadWriteMemory( global char* pData, size_t length )
 {
-	for( size_t i=0; i<length; i++ )
-		pData[length-1-i] = pData[i];
+	for( size_t i=0; i<length/2; i++ )
+	{
+		char t;
+		t = pData[i];
+		pData[i] = pData[length-1-i];
+		pData[length-1-i] = t;
+	}
+}
+
+kernel void TestVectorFloat2(float2 f, global float* pS)
+{
+	*pS++ = f.s0;
+	*pS++ = f.s1;
 }

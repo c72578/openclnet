@@ -101,6 +101,8 @@ namespace OpenCLNet
     public delegate void ContextNotify(string errInfo, byte[] data, IntPtr cb, IntPtr userData);
     public delegate void ProgramNotify(cl_program program, IntPtr userData);
     public delegate void NativeKernel(IntPtr args);
+    public delegate void EventNotify(Event _event, ExecutionStatus eventCommandExecStatus, object userData);
+    public delegate void EventNotifyInternal(cl_event _event, cl_int eventCommandExecStatus, IntPtr userData);
 
     public unsafe static class OpenCL
     {
@@ -371,6 +373,11 @@ namespace OpenCLNet
             return OpenCLAPI.clGetImageInfo(image, param_name, param_value_size, param_value, out param_value_size_ret);
         }
 
+        public static IntPtr CreateSubBuffer(IntPtr memobj, MemFlags flags, BufferRegion buffer_create_info, out ErrorCode errcode_ret)
+        {
+            return OpenCLAPI.clCreateSubBuffer(memobj, (cl_mem_flags)flags, BufferCreateType.REGION, &buffer_create_info, out errcode_ret);
+        }
+
         #endregion
 
         #region Kernel Object API
@@ -418,50 +425,138 @@ namespace OpenCLNet
         {
             return OpenCLAPI.clEnqueueReadBuffer(command_queue, buffer, blocking_read, offset, cb, ptr, num_events_in_wait_list, event_wait_list, _event);
         }
+        public static ErrorCode EnqueueReadBuffer(IntPtr command_queue, IntPtr buffer, uint blocking_read, int offset, int cb, IntPtr ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueReadBuffer(command_queue, buffer, blocking_read, (IntPtr)offset, (IntPtr)cb, ptr.ToPointer(), (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueReadBuffer(IntPtr command_queue, IntPtr buffer, uint blocking_read, long offset, long cb, IntPtr ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueReadBuffer(command_queue, buffer, blocking_read, (IntPtr)offset, (IntPtr)cb, ptr.ToPointer(), (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
 
         public static ErrorCode EnqueueWriteBuffer(IntPtr command_queue, IntPtr buffer, uint blocking_write, IntPtr offset, IntPtr cb, void* ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
         {
             return OpenCLAPI.clEnqueueWriteBuffer(command_queue, buffer, blocking_write, offset, cb, ptr, num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueWriteBuffer(IntPtr command_queue, IntPtr buffer, uint blocking_write, int offset, int cb, IntPtr ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueWriteBuffer(command_queue, buffer, blocking_write, (IntPtr)offset, (IntPtr)cb, ptr.ToPointer(), (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueWriteBuffer(IntPtr command_queue, IntPtr buffer, uint blocking_write, long offset, long cb, IntPtr ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueWriteBuffer(command_queue, buffer, blocking_write, (IntPtr)offset, (IntPtr)cb, ptr.ToPointer(), (uint)num_events_in_wait_list, event_wait_list, _event);
         }
 
         public static ErrorCode EnqueueCopyBuffer(IntPtr command_queue, IntPtr src_buffer, IntPtr dst_buffer, IntPtr src_offset, IntPtr dst_offset, IntPtr cb, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
         {
             return OpenCLAPI.clEnqueueCopyBuffer(command_queue, src_buffer, dst_buffer, src_offset, dst_offset, cb, num_events_in_wait_list, event_wait_list, _event);
         }
+        public static ErrorCode EnqueueCopyBuffer(IntPtr command_queue, IntPtr src_buffer, IntPtr dst_buffer, int src_offset, int dst_offset, int cb, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueCopyBuffer(command_queue, src_buffer, dst_buffer, (IntPtr)src_offset, (IntPtr)dst_offset, (IntPtr)cb, (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueCopyBuffer(IntPtr command_queue, IntPtr src_buffer, IntPtr dst_buffer, long src_offset, long dst_offset, long cb, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueCopyBuffer(command_queue, src_buffer, dst_buffer, (IntPtr)src_offset, (IntPtr)dst_offset, (IntPtr)cb, (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
 
         public static ErrorCode EnqueueReadImage(IntPtr command_queue, IntPtr image, uint blocking_read, IntPtr[] origin, IntPtr[] region, IntPtr row_pitch, IntPtr slice_pitch, void* ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
         {
             return OpenCLAPI.clEnqueueReadImage(command_queue, image, blocking_read, origin, region, row_pitch, slice_pitch, ptr, num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueReadImage(IntPtr command_queue, IntPtr image, uint blocking_read, IntPtr* origin, IntPtr* region, int row_pitch, int slice_pitch, IntPtr ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueReadImage(command_queue, image, blocking_read, origin, region, (IntPtr)row_pitch, (IntPtr)slice_pitch, ptr.ToPointer(), (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueReadImage(IntPtr command_queue, IntPtr image, uint blocking_read, IntPtr* origin, IntPtr* region, long row_pitch, long slice_pitch, IntPtr ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueReadImage(command_queue, image, blocking_read, origin, region, (IntPtr)row_pitch, (IntPtr)slice_pitch, ptr.ToPointer(), (uint)num_events_in_wait_list, event_wait_list, _event);
         }
 
         public static ErrorCode EnqueueWriteImage(IntPtr command_queue, IntPtr image, uint blocking_write, IntPtr[] origin, IntPtr[] region, IntPtr input_row_pitch, IntPtr input_slice_pitch, void* ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
         {
             return OpenCLAPI.clEnqueueWriteImage(command_queue, image, blocking_write, origin, region, input_row_pitch, input_slice_pitch, ptr, num_events_in_wait_list, event_wait_list, _event);
         }
+        public static ErrorCode EnqueueWriteImage(IntPtr command_queue, IntPtr image, uint blocking_write, IntPtr* origin, IntPtr* region, int input_row_pitch, int input_slice_pitch, IntPtr ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueWriteImage(command_queue, image, blocking_write, origin, region, (IntPtr)input_row_pitch, (IntPtr)input_slice_pitch, ptr.ToPointer(), (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueWriteImage(IntPtr command_queue, IntPtr image, uint blocking_write, IntPtr* origin, IntPtr* region, long input_row_pitch, long input_slice_pitch, IntPtr ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueWriteImage(command_queue, image, blocking_write, origin, region, (IntPtr)input_row_pitch, (IntPtr)input_slice_pitch, ptr.ToPointer(), (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
 
         public static ErrorCode EnqueueCopyImage(IntPtr command_queue, IntPtr src_image, IntPtr dst_image, IntPtr[] src_origin, IntPtr[] dst_origin, IntPtr[] region, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
         {
             return OpenCLAPI.clEnqueueCopyImage(command_queue, src_image, dst_image, src_origin, dst_origin, region, num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueCopyImage(IntPtr command_queue, IntPtr src_image, IntPtr dst_image, IntPtr* src_origin, IntPtr* dst_origin, IntPtr* region, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueCopyImage(command_queue, src_image, dst_image, src_origin, dst_origin, region, (uint)num_events_in_wait_list, event_wait_list, _event);
         }
 
         public static ErrorCode EnqueueCopyImageToBuffer(IntPtr command_queue, IntPtr src_image, IntPtr dst_buffer, IntPtr[] src_origin, IntPtr[] region, IntPtr dst_offset, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
         {
             return OpenCLAPI.clEnqueueCopyImageToBuffer(command_queue, src_image, dst_buffer, src_origin, region, dst_offset, num_events_in_wait_list, event_wait_list, _event);
         }
+        public static ErrorCode EnqueueCopyImageToBuffer(IntPtr command_queue, IntPtr src_image, IntPtr dst_buffer, IntPtr* src_origin, IntPtr* region, int dst_offset, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueCopyImageToBuffer(command_queue, src_image, dst_buffer, src_origin, region, (IntPtr)dst_offset, (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueCopyImageToBuffer(IntPtr command_queue, IntPtr src_image, IntPtr dst_buffer, IntPtr* src_origin, IntPtr* region, long dst_offset, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueCopyImageToBuffer(command_queue, src_image, dst_buffer, src_origin, region, (IntPtr)dst_offset, (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
 
         public static ErrorCode EnqueueCopyBufferToImage(IntPtr command_queue, IntPtr src_buffer, IntPtr dst_image, IntPtr src_offset, IntPtr[] dst_origin, IntPtr[] region, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
         {
             return OpenCLAPI.clEnqueueCopyBufferToImage(command_queue, src_buffer, dst_image, src_offset, dst_origin, region, num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueCopyBufferToImage(IntPtr command_queue, IntPtr src_buffer, IntPtr dst_image, int src_offset, IntPtr* dst_origin, IntPtr* region, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueCopyBufferToImage(command_queue, src_buffer, dst_image, (IntPtr)src_offset, dst_origin, region, (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueCopyBufferToImage(IntPtr command_queue, IntPtr src_buffer, IntPtr dst_image, long src_offset, IntPtr* dst_origin, IntPtr* region, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueCopyBufferToImage(command_queue, src_buffer, dst_image, (IntPtr)src_offset, dst_origin, region, (uint)num_events_in_wait_list, event_wait_list, _event);
         }
 
         public static void* EnqueueMapBuffer(IntPtr command_queue, IntPtr buffer, uint blocking_map, ulong map_flags, IntPtr offset, IntPtr cb, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clEnqueueMapBuffer(command_queue, buffer, blocking_map, map_flags, offset, cb, num_events_in_wait_list, event_wait_list, _event, out errcode_ret);
         }
+        public static void* EnqueueMapBuffer(IntPtr command_queue, IntPtr buffer, uint blocking_map, ulong map_flags, int offset, int cb, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event, out ErrorCode errcode_ret)
+        {
+            return OpenCLAPI.clEnqueueMapBuffer(command_queue, buffer, blocking_map, map_flags, (IntPtr)offset, (IntPtr)cb, (uint)num_events_in_wait_list, event_wait_list, _event, out errcode_ret);
+        }
+        public static void* EnqueueMapBuffer(IntPtr command_queue, IntPtr buffer, uint blocking_map, ulong map_flags, long offset, long cb, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event, out ErrorCode errcode_ret)
+        {
+            return OpenCLAPI.clEnqueueMapBuffer(command_queue, buffer, blocking_map, map_flags, (IntPtr)offset, (IntPtr)cb, (uint)num_events_in_wait_list, event_wait_list, _event, out errcode_ret);
+        }
 
         public static void* EnqueueMapImage(IntPtr command_queue, IntPtr image, uint blocking_map, ulong map_flags, IntPtr[] origin, IntPtr[] region, out IntPtr image_row_pitch, out IntPtr image_slice_pitch, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clEnqueueMapImage(command_queue, image, blocking_map, map_flags, origin, region, out image_row_pitch, out image_slice_pitch, num_events_in_wait_list, event_wait_list, _event, out errcode_ret);
+        }
+        public static void* EnqueueMapImage(IntPtr command_queue, IntPtr image, uint blocking_map, ulong map_flags, IntPtr* origin, IntPtr* region, out int image_row_pitch, out int image_slice_pitch, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event, out ErrorCode errcode_ret)
+        {
+            IntPtr rowPitch;
+            IntPtr slicePitch;
+            void* p;
+            p = OpenCLAPI.clEnqueueMapImage(command_queue, image, blocking_map, map_flags, origin, region, out rowPitch, out slicePitch, (uint)num_events_in_wait_list, event_wait_list, _event, out errcode_ret);
+            image_row_pitch = rowPitch.ToInt32();
+            image_slice_pitch = slicePitch.ToInt32();
+            return p;
+        }
+        public static void* EnqueueMapImage(IntPtr command_queue, IntPtr image, uint blocking_map, ulong map_flags, IntPtr* origin, IntPtr* region, out long image_row_pitch, out long image_slice_pitch, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event, out ErrorCode errcode_ret)
+        {
+            IntPtr rowPitch;
+            IntPtr slicePitch;
+            void* p;
+            p = OpenCLAPI.clEnqueueMapImage(command_queue, image, blocking_map, map_flags, origin, region, out rowPitch, out slicePitch, (uint)num_events_in_wait_list, event_wait_list, _event, out errcode_ret);
+            image_row_pitch = rowPitch.ToInt64();
+            image_slice_pitch = slicePitch.ToInt64();
+            return p;
         }
 
         public static ErrorCode EnqueueUnmapMemObject(IntPtr command_queue, IntPtr memobj, void* mapped_ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
@@ -473,10 +568,18 @@ namespace OpenCLNet
         {
             return OpenCLAPI.clEnqueueNDRangeKernel(command_queue, kernel, work_dim, global_work_offset, global_work_size, local_work_size, num_events_in_wait_list, event_wait_list, _event);
         }
+        public static ErrorCode EnqueueNDRangeKernel(IntPtr command_queue, IntPtr kernel, int work_dim, IntPtr* global_work_offset, IntPtr* global_work_size, IntPtr* local_work_size, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueNDRangeKernel(command_queue, kernel, (uint)work_dim, global_work_offset, global_work_size, local_work_size, (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
 
         public static ErrorCode EnqueueTask(IntPtr command_queue, IntPtr kernel, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
         {
             return OpenCLAPI.clEnqueueTask(command_queue, kernel, num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueTask(IntPtr command_queue, IntPtr kernel, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueTask(command_queue, kernel, (uint)num_events_in_wait_list, event_wait_list, _event);
         }
 
         public static ErrorCode EnqueueNativeKernel(cl_command_queue command_queue,
@@ -511,11 +614,119 @@ namespace OpenCLNet
         {
             return OpenCLAPI.clEnqueueWaitForEvents(command_queue, num_events, _event_list);
         }
+        public static ErrorCode EnqueueWaitForEvents(IntPtr command_queue, int num_events, IntPtr* _event_list)
+        {
+            return OpenCLAPI.clEnqueueWaitForEvents(command_queue, (uint)num_events, _event_list);
+        }
 
         public static ErrorCode EnqueueBarrier(IntPtr command_queue)
         {
             return OpenCLAPI.clEnqueueBarrier(command_queue);
         }
+
+        #region EnqueueReadBufferRect
+
+        /// <summary>
+        /// OpenCL 1.1
+        /// </summary>
+        /// <param name="command_queue"></param>
+        /// <param name="buffer"></param>
+        /// <param name="blocking_read"></param>
+        /// <param name="buffer_offset"></param>
+        /// <param name="host_offset"></param>
+        /// <param name="region"></param>
+        /// <param name="buffer_row_pitch"></param>
+        /// <param name="buffer_slice_pitch"></param>
+        /// <param name="host_row_pitch"></param>
+        /// <param name="host_slice_pitch"></param>
+        /// <param name="ptr"></param>
+        /// <param name="num_events_in_wait_list"></param>
+        /// <param name="event_wait_list"></param>
+        /// <param name="_event"></param>
+        /// <returns></returns>
+        public static ErrorCode EnqueueReadBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, IntPtr[] buffer_offset, IntPtr[] host_offset, IntPtr[] region, IntPtr buffer_row_pitch, IntPtr buffer_slice_pitch, IntPtr host_row_pitch, IntPtr host_slice_pitch, void* ptr, cl_uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueReadBufferRect(command_queue, buffer, blocking_read, buffer_offset, host_offset, region, buffer_row_pitch, buffer_slice_pitch, host_row_pitch, host_slice_pitch, ptr, num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueReadBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, int buffer_row_pitch, int buffer_slice_pitch, int host_row_pitch, int host_slice_pitch, void* ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueReadBufferRect(command_queue, buffer, blocking_read, buffer_offset, host_offset, region, (IntPtr)buffer_row_pitch, (IntPtr)buffer_slice_pitch, (IntPtr)host_row_pitch, (IntPtr)host_slice_pitch, ptr, (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueReadBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, long buffer_row_pitch, long buffer_slice_pitch, long host_row_pitch, long host_slice_pitch, void* ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        {
+            return OpenCLAPI.clEnqueueReadBufferRect(command_queue, buffer, blocking_read, buffer_offset, host_offset, region, (IntPtr)buffer_row_pitch, (IntPtr)buffer_slice_pitch, (IntPtr)host_row_pitch, (IntPtr)host_slice_pitch, ptr, (uint)num_events_in_wait_list, event_wait_list, _event);
+        }
+
+        #endregion
+
+        #region EnqueueWriteBufferRect
+
+        /// <summary>
+        /// OpenCL 1.1
+        /// </summary>
+        /// <param name="command_queue"></param>
+        /// <param name="buffer"></param>
+        /// <param name="blocking_read"></param>
+        /// <param name="buffer_offset"></param>
+        /// <param name="host_offset"></param>
+        /// <param name="region"></param>
+        /// <param name="buffer_row_pitch"></param>
+        /// <param name="buffer_slice_pitch"></param>
+        /// <param name="host_row_pitch"></param>
+        /// <param name="host_slice_pitch"></param>
+        /// <param name="ptr"></param>
+        /// <param name="num_events_in_wait_list"></param>
+        /// <param name="_event_wait_list"></param>
+        /// <param name="_event"></param>
+        /// <returns></returns>
+        public static ErrorCode EnqueueWriteBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, IntPtr[] buffer_offset, IntPtr[] host_offset, IntPtr[] region, IntPtr buffer_row_pitch, IntPtr buffer_slice_pitch, IntPtr host_row_pitch, IntPtr host_slice_pitch, void* ptr, cl_uint num_events_in_wait_list, cl_event[] _event_wait_list, cl_event* _event)
+        {
+            return OpenCLAPI.clEnqueueWriteBufferRect(command_queue, buffer, blocking_write, buffer_offset, host_offset, region, buffer_row_pitch, buffer_slice_pitch, host_row_pitch, host_slice_pitch, ptr, num_events_in_wait_list, _event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueWriteBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, int buffer_row_pitch, int buffer_slice_pitch, int host_row_pitch, int host_slice_pitch, void* ptr, int num_events_in_wait_list, cl_event* _event_wait_list, cl_event* _event)
+        {
+            return OpenCLAPI.clEnqueueWriteBufferRect(command_queue, buffer, blocking_write, buffer_offset, host_offset, region, (IntPtr)buffer_row_pitch, (IntPtr)buffer_slice_pitch, (IntPtr)host_row_pitch, (IntPtr)host_slice_pitch, ptr, (uint)num_events_in_wait_list, _event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueWriteBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, long buffer_row_pitch, long buffer_slice_pitch, long host_row_pitch, long host_slice_pitch, void* ptr, int num_events_in_wait_list, cl_event* _event_wait_list, cl_event* _event)
+        {
+            return OpenCLAPI.clEnqueueWriteBufferRect(command_queue, buffer, blocking_write, buffer_offset, host_offset, region, (IntPtr)buffer_row_pitch, (IntPtr)buffer_slice_pitch, (IntPtr)host_row_pitch, (IntPtr)host_slice_pitch, ptr, (uint)num_events_in_wait_list, _event_wait_list, _event);
+        }
+
+        #endregion
+
+        #region EnqueueCopyBufferRect
+
+        /// <summary>
+        /// OpenCL 1.1
+        /// </summary>
+        /// <param name="command_queue"></param>
+        /// <param name="src_buffer"></param>
+        /// <param name="dst_buffer"></param>
+        /// <param name="src_origin"></param>
+        /// <param name="dst_origin"></param>
+        /// <param name="region"></param>
+        /// <param name="src_row_pitch"></param>
+        /// <param name="src_slice_pitch"></param>
+        /// <param name="dst_row_pitch"></param>
+        /// <param name="dst_slice_pitch"></param>
+        /// <param name="num_events_in_wait_list"></param>
+        /// <param name="_event_wait_list"></param>
+        /// <param name="_event"></param>
+        /// <returns></returns>
+        public static ErrorCode EnqueueCopyBufferRect(cl_command_queue command_queue, cl_mem src_buffer, cl_mem dst_buffer, IntPtr[] src_origin, IntPtr[] dst_origin, IntPtr[] region, IntPtr src_row_pitch, IntPtr src_slice_pitch, IntPtr dst_row_pitch, IntPtr dst_slice_pitch, cl_uint num_events_in_wait_list, cl_event[] _event_wait_list, cl_event* _event)
+        {
+            return OpenCLAPI.clEnqueueCopyBufferRect(command_queue, src_buffer, dst_buffer, src_origin, dst_origin, region, src_row_pitch, src_slice_pitch, dst_row_pitch, dst_slice_pitch, num_events_in_wait_list, _event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueCopyBufferRect(cl_command_queue command_queue, cl_mem src_buffer, cl_mem dst_buffer, IntPtr* src_origin, IntPtr* dst_origin, IntPtr* region, int src_row_pitch, int src_slice_pitch, int dst_row_pitch, int dst_slice_pitch, int num_events_in_wait_list, cl_event* _event_wait_list, cl_event* _event)
+        {
+            return OpenCLAPI.clEnqueueCopyBufferRect(command_queue, src_buffer, dst_buffer, src_origin, dst_origin, region, (IntPtr)src_row_pitch, (IntPtr)src_slice_pitch, (IntPtr)dst_row_pitch, (IntPtr)dst_slice_pitch, (uint)num_events_in_wait_list, _event_wait_list, _event);
+        }
+        public static ErrorCode EnqueueCopyBufferRect(cl_command_queue command_queue, cl_mem src_buffer, cl_mem dst_buffer, IntPtr* src_origin, IntPtr* dst_origin, IntPtr* region, long src_row_pitch, long src_slice_pitch, long dst_row_pitch, long dst_slice_pitch, int num_events_in_wait_list, cl_event* _event_wait_list, cl_event* _event)
+        {
+            return OpenCLAPI.clEnqueueCopyBufferRect(command_queue, src_buffer, dst_buffer, src_origin, dst_origin, region, (IntPtr)src_row_pitch, (IntPtr)src_slice_pitch, (IntPtr)dst_row_pitch, (IntPtr)dst_slice_pitch, (uint)num_events_in_wait_list, _event_wait_list, _event);
+        }
+
+        #endregion
 
         #endregion
 
@@ -553,6 +764,41 @@ namespace OpenCLNet
         public static ErrorCode ReleaseEvent(cl_event _event)
         {
             return OpenCLAPI.clReleaseEvent(_event);
+        }
+
+        /// <summary>
+        /// OpenCL 1.1
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="errcode_ret"></param>
+        /// <returns></returns>
+        public static cl_event CreateUserEvent(cl_context context, out ErrorCode errcode_ret)
+        {
+            return OpenCLAPI.clCreateUserEvent(context, out errcode_ret);
+        }
+
+        /// <summary>
+        /// OpenCL 1.1
+        /// </summary>
+        /// <param name="_event"></param>
+        /// <param name="execution_status"></param>
+        /// <returns></returns>
+        public static ErrorCode SetUserEventStatus(cl_event _event, ExecutionStatus execution_status)
+        {
+            return OpenCLAPI.clSetUserEventStatus(_event, execution_status);
+        }
+
+        /// <summary>
+        /// OpenCL 1.1
+        /// </summary>
+        /// <param name="_event"></param>
+        /// <param name="command_exec_callback_type"></param>
+        /// <param name="pfn_notify"></param>
+        /// <param name="user_data"></param>
+        /// <returns></returns>
+        public static ErrorCode SetEventCallback(cl_event _event, cl_int command_exec_callback_type, EventNotifyInternal pfn_notify, IntPtr user_data)
+        {
+            return OpenCLAPI.clSetEventCallback(_event, command_exec_callback_type, pfn_notify, user_data);
         }
 
         #endregion

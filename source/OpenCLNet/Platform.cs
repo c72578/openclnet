@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace OpenCLNet
 {
@@ -36,13 +37,41 @@ namespace OpenCLNet
     unsafe public class Platform : InteropTools.IPropertyContainer
     {
         public IntPtr PlatformID { get; protected set; }
+        /// <summary>
+        /// Equal to "FULL_PROFILE" if the implementation supports the OpenCL specification or
+        /// "EMBEDDED_PROFILE" if the implementation supports the OpenCL embedded profile.
+        /// </summary>
         public string Profile { get { return InteropTools.ReadString( this, (uint)PlatformInfo.PROFILE ); } }
+        /// <summary>
+        /// OpenCL version string. Returns the OpenCL version supported by the implementation. This version string
+        /// has the following format: OpenCL&lt;space&gt;&lt;major_version.minor_version&gt;&lt;space&gt;&lt;platform specific information&gt;
+        /// </summary>
         public string Version { get { return InteropTools.ReadString( this, (uint)PlatformInfo.VERSION ); } }
+        /// <summary>
+        /// Platofrm name string
+        /// </summary>
         public string Name { get { return InteropTools.ReadString( this, (uint)PlatformInfo.NAME ); } }
+        /// <summary>
+        /// Platform Vendor string
+        /// </summary>
         public string Vendor { get { return InteropTools.ReadString( this, (uint)PlatformInfo.VENDOR ); } }
+        /// <summary>
+        /// Space separated string of extension names.
+        /// Note that this class has some support functions to help query extension capbilities.
+        /// This property is only present for completeness.
+        /// </summary>
         public string Extensions { get { return InteropTools.ReadString( this, (uint)PlatformInfo.EXTENSIONS ); } }
+        /// <summary>
+        /// Convenience method to get at the major_version field in the Version string
+        /// </summary>
+        public int OpenCLMajorVersion { get; protected set; }
+        /// <summary>
+        /// Convenience method to get at the minor_version field in the Version string
+        /// </summary>
+        public int OpenCLMinorVersion { get; protected set; }
 
-        protected Dictionary<IntPtr,Device> _Devices =  new Dictionary<IntPtr, Device>();
+        Regex VersionStringRegex = new Regex("OpenCL (?<Major>[0-9]+)\\.(?<Minor>[0-9]+)");
+        protected Dictionary<IntPtr, Device> _Devices = new Dictionary<IntPtr, Device>();
         Device[] DeviceList;
         IntPtr[] DeviceIDs;
 
@@ -59,6 +88,18 @@ namespace OpenCLNet
             DeviceList = InteropTools.ConvertDeviceIDsToDevices( this, DeviceIDs );
 
             InitializeExtensionHashSet();
+
+            Match m = VersionStringRegex.Match(Version);
+            if (m.Success)
+            {
+                OpenCLMajorVersion = int.Parse(m.Groups["Major"].Value);
+                OpenCLMinorVersion = int.Parse(m.Groups["Minor"].Value);
+            }
+            else
+            {
+                OpenCLMajorVersion = 1;
+                OpenCLMinorVersion = 0;
+            }
         }
 
         public Context CreateDefaultContext()

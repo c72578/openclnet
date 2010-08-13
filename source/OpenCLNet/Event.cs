@@ -27,22 +27,104 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace OpenCLNet
 {
     public class Event : IDisposable, InteropTools.IPropertyContainer
     {
+        #region Properties
+        
         public IntPtr EventID { get; protected set; }
         public Context Context { get; protected set; }
+        public CommandQueue CommandQueue { get; protected set; }
+        public ExecutionStatus ExecutionStatus { get { return (ExecutionStatus)InteropTools.ReadUInt(this, (uint)EventInfo.COMMAND_EXECUTION_STATUS); } }
+        public CommandType CommandType { get { return (CommandType)InteropTools.ReadUInt(this, (uint)EventInfo.COMMAND_TYPE); } }
+
+        #endregion
+
+        internal class CallbackData
+        {
+            public Event EventObject;
+            public EventNotify UserMethod;
+            public object UserData;
+
+            internal CallbackData(Event _event, EventNotify userMethod, object userData)
+            {
+                EventObject = _event;
+                UserMethod = userMethod;
+                UserData = userData;
+            }
+        }
+
+        private static int CallbackId;
+        private static Mutex CallbackMutex = new Mutex();
+        private static Dictionary<int, CallbackData> CallbackDispatch = new Dictionary<int, CallbackData>();
+        private static EventNotifyInternal CallbackDelegate = new EventNotifyInternal(EventCallback);
+        private static int AddCallback(Event _event, EventNotify userMethod, object userData)
+        {
+            int callbackId;
+            CallbackData callbackData = new CallbackData(_event,userMethod,userData);
+            bool gotMutex = false;
+
+            try
+            {
+                gotMutex = CallbackMutex.WaitOne();
+                do
+                {
+                    callbackId = CallbackId++;
+                } while (CallbackDispatch.ContainsKey(callbackId));
+                CallbackDispatch.Add(callbackId, callbackData);
+            }
+            finally
+            {
+                if (gotMutex)
+                    CallbackMutex.ReleaseMutex();
+            }
+            return callbackId;
+        }
+
+        private static CallbackData GetCallback(int callbackId)
+        {
+            CallbackData callbackData = null;
+            bool gotMutex = false;
+            try
+            {
+                gotMutex = CallbackMutex.WaitOne();
+                callbackData = CallbackDispatch[callbackId];
+            }
+            finally
+            {
+                if( gotMutex )
+                    CallbackMutex.ReleaseMutex();
+            }
+            return callbackData;
+        }
+
+        private static void RemoveCallback(int callbackId)
+        {
+            bool gotMutex = false;
+            try
+            {
+                gotMutex = CallbackMutex.WaitOne();
+                CallbackDispatch.Remove(callbackId);
+            }
+            finally
+            {
+                if (gotMutex)
+                    CallbackMutex.ReleaseMutex();
+            }
+        }
 
         // Track whether Dispose has been called.
         private bool disposed = false;
 
         #region Construction / Destruction
 
-        internal Event( Context context, IntPtr eventID )
+        internal Event( Context context, CommandQueue cq, IntPtr eventID )
         {
             Context = context;
+            CommandQueue = cq;
             EventID = eventID;
         }
 
@@ -135,6 +217,57 @@ namespace OpenCLNet
 
         #endregion
 
+        /// <summary>
+        /// Block the current thread until this event is completed
+        /// </summary>
+        public void Wait()
+        {
+            Context.WaitForEvent(this);
+        }
+
+        /// <summary>
+        /// OpenCL 1.1
+        /// </summary>
+        /// <param name="_event"></param>
+        /// <param name="execution_status"></param>
+        public void SetUserEventStatus(ExecutionStatus execution_status)
+        {
+            ErrorCode result;
+
+            result = OpenCL.SetUserEventStatus(EventID, execution_status);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetUserEventStatus failed with error code " + result, result);
+        }
+
+        /// <summary>
+        /// OpenCL 1.1
+        /// </summary>
+        /// <param name="command_exec_callback_type"></param>
+        /// <param name="pfn_notify"></param>
+        /// <param name="user_data"></param>
+        public void SetCallback(ExecutionStatus command_exec_callback_type, EventNotify pfn_notify, object user_data)
+        {
+            ErrorCode result;
+            int callbackId = AddCallback(this,pfn_notify, user_data);
+
+            result = OpenCL.SetEventCallback(EventID, (int)command_exec_callback_type, CallbackDelegate, (IntPtr)callbackId);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetEventCallback failed with error code " + result, result);
+        }
+
+        private static void EventCallback(IntPtr eventId, int executionStatus, IntPtr userData)
+        {
+            int callbackId = userData.ToInt32();
+            CallbackData callbackData = GetCallback(callbackId);
+            callbackData.UserMethod(callbackData.EventObject, (ExecutionStatus)executionStatus, callbackData.UserData);
+            RemoveCallback(callbackId);
+        }
+
+        /// <summary>
+        /// Returns the specified profiling counter
+        /// </summary>
+        /// <param name="paramName"></param>
+        /// <param name="paramValue"></param>
         public unsafe void GetEventProfilingInfo(ProfilingInfo paramName, out ulong paramValue)
         {
             IntPtr paramValueSizeRet;

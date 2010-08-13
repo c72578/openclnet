@@ -10,89 +10,232 @@ using System.Xml.Serialization;
 
 namespace OpenCLNet
 {
+#warning Meta files need to contain BuildOptions and Defines for proper uniqueness testing
+
     public partial class OpenCLManager : Component
     {
+        /// <summary>
+        /// True if OpenCL is available on this machine
+        /// </summary>
         public bool OpenCLIsAvailable { get { return OpenCL.NumberOfPlatforms > 0; } }
-        public List<string> RequireExtensions = new List<string>();
+        /// <summary>
+        /// Each element in this list is interpreted as the name of an extension.
+        /// Any device that does not present this extension in its Extensions
+        /// property will be filtered out during context creation.
+        /// </summary>
+        public List<string> RequiredExtensions = new List<string>();
+        /// <summary>
+        /// If true, OpenCLManager will filter out any devices that don't signal image support through the HasImageSupport property
+        /// </summary>
         public bool RequireImageSupport { get; set; }
-        public bool UseMultiplePlatforms { get; set; }
+        /// <summary>
+        /// If true, OpenCLManager will attempt to use stored binaries(Stored at 'BinaryPath') to avoid recompilation
+        /// </summary>
         public bool AttemptUseBinaries { get; set; }
+        /// <summary>
+        /// The location to store and look for compiled binaries
+        /// </summary>
         public string BinaryPath { get; set; }
+        /// <summary>
+        /// If true, OpenCLManager will attempt to compile sources(Stored at 'SourcePath') to compile programs, and possibly
+        /// to store binaries(If 'AttemptUseBinarues' is true)
+        /// </summary>
         public bool AttemptUseSource { get; set; }
+        /// <summary>
+        /// The location where sources are stored
+        /// </summary>
         public string SourcePath { get; set; }
         public List<DeviceType> DeviceTypes = new List<DeviceType>();
-
-        public string BuildOptions = "";
+        /// <summary>
+        /// BuildOptions is passed to the OpenCL build functions that take compiler options
+        /// </summary>
+        public string BuildOptions { get; set; }
+        /// <summary>
+        /// This string is prepended verbatim to any and all sources that are compiled.
+        /// It can contain any kind of useful global definitions.
+        /// </summary>
+        public string Defines { get; set; }
         public Platform Platform;
         public Context Context;
+        /// <summary>
+        /// Array of CommandQueues. Indices correspond to the devices in the Context.Devices.
+        /// Simple OpenCL programs will typically just enqueue operations on CQ[0] and ignore any additional devices.
+        /// </summary>
+        public CommandQueue[] CQ;
 
         public OpenCLManager()
         {
+            DefaultProperties();
             InitializeComponent();
         }
 
         public OpenCLManager(IContainer container)
         {
-            container.Add(this);
+            DefaultProperties();
 
+            container.Add(this);
             InitializeComponent();
         }
 
+        private void DefaultProperties()
+        {
+            RequireImageSupport = false;
+            BuildOptions = "";
+            Defines = "";
+            SourcePath = "OpenCL" + Path.AltDirectorySeparatorChar + "src";
+            BinaryPath = "OpenCL" + Path.AltDirectorySeparatorChar + "bin";
+            AttemptUseBinaries = true;
+            AttemptUseSource = true;
+        }
+
         /// <summary>
-        /// Create a context containing all devices in the platform returned by OpenCL.GetPlatform(0)
+        /// Create a context containing all devices in the platform returned by OpenCL.GetPlatform(0) that satisfy the current RequireImageSupport and RequireExtensions property settings.
+        /// Default command queues are made available through the CQ property
         /// </summary>
         /// <param name="platform"></param>
         /// <param name="devices"></param>
         public void CreateDefaultContext()
         {
-            if (!OpenCLIsAvailable)
-                throw new OpenCLNotAvailableException();
-
-            Platform = OpenCL.GetPlatform(0);
-            Context = Platform.CreateDefaultContext();
+            CreateDefaultContext(0,DeviceType.ALL);
         }
 
         /// <summary>
-        /// Create a context containing all devices in the given platform
+        /// Create a context containing all devices of a given type that satisfy the current RequireImageSupport and RequireExtensions property settings.
+        /// Default command queues are made available through the CQ property
+        /// 
         /// </summary>
-        /// <param name="platform"></param>
-        /// <param name="devices"></param>
-        public void CreateContext( Platform platform, IEnumerable<Device> devices )
+        /// <param name="deviceType"></param>
+        public void CreateDefaultContext(int platformNumber, DeviceType deviceType)
         {
             if (!OpenCLIsAvailable)
                 throw new OpenCLNotAvailableException();
 
-            foreach (Platform p in OpenCL.GetPlatforms())
+            Platform = OpenCL.GetPlatform(platformNumber);
+            var devices = from d in Platform.QueryDevices(deviceType)
+                    where ((RequireImageSupport && d.ImageSupport == true) || !RequireImageSupport) && d.HasExtensions( RequiredExtensions.ToArray<string>() )
+                    select d;
+            IntPtr[] properties = new IntPtr[]
             {
-                //p.QueryDevices(DeviceType DeviceType.
-            }
+                (IntPtr)ContextProperties.PLATFORM, Platform,
+                IntPtr.Zero
+            };
+
+            if (devices.Count() == 0)
+                throw new OpenCLException("CreateDefaultContext: No OpenCL devices found that matched filter criteria.");
+
+            CreateContext(Platform, properties, devices);
         }
 
-        public Program CompileSourceFromFile( string fileName )
+
+        /// <summary>
+        /// Create a context and initialize default command queues in the CQ property
+        /// </summary>
+        /// <param name="platform"></param>
+        /// <param name="devices"></param>
+        public void CreateContext(Platform platform, IntPtr[] contextProperties, IEnumerable<Device> devices)
+        {
+            CreateContext(platform, contextProperties, devices, null, IntPtr.Zero);
+        }
+
+        /// <summary>
+        /// Create a context and initialize default command queues in the CQ property
+        /// </summary>
+        /// <param name="platform"></param>
+        /// <param name="devices"></param>
+        public void CreateContext( Platform platform, IntPtr[] contextProperties, IEnumerable<Device> devices, ContextNotify notify, IntPtr userData )
+        {
+            if (!OpenCLIsAvailable)
+                throw new OpenCLNotAvailableException();
+
+            Platform = platform;
+            Context = platform.CreateContext( contextProperties, devices.ToArray<Device>(), notify, userData );
+            CQ = new CommandQueue[Context.Devices.Length];
+            for (int i = 0; i < Context.Devices.Length; i++)
+                CQ[i] = Context.CreateCommandQueue(Context.Devices[0]);
+        }
+
+        /// <summary>
+        /// CompileSource
+        /// 
+        /// Attempt to create a program from source and build it. No caching is attempted.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public Program CompileSource(string source)
+        {
+            Program program = Context.CreateProgramWithSource(Defines+System.Environment.NewLine+source);
+            program.Build(Context.Devices, BuildOptions, null, IntPtr.Zero);
+            return program;
+        }
+
+        /// <summary>
+        /// CompileFile
+        /// 
+        /// Attempt to compile the file identified by fileName.
+        /// If the AttemptUseBinaries property is true, the method will first check if an up-to-date precompiled binary exists.
+        /// If it does, it will load the binary instead, if no binary exists, compilation will be performed and the resulting binaries saved.
+        /// 
+        /// If the AttemptUseBinaries property is false, only compilation will be attempted.
+        /// 
+        /// Caveat: If AttemptUseSource is false, no compilation will be attempted - ever.
+        /// If both AttemptUseSource and AttemptUseBinaries are false this function will throw an exception.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public Program CompileFile( string fileName )
         {
             string sourcePath = SourcePath + Path.DirectorySeparatorChar + fileName;
             string binaryPath = BinaryPath + Path.DirectorySeparatorChar + fileName;
+            Program p;
 
             if (!File.Exists(sourcePath))
                 throw new FileNotFoundException(sourcePath);
 
-            try
+            if (AttemptUseBinaries && !AttemptUseSource)
             {
                 byte[][] binaries = LoadAllBinaries(Context, fileName);
                 ErrorCode[] status = new ErrorCode[Context.Devices.Length];
-                Program p = Context.CreateProgramWithBinary(Context.Devices, binaries, status);
+                p = Context.CreateProgramWithBinary(Context.Devices, binaries, status);
+                p.Build();
                 return p;
             }
-            catch (Exception) // Loading binaries failed for some reason. Attempt to compile instead.
+            else if (!AttemptUseBinaries && AttemptUseSource)
             {
-                Program p = Context.CreateProgramFromFile(sourcePath);
+                string source = Defines+System.Environment.NewLine+File.ReadAllText(sourcePath);
+                p = Context.CreateProgramWithSource(source);
                 p.Build(Context.Devices, BuildOptions, null, IntPtr.Zero);
                 SaveAllBinaries(Context, fileName, p.Binaries);
                 return p;
             }
+            else if (AttemptUseBinaries && AttemptUseSource)
+            {
+                try
+                {
+                    byte[][] binaries = LoadAllBinaries(Context, fileName);
+                    ErrorCode[] status = new ErrorCode[Context.Devices.Length];
+                    p = Context.CreateProgramWithBinary(Context.Devices, binaries, status);
+                    p.Build();
+                    return p;
+                }
+                catch (Exception)
+                {
+                    // Loading binaries failed for some reason. Attempt to compile instead.
+                    string source = Defines + System.Environment.NewLine + File.ReadAllText(sourcePath);
+                    p = Context.CreateProgramWithSource(source);
+                    p.Build(Context.Devices, BuildOptions, null, IntPtr.Zero);
+                    SaveAllBinaries(Context, fileName, p.Binaries);
+                    return p;
+                }
+            }
+            else
+            {
+                throw new OpenCLException("OpenCLManager has both AttemptUseBinaries and AttemptUseSource set to false, and therefore can't build Programs from files");
+            }
         }
+
         protected void SaveDeviceBinary(Context context, string fileName, byte[][] binaries, string platformDirectoryName, Device device )
         {
+            throw new NotImplementedException("SaveDeviceBinary not implemented");
         }
 
         protected void SaveAllBinaries(Context context, string fileName, byte[][] binaries)
@@ -240,6 +383,8 @@ namespace OpenCLNet
     {
         public string Root { get; set; }
         public string MetaFileName { get { return Root+Path.DirectorySeparatorChar + "metainfo.xml"; } }
+        [XmlIgnore()]
+        public Dictionary<string, string> KeyValueMap = new Dictionary<string, string>();
 
         public MetaDirectory()
         {
@@ -411,8 +556,6 @@ namespace OpenCLNet
         }
 
 
-        [XmlIgnore()]
-        public Dictionary<string, string> KeyValueMap = new Dictionary<string, string>();
         [XmlArray("KeyValueMap")]
         [XmlArrayItem("DictionaryEntry", Type = typeof(DictionaryEntry))]
         public DictionaryEntry[] _PlatformToDirectoryMap

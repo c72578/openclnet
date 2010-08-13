@@ -560,6 +560,7 @@ namespace OpenCLNet
     {
         READ                                = (1 << 0),
         WRITE                               = (1 << 1),
+        READ_WRITE                          = ((ulong)READ+(ulong)WRITE),
     };
 
     // cl_program_info
@@ -661,6 +662,14 @@ namespace OpenCLNet
         REGION = 0x1220,
     };
 
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct BufferRegion
+    {
+        public IntPtr Origin;
+        public IntPtr Size;
+    }
+
+
     // cl_profiling_info
     public enum ProfilingInfo
     {
@@ -688,4 +697,734 @@ namespace OpenCLNet
         TEXTURE_TARGET           = 0x2004,
         MIPMAP_LEVEL             = 0x2005,
     };
+
+    #region Vector2
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Char2
+    {
+        public sbyte S0;
+        public sbyte S1;
+
+        public Char2(sbyte s0, sbyte s1)
+        {
+            S0 = s0;
+            S1 = s1;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UChar2
+    {
+        public byte S0;
+        public byte S1;
+
+        public UChar2(byte s0, byte s1)
+        {
+            S0 = s0;
+            S1 = s1;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Short2
+    {
+        public short S0;
+        public short S1;
+
+        public Short2(short s0, short s1)
+        {
+            S0 = s0;
+            S1 = s1;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UShort2
+    {
+        public ushort S0;
+        public ushort S1;
+
+        public UShort2(ushort s0, ushort s1)
+        {
+            S0 = s0;
+            S1 = s1;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Int2
+    {
+        public int S0;
+        public int S1;
+
+        public Int2(int s0, int s1)
+        {
+            S0 = s0;
+            S1 = s1;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UInt2
+    {
+        public uint S0;
+        public uint S1;
+
+        public UInt2(uint s0, uint s1)
+        {
+            S0 = s0;
+            S1 = s1;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Long2
+    {
+        public long S0;
+        public long S1;
+
+        public Long2(long s0, long s1)
+        {
+            S0 = s0;
+            S1 = s1;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct ULong2
+    {
+        public ulong S0;
+        public ulong S1;
+
+        public ULong2(ulong s0, ulong s1)
+        {
+            S0 = s0;
+            S1 = s1;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Float2
+    {
+        public float S0;
+        public float S1;
+
+        public Float2(float s0, float s1)
+        {
+            S0 = s0;
+            S1 = s1;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Double2
+    {
+        public double S0;
+        public double S1;
+
+        public Double2(double s0, double s1)
+        {
+            S0 = s0;
+            S1 = s1;
+        }
+    }
+
+    #endregion
+
+    #region Vector3
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Char3
+    {
+        public sbyte S0;
+        public sbyte S1;
+        public sbyte S2;
+
+        public Char3(sbyte s0, sbyte s1, sbyte s2)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UChar3
+    {
+        public byte S0;
+        public byte S1;
+        public byte S2;
+
+        public UChar3(byte s0, byte s1, byte s2)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Short3
+    {
+        public short S0;
+        public short S1;
+        public short S2;
+
+        public Short3(short s0, short s1, short s2)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UShort3
+    {
+        public ushort S0;
+        public ushort S1;
+        public ushort S2;
+
+        public UShort3(ushort s0, ushort s1, ushort s2)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Int3
+    {
+        public int S0;
+        public int S1;
+        public int S2;
+
+        public Int3(int s0, int s1, int s2)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UInt3
+    {
+        public uint S0;
+        public uint S1;
+        public uint S2;
+
+        public UInt3(uint s0, uint s1, uint s2)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Long3
+    {
+        public long S0;
+        public long S1;
+        public long S2;
+
+        public Long3(long s0, long s1, long s2)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct ULong3
+    {
+        public ulong S0;
+        public ulong S1;
+        public ulong S2;
+
+        public ULong3(ulong s0, ulong s1, ulong s2)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Float3
+    {
+        public float S0;
+        public float S1;
+        public float S2;
+
+        public Float3(float s0, float s1, float s2)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Double3
+    {
+        public double S0;
+        public double S1;
+        public double S2;
+
+        public Double3(double s0, double s1, double s2)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+        }
+    }
+
+    #endregion
+
+    #region Vector4
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Char4
+    {
+        public sbyte S0;
+        public sbyte S1;
+        public sbyte S2;
+        public sbyte S3;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UChar4
+    {
+        public byte S0;
+        public byte S1;
+        public byte S2;
+        public byte S3;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Short4
+    {
+        public short S0;
+        public short S1;
+        public short S2;
+        public short S3;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UShort4
+    {
+        public ushort S0;
+        public ushort S1;
+        public ushort S2;
+        public ushort S3;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Int4
+    {
+        public int S0;
+        public int S1;
+        public int S2;
+        public int S3;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UInt4
+    {
+        public uint S0;
+        public uint S1;
+        public uint S2;
+        public uint S3;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Long4
+    {
+        public long S0;
+        public long S1;
+        public long S2;
+        public long S3;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct ULong4
+    {
+        public ulong S0;
+        public ulong S1;
+        public ulong S2;
+        public ulong S3;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Float4
+    {
+        public float S0;
+        public float S1;
+        public float S2;
+        public float S3;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Double4
+    {
+        public double S0;
+        public double S1;
+        public double S2;
+        public double S3;
+    }
+
+    #endregion
+
+    #region Vector8
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Char8
+    {
+        public sbyte S0;
+        public sbyte S1;
+        public sbyte S2;
+        public sbyte S3;
+        public sbyte S4;
+        public sbyte S5;
+        public sbyte S6;
+        public sbyte S7;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UChar8
+    {
+        public byte S0;
+        public byte S1;
+        public byte S2;
+        public byte S3;
+        public byte S4;
+        public byte S5;
+        public byte S6;
+        public byte S7;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Short8
+    {
+        public short S0;
+        public short S1;
+        public short S2;
+        public short S3;
+        public short S4;
+        public short S5;
+        public short S6;
+        public short S7;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UShort8
+    {
+        public ushort S0;
+        public ushort S1;
+        public ushort S2;
+        public ushort S3;
+        public ushort S4;
+        public ushort S5;
+        public ushort S6;
+        public ushort S7;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Int8
+    {
+        public int S0;
+        public int S1;
+        public int S2;
+        public int S3;
+        public int S4;
+        public int S5;
+        public int S6;
+        public int S7;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UInt8
+    {
+        public uint S0;
+        public uint S1;
+        public uint S2;
+        public uint S3;
+        public uint S4;
+        public uint S5;
+        public uint S6;
+        public uint S7;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Long8
+    {
+        public long S0;
+        public long S1;
+        public long S2;
+        public long S3;
+        public long S4;
+        public long S5;
+        public long S6;
+        public long S7;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct ULong8
+    {
+        public ulong S0;
+        public ulong S1;
+        public ulong S2;
+        public ulong S3;
+        public ulong S4;
+        public ulong S5;
+        public ulong S6;
+        public ulong S7;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Float8
+    {
+        public float S0;
+        public float S1;
+        public float S2;
+        public float S3;
+        public float S4;
+        public float S5;
+        public float S6;
+        public float S7;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Double8
+    {
+        public double S0;
+        public double S1;
+        public double S2;
+        public double S3;
+        public double S4;
+        public double S5;
+        public double S6;
+        public double S7;
+    }
+
+    #endregion
+
+    #region Vector16
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Char16
+    {
+        public sbyte S0;
+        public sbyte S1;
+        public sbyte S2;
+        public sbyte S3;
+        public sbyte S4;
+        public sbyte S5;
+        public sbyte S6;
+        public sbyte S7;
+        public sbyte S8;
+        public sbyte S9;
+        public sbyte S10;
+        public sbyte S11;
+        public sbyte S12;
+        public sbyte S13;
+        public sbyte S14;
+        public sbyte S15;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UChar16
+    {
+        public byte S0;
+        public byte S1;
+        public byte S2;
+        public byte S3;
+        public byte S4;
+        public byte S5;
+        public byte S6;
+        public byte S7;
+        public byte S8;
+        public byte S9;
+        public byte S10;
+        public byte S11;
+        public byte S12;
+        public byte S13;
+        public byte S14;
+        public byte S15;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Short16
+    {
+        public short S0;
+        public short S1;
+        public short S2;
+        public short S3;
+        public short S4;
+        public short S5;
+        public short S6;
+        public short S7;
+        public short S8;
+        public short S9;
+        public short S10;
+        public short S11;
+        public short S12;
+        public short S13;
+        public short S14;
+        public short S15;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UShort16
+    {
+        public ushort S0;
+        public ushort S1;
+        public ushort S2;
+        public ushort S3;
+        public ushort S4;
+        public ushort S5;
+        public ushort S6;
+        public ushort S7;
+        public ushort S8;
+        public ushort S9;
+        public ushort S10;
+        public ushort S11;
+        public ushort S12;
+        public ushort S13;
+        public ushort S14;
+        public ushort S15;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Int16
+    {
+        public int S0;
+        public int S1;
+        public int S2;
+        public int S3;
+        public int S4;
+        public int S5;
+        public int S6;
+        public int S7;
+        public int S8;
+        public int S9;
+        public int S10;
+        public int S11;
+        public int S12;
+        public int S13;
+        public int S14;
+        public int S15;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct UInt16
+    {
+        public uint S0;
+        public uint S1;
+        public uint S2;
+        public uint S3;
+        public uint S4;
+        public uint S5;
+        public uint S6;
+        public uint S7;
+        public uint S8;
+        public uint S9;
+        public uint S10;
+        public uint S11;
+        public uint S12;
+        public uint S13;
+        public uint S14;
+        public uint S15;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Long16
+    {
+        public long S0;
+        public long S1;
+        public long S2;
+        public long S3;
+        public long S4;
+        public long S5;
+        public long S6;
+        public long S7;
+        public long S8;
+        public long S9;
+        public long S10;
+        public long S11;
+        public long S12;
+        public long S13;
+        public long S14;
+        public long S15;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct ULong16
+    {
+        public ulong S0;
+        public ulong S1;
+        public ulong S2;
+        public ulong S3;
+        public ulong S4;
+        public ulong S5;
+        public ulong S6;
+        public ulong S7;
+        public ulong S8;
+        public ulong S9;
+        public ulong S10;
+        public ulong S11;
+        public ulong S12;
+        public ulong S13;
+        public ulong S14;
+        public ulong S15;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Float16
+    {
+        public float S0;
+        public float S1;
+        public float S2;
+        public float S3;
+        public float S4;
+        public float S5;
+        public float S6;
+        public float S7;
+        public float S8;
+        public float S9;
+        public float S10;
+        public float S11;
+        public float S12;
+        public float S13;
+        public float S14;
+        public float S15;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct Double16
+    {
+        public double S0;
+        public double S1;
+        public double S2;
+        public double S3;
+        public double S4;
+        public double S5;
+        public double S6;
+        public double S7;
+        public double S8;
+        public double S9;
+        public double S10;
+        public double S11;
+        public double S12;
+        public double S13;
+        public double S14;
+        public double S15;
+    }
+
+    #endregion
 }
