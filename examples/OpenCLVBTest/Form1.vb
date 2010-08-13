@@ -44,6 +44,9 @@ Public Class Form1
         Dim _Top
         Dim _Right
         Dim _Bottom
+        Dim offset As Integer
+        Dim cb As Integer
+        Dim ptr As System.IntPtr
 
         _Left = -2.0
         _Top = 2.0
@@ -62,7 +65,10 @@ Public Class Form1
         cq.EnqueueNDRangeKernel(kernel, 2, Nothing, globalWorkSize, Nothing, 0, Nothing, clEvent)
         cq.Finish()
         For i = 0 To bitmap.Width - 1
-            cq.EnqueueReadBuffer(mandelbrotMemBuffer, False, bitmap.Width * 4 * i, bitmap.Width * 4, bd.Scan0.ToInt32 + bd.Stride * i)
+            offset = bitmap.Width * 4 * i
+            cb = bitmap.Width * 4
+            ptr = bd.Scan0.ToInt32 + bd.Stride * i
+            cq.EnqueueReadBuffer(mandelbrotMemBuffer, False, offset, cb, ptr)
         Next i
         cq.Finish()
         bitmap.UnlockBits(bd)

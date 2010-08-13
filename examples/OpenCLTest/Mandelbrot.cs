@@ -70,10 +70,10 @@ namespace OpenCLTest
             {
                 mandelBrotProgram.Build();
             }
-            catch (OpenCLException ocle)
+            catch (OpenCLException)
             {
                 string buildLog = mandelBrotProgram.GetBuildLog(openCLDevices[0]);
-                MessageBox.Show(buildLog,"Build error(64 bit debug sessions in vs2008 always fail like this - debug in 32 bit)");
+                MessageBox.Show(buildLog,"Build error(64 bit debug sessions in vs2008 always fail like this - debug in 32 bit or use vs2010)");
                 Application.Exit();
             }
             mandelbrotKernel = mandelBrotProgram.CreateKernel("Mandelbrot");
@@ -129,7 +129,7 @@ namespace OpenCLTest
                 calculationStart.GetEventProfilingInfo(ProfilingInfo.QUEUED, out start);
                 calculationEnd.GetEventProfilingInfo(ProfilingInfo.END, out end);
             }
-            catch (OpenCLException ocle)
+            catch (OpenCLException)
             {
             }
             finally
