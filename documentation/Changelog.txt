@@ -1,4 +1,16 @@
-﻿June 30, 2010
+﻿August 16, 2010
+---------------
+A bunch of changes. Most functions taking IntPtr arguments now have overloads accepting int and long in place of IntPtr. This is done in the interest of minimizing casting hell for simple programs, while maintaining an API that has full functionality on both 64 and 32 bit platforms.
+
+The OpenCLManager is getting its first test run out in the wild.
+
+Added support for OpenCL 1.1.
+
+Added a hell of a lot of test code to the unit tester.
+
+Added some convenience functions to  the Mem class to make loading data from managed arrays simpler.
+
+June 30, 2010
 -------------
 Releasing a version 0.5. I finally had the time to check/fix code
 associated with saving and loading binary images. The original code
