@@ -51,13 +51,13 @@ struct IOKernelArgs
     long outLong;
     int outInt;
     float outSingle;
-    intptr_t outIntPtr;
+    size_t outIntPtr;
 };
 
 kernel void ArgIO( int i,
   long l,
   float s,
-  intptr_t p,
+  size_t p,
   global struct IOKernelArgs* pA)
 {
 	pA->outInt = i;

@@ -281,18 +281,9 @@ namespace OpenCLNet
         public void SetArg( int argIndex, IntPtr c )
         {
             ErrorCode result;
-
-            if (Context.Is64BitContext)
-            {
-                long l = c.ToInt64();
-                result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(8), &l);
-            }
-            else
-            {
-                int i = c.ToInt32();
-                result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(4), &i);
-            }
-            if( result!=ErrorCode.SUCCESS )
+            IntPtr lc = c;
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(IntPtr), &lc);
+            if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
         }
 
@@ -792,6 +783,67 @@ namespace OpenCLNet
 
         #endregion
 
+        #region SetSizeTArg
+
+        /// <summary>
+        /// This function will assign a value to a kernel argument of type size_t.
+        /// size_t is 32 bit
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
+        public void SetSizeTArg(int argIndex, IntPtr c)
+        {
+            ErrorCode result;
+            if (Context.Is64BitContext)
+            {
+                long l = c.ToInt64();
+                result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(8), &l);
+            }
+            else
+            {
+                int i = c.ToInt32();
+                result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(4), &i);
+            }
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetSizeTArg(int argIndex, int c)
+        {
+            ErrorCode result;
+            if (Context.Is64BitContext)
+            {
+                long l = (long)c;
+                result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(8), &l);
+            }
+            else
+            {
+                int i = c;
+                result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(4), &i);
+            }
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        public void SetSizeTArg(int argIndex, long c)
+        {
+            ErrorCode result;
+            if (Context.Is64BitContext)
+            {
+                long l = c;
+                result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(8), &l);
+            }
+            else
+            {
+                int i = (int)c;
+                result = OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(4), &i);
+            }
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("SetArg failed with error code " + result, result);
+        }
+
+        #endregion
+
         #region Setargs with explicit function names(For VB mostly)
 
         public void SetSByteArg(int argIndex, sbyte c)
@@ -884,20 +936,19 @@ namespace OpenCLNet
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }
 
+        /// <summary>
+        /// Note that this function sets C# IntPtr args that are handles to OpenCL memory objects.
+        /// The OpenCL-C datatype intptr_t is not available to use as a kernel argument.
+        /// Use the type size_t and SetSizeTArg if you need platform specific integer sizes.
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="c"></param>
         public void SetIntPtrArg(int argIndex, IntPtr c)
         {
             ErrorCode result;
+            IntPtr lc = c;
 
-            if (Context.Is64BitContext)
-            {
-                long l = c.ToInt64();
-                result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(8), &l);
-            }
-            else
-            {
-                int i = c.ToInt32();
-                result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, new IntPtr(4), &i);
-            }
+            result = (ErrorCode)OpenCL.SetKernelArg(KernelID, (uint)argIndex, (IntPtr)sizeof(IntPtr), &lc);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("SetArg failed with error code " + result, result);
         }

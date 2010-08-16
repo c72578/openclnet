@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Threading;
 
 namespace OpenCLNet
 {
@@ -166,6 +167,8 @@ namespace OpenCLNet
             IntPtr tmpEvent;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
             result = OpenCL.EnqueueWriteBuffer(CommandQueueID,
                 buffer,
@@ -186,6 +189,8 @@ namespace OpenCLNet
             IntPtr tmpEvent;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
             result = OpenCL.EnqueueWriteBuffer(CommandQueueID,
                 buffer,
@@ -222,6 +227,8 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
             result = OpenCL.EnqueueWriteBuffer(CommandQueueID,
                 buffer,
@@ -240,6 +247,8 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
             result = OpenCL.EnqueueWriteBuffer(CommandQueueID,
                 buffer,
@@ -342,6 +351,8 @@ namespace OpenCLNet
             IntPtr tmpEvent;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
             result = OpenCL.EnqueueReadBuffer(CommandQueueID,
                 buffer,
@@ -362,6 +373,8 @@ namespace OpenCLNet
             IntPtr tmpEvent;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
             result = OpenCL.EnqueueReadBuffer(CommandQueueID,
                 buffer,
@@ -398,6 +411,8 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
             result = OpenCL.EnqueueReadBuffer(CommandQueueID,
                 buffer,
@@ -416,6 +431,8 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
             result = OpenCL.EnqueueReadBuffer(CommandQueueID,
                 buffer,
@@ -603,6 +620,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -630,6 +649,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -675,6 +696,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -700,6 +723,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -816,6 +841,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -843,6 +870,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -888,6 +917,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -913,6 +944,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1028,6 +1061,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, repackedSrcOrigin);
             InteropTools.A3ToIntPtr3(dst_origin, repackedDstOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
@@ -1047,6 +1082,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, repackedSrcOrigin);
             InteropTools.A3ToIntPtr3(dst_origin, repackedDstOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
@@ -1082,6 +1119,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, repackedSrcOrigin);
             InteropTools.A3ToIntPtr3(dst_origin, repackedDstOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
@@ -1099,6 +1138,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, repackedSrcOrigin);
             InteropTools.A3ToIntPtr3(dst_origin, repackedDstOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
@@ -1186,6 +1227,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, repackedSrcOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1203,6 +1246,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, repackedSrcOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1236,6 +1281,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, repackedSrcOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1251,6 +1298,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, repackedSrcOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1333,6 +1382,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(dst_origin, repackedDstOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1350,6 +1401,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(dst_origin, repackedDstOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1383,6 +1436,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(dst_origin, repackedDstOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1398,6 +1453,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(dst_origin, repackedDstOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1483,6 +1540,8 @@ namespace OpenCLNet
             IntPtr tmpEvent;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
 
             pMappedPtr = OpenCL.EnqueueMapBuffer(CommandQueueID, buffer, blockingMap ? (uint)Bool.TRUE : (uint)Bool.FALSE, (ulong)map_flags, offset, cb, num_events_in_wait_list, repackedEvents, &tmpEvent, out result);
@@ -1499,6 +1558,8 @@ namespace OpenCLNet
             IntPtr tmpEvent;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
 
             pMappedPtr = OpenCL.EnqueueMapBuffer(CommandQueueID, buffer, blockingMap ? (uint)Bool.TRUE : (uint)Bool.FALSE, (ulong)map_flags, offset, cb, num_events_in_wait_list, repackedEvents, &tmpEvent, out result);
@@ -1534,6 +1595,8 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
 
             pMappedPtr = OpenCL.EnqueueMapBuffer(CommandQueueID, buffer, blockingMap ? (uint)Bool.TRUE : (uint)Bool.FALSE, (ulong)map_flags, offset, cb, num_events_in_wait_list, repackedEvents, null, out result);
@@ -1547,6 +1610,8 @@ namespace OpenCLNet
             ErrorCode result;
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
 
             pMappedPtr = OpenCL.EnqueueMapBuffer(CommandQueueID, buffer, blockingMap ? (uint)Bool.TRUE : (uint)Bool.FALSE, (ulong)map_flags, offset, cb, num_events_in_wait_list, repackedEvents, null, out result);
@@ -1650,6 +1715,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1669,6 +1736,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1710,6 +1779,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -1727,6 +1798,8 @@ namespace OpenCLNet
             IntPtr* repackedRegion = stackalloc IntPtr[3];
             IntPtr* repackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                repackedEvents = null;
             InteropTools.A3ToIntPtr3(origin, repackedOrigin);
             InteropTools.A3ToIntPtr3(region, repackedRegion);
             InteropTools.ConvertEventsToEventIDs(num_events_in_wait_list, event_wait_list, repackedEvents);
@@ -2177,9 +2250,108 @@ namespace OpenCLNet
 
         #endregion
 
-#warning Fix Enqueue native kernel
-
         #region EnqueueNativeKernel
+
+        internal class NativeKernelCallbackData
+        {
+            internal NativeKernel NativeKernel;
+            internal CommandQueue CQ;
+            internal object O;
+            internal Mem [] Buffers;
+
+            internal NativeKernelCallbackData(NativeKernel nk,CommandQueue cq, object o, Mem[] buffers)
+            {
+                NativeKernel = nk;
+                CQ = cq;
+                O = o;
+                Buffers = buffers;
+            }
+        }
+
+        private static Mutex NativeKernelParamsMutex = new Mutex();
+        private static int NativeKernelParamsId = 0;
+        private static NativeKernelInternal NativeKernelDelegate = new NativeKernelInternal(NativeKernelCallback);
+        private static Dictionary<int, NativeKernelCallbackData> NativeKernelDispatch = new Dictionary<int, NativeKernelCallbackData>();
+        
+        unsafe private static void NativeKernelCallback( void* args )
+        {
+            int callbackId = *(int*)args;
+            NativeKernelCallbackData callbackData = GetCallback(callbackId);
+            void*[] buffers;
+
+            if( callbackData.Buffers!=null )
+            {
+                buffers = new void*[callbackData.Buffers.Length];
+                for (int i = 0; i < buffers.Length; i++)
+                    buffers[i] = callbackData.CQ.EnqueueMapBuffer(callbackData.Buffers[i], true, MapFlags.READ_WRITE, IntPtr.Zero, callbackData.Buffers[i].MemSize).ToPointer();
+            }
+            else
+                buffers = null;
+
+            callbackData.NativeKernel(callbackData.O, buffers);
+
+            if (buffers != null)
+            {
+                for (int i = 0; i < buffers.Length; i++)
+                    callbackData.CQ.EnqueueUnmapMemObject(callbackData.Buffers[i], (IntPtr)buffers[i]);
+            }            
+            RemoveCallback(callbackId);
+        }
+
+        private static int AddNativeKernelParams( NativeKernel nk, CommandQueue cq, object o, Mem[] buffers)
+        {
+            int callbackId;
+            NativeKernelCallbackData callbackData = new NativeKernelCallbackData(nk, cq, o, buffers);
+            bool gotMutex = false;
+            try
+            {
+                gotMutex = NativeKernelParamsMutex.WaitOne();
+                do
+                {
+                    callbackId = NativeKernelParamsId++;
+                } while (NativeKernelDispatch.ContainsKey(callbackId));
+                NativeKernelDispatch.Add(callbackId, callbackData);
+            }
+            finally
+            {
+                if (gotMutex)
+                    NativeKernelParamsMutex.ReleaseMutex();
+            }
+            return callbackId;
+        }
+
+        private static NativeKernelCallbackData GetCallback(int callbackId)
+        {
+            NativeKernelCallbackData callbackData = null;
+            bool gotMutex = false;
+            try
+            {
+                gotMutex = NativeKernelParamsMutex.WaitOne();
+                callbackData = NativeKernelDispatch[callbackId];
+            }
+            finally
+            {
+                if (gotMutex)
+                    NativeKernelParamsMutex.ReleaseMutex();
+            }
+            return callbackData;
+        }
+
+
+        private static void RemoveCallback(int callbackId)
+        {
+            bool gotMutex = false;
+            try
+            {
+                gotMutex = NativeKernelParamsMutex.WaitOne();
+                NativeKernelDispatch.Remove(callbackId);
+            }
+            finally
+            {
+                if (gotMutex)
+                    NativeKernelParamsMutex.ReleaseMutex();
+            }
+        }
 
         /// <summary>
         /// Enqueue a user function. This function is only supported if
@@ -2189,15 +2361,17 @@ namespace OpenCLNet
         /// <param name="numEventsInWaitList"></param>
         /// <param name="event_wait_list"></param>
         /// <param name="_event"></param>
-        public void EnqueueNativeKernel(NativeKernel nativeKernel, int numEventsInWaitList, Event[] event_wait_list, out Event _event)
+        public void EnqueueNativeKernel(NativeKernel nativeKernel, object userObject, Mem[] buffers, int numEventsInWaitList, Event[] event_wait_list, out Event _event)
         {
             ErrorCode result;
             IntPtr tmpEvent;
+            int callbackId;
             
+            callbackId = AddNativeKernelParams(nativeKernel, this, userObject, buffers);
             result = OpenCL.EnqueueNativeKernel(CommandQueueID,
-                nativeKernel,
-                null,
-                IntPtr.Zero,
+                NativeKernelDelegate,
+                &callbackId,
+                (IntPtr)4,
                 0,
                 null,
                 null,
@@ -2212,23 +2386,20 @@ namespace OpenCLNet
         /// <summary>
         /// Enquque a user function. This function is only supported if
         /// DeviceExecCapabilities.NATIVE_KERNEL set in Device.ExecutionCapabilities
-        /// 
-        /// NOTE: As the delegate is being passed to an unmanaged function,
-        /// it is the caller's responsibility to maintain a reference to the
-        /// delegate so it does not get garbage collected before the callback happens.
-        /// Failure to do this will cause crashes.
         /// </summary>
         /// <param name="nativeKernel"></param>
         /// <param name="numEventsInWaitList"></param>
         /// <param name="event_wait_list"></param>
-        public void EnqueueNativeKernel(NativeKernel nativeKernel, int numEventsInWaitList, Event[] event_wait_list)
+        public void EnqueueNativeKernel(NativeKernel nativeKernel, object userObject, Mem[] buffers, int numEventsInWaitList, Event[] event_wait_list)
         {
             ErrorCode result;
+            int callbackId;
 
+            callbackId = AddNativeKernelParams(nativeKernel, this, userObject, buffers);
             result = OpenCL.EnqueueNativeKernel(CommandQueueID,
-                nativeKernel,
-                null,
-                IntPtr.Zero,
+                NativeKernelDelegate,
+                &callbackId,
+                (IntPtr)4,
                 0,
                 null,
                 null,
@@ -2242,21 +2413,18 @@ namespace OpenCLNet
         /// <summary>
         /// Enquque a user function. This function is only supported if
         /// DeviceExecCapabilities.NATIVE_KERNEL set in Device.ExecutionCapabilities
-        /// 
-        /// NOTE: As the delegate is being passed to an unmanaged function,
-        /// it is the caller's responsibility to maintain a reference to the
-        /// delegate so it does not get garbage collected before the callback happens.
-        /// Failure to do this will cause crashes.
         /// </summary>
         /// <param name="nativeKernel"></param>
-        public void EnqueueNativeKernel(NativeKernel nativeKernel)
+        public void EnqueueNativeKernel(NativeKernel nativeKernel, object userObject, Mem[] buffers)
         {
             ErrorCode result;
+            int callbackId;
 
+            callbackId = AddNativeKernelParams(nativeKernel, this, userObject, buffers);
             result = OpenCL.EnqueueNativeKernel(CommandQueueID,
-                nativeKernel,
-                null,
-                IntPtr.Zero,
+                NativeKernelDelegate,
+                &callbackId,
+                (IntPtr)4,
                 0,
                 null,
                 null,
@@ -2502,6 +2670,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(buffer_offset, pBufferOffset);
             InteropTools.A3ToIntPtr3(host_offset, pHostOffset);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -2534,6 +2704,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(buffer_offset, pBufferOffset);
             InteropTools.A3ToIntPtr3(host_offset, pHostOffset);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -2598,6 +2770,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(buffer_offset, pBufferOffset);
             InteropTools.A3ToIntPtr3(host_offset, pHostOffset);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -2628,6 +2802,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(buffer_offset, pBufferOffset);
             InteropTools.A3ToIntPtr3(host_offset, pHostOffset);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -2802,6 +2978,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(buffer_offset, pBufferOffset);
             InteropTools.A3ToIntPtr3(host_offset, pHostOffset);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -2834,6 +3012,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(buffer_offset, pBufferOffset);
             InteropTools.A3ToIntPtr3(host_offset, pHostOffset);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -2899,6 +3079,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(buffer_offset, pBufferOffset);
             InteropTools.A3ToIntPtr3(host_offset, pHostOffset);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -2929,6 +3111,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(buffer_offset, pBufferOffset);
             InteropTools.A3ToIntPtr3(host_offset, pHostOffset);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -3100,6 +3284,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, pSrcOrigin);
             InteropTools.A3ToIntPtr3(dst_origin, pDstOrigin);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -3131,6 +3317,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, pSrcOrigin);
             InteropTools.A3ToIntPtr3(dst_origin, pDstOrigin);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -3192,6 +3380,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, pSrcOrigin);
             InteropTools.A3ToIntPtr3(dst_origin, pDstOrigin);
             InteropTools.A3ToIntPtr3(region, pRegion);
@@ -3221,6 +3411,8 @@ namespace OpenCLNet
             IntPtr* pRegion = stackalloc IntPtr[3];
             IntPtr* pRepackedEvents = stackalloc IntPtr[num_events_in_wait_list];
 
+            if (num_events_in_wait_list == 0)
+                pRepackedEvents = null;
             InteropTools.A3ToIntPtr3(src_origin, pSrcOrigin);
             InteropTools.A3ToIntPtr3(dst_origin, pDstOrigin);
             InteropTools.A3ToIntPtr3(region, pRegion);

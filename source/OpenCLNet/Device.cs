@@ -264,22 +264,18 @@ namespace OpenCLNet
         /// <summary>
         /// OpenCL version string. Returns the OpenCL version supported by the device. This version string has the
         /// following format:
-        /// OpenCL<space><major_version.minor_version><space><vendor-specificinformation>
-        /// The major_version.minor_version value returned will be 1.0.
+        /// OpenCL&lt;space&gt;&lt;major_version.minor_version&gt;&lt;space&gt;&lt;vendor-specificinformation&gt;
         /// </summary>
         public string Version { get { return InteropTools.ReadString(this, (uint)DeviceInfo.VERSION); } }
         /// <summary>
         /// OpenCL C version string. Returns the highest OpenCL C version supported
         /// by the compiler for this device. This version string has the following format:
         /// OpenCL&lt;space&gt;C&lt;space&gt;&lt;major_version.minor_version&gt;&lt;space&gt;&lt;vendor-specific information&gt;
-        /// The major_version.minor_version value returned must be 1.1 if CL_DEVICE_VERSION is OpenCL 1.1.
-        /// The major_version.minor_version value returned can be 1.0 or 1.1 if CL_DEVICE_VERSION is OpenCL 1.0.
-        /// If OpenCL C 1.1 is returned, this implies that the language feature set defined in section 6 of the OpenCL 1.1
-        /// specification is supported by the OpenCL 1.0 device.
         /// </summary>
         public string OpenCL_C_Version { get { return InteropTools.ReadString(this, (uint)DeviceInfo.OPENCL_C_VERSION); } }
         /// <summary>
-        /// Returns a space separated list of extension names (the extension names themselves do not contain any spaces).
+        /// Returns a space separated list of extension names
+        /// (the extension names themselves do not contain any spaces).
         /// The list of extension names returned currently can include one or more of
         /// the following approved extension names:
         /// cl_khr_fp64
@@ -294,7 +290,7 @@ namespace OpenCLNet
         /// cl_khr_byte_addressable_store
         /// cl_khr_fp16
         /// cl_khr_gl_sharing
-        /// Please refer to section 9 for a detailed
+        /// Please refer to the OpenCL specification for a detailed
         /// description of these extensions.
         /// </summary>
         public string Extensions { get { return InteropTools.ReadString( this, (uint)DeviceInfo.EXTENSIONS ); } }

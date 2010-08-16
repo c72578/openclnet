@@ -518,10 +518,14 @@ namespace OpenCLNet
 
         #endregion
 
+        #region Casts
+
         public static implicit operator IntPtr( Context c )
         {
             return c.ContextID;
         }
+
+        #endregion
 
         #region IPropertyContainer Members
 

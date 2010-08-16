@@ -23,6 +23,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+// Toggles D3D10 extension support
+// NOTE: The C# API is not done yet, but enabling it will let you call something like the raw C API
+#define nD3D10_Extension
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,8 +103,26 @@ namespace OpenCLNet
     using GLint=Int32;
     using GLenum=Int32;
     using cl_device_partition_property_ext=UInt64;
+    
+    using cl_d3d10_device_source_khr = UInt32;
+    using cl_d3d10_device_set_khr = UInt32;
+    using UINT = UInt32;
+    using ID3D10Buffer = IntPtr;
+    using ID3D10Texture2D = IntPtr;
+    using ID3D10Texture3D = IntPtr;
+
     #endregion
 
+
+#if D3D10_Extension
+    // D3D10 Delegates
+    public unsafe delegate cl_int clGetDeviceIDsFromD3D10KHRDelegate(cl_platform_id platform, cl_d3d10_device_source_khr d3d_device_source, void* d3d_object, cl_d3d10_device_set_khr d3d_device_set, cl_uint num_entries, cl_device_id* devices, cl_uint* num_devices);
+    public unsafe delegate cl_mem clCreateFromD3D10BufferKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Buffer* resource, cl_int* errcode_ret);
+    public unsafe delegate cl_mem clCreateFromD3D10Texture2DKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Texture2D* resource, UINT subresource, cl_int* errcode_ret);
+    public unsafe delegate cl_mem clCreateFromD3D10Texture3DKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Texture3D* resource, UINT subresource, cl_int* errcode_ret);
+    public unsafe delegate cl_int clEnqueueAcquireD3D10ObjectsKHRDelegate(cl_command_queue command_queue, cl_uint num_objects, cl_mem* mem_objects, cl_uint num_events_in_wait_list, cl_event* event_wait_list, cl_event* _event);
+    public unsafe delegate cl_int clEnqueueReleaseD3D10ObjectsKHRDelegate(cl_command_queue command_queue, cl_uint num_objects, cl_mem* mem_objects, cl_uint num_events_in_wait_list, cl_event* event_wait_list, cl_event* _event);
+#endif
 
     /// <summary>
     /// OpenCLAPI - native bindings
@@ -111,6 +133,27 @@ namespace OpenCLNet
         internal static class Configuration
         {
             public const string Library = "opencl.dll";
+        }
+    
+        static OpenCLAPI()
+        {
+
+#if D3D10_Extension
+            // Get function pointers for D3D10 extension
+            IntPtr func;
+            func = OpenCLAPI.clGetExtensionFunctionAddress("clGetDeviceIDsFromD3D10KHR");
+            clGetDeviceIDsFromD3D10KHR = (clGetDeviceIDsFromD3D10KHRDelegate)Marshal.GetDelegateForFunctionPointer(func,typeof(clGetDeviceIDsFromD3D10KHRDelegate));
+            func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10BufferKHR");
+            clCreateFromD3D10BufferKHR = (clCreateFromD3D10BufferKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10BufferKHRDelegate));
+            func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10Texture2DKHR");
+            clCreateFromD3D10Texture2DKHR = (clCreateFromD3D10Texture2DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture2DKHRDelegate));
+            func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10Texture3DKHR");
+            clCreateFromD3D10Texture3DKHR = (clCreateFromD3D10Texture3DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture3DKHRDelegate));
+            func = OpenCLAPI.clGetExtensionFunctionAddress("clEnqueueAcquireD3D10ObjectsKHR");
+            clEnqueueAcquireD3D10ObjectsKHR = (clEnqueueAcquireD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueAcquireD3D10ObjectsKHRDelegate));
+            func = OpenCLAPI.clGetExtensionFunctionAddress("clEnqueueReleaseD3D10ObjectsKHR");
+            clEnqueueReleaseD3D10ObjectsKHR = (clEnqueueReleaseD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueReleaseD3D10ObjectsKHRDelegate));
+#endif
         }
 
         #region Platform API
@@ -543,12 +586,12 @@ namespace OpenCLNet
 
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueNativeKernel(cl_command_queue command_queue,
-            NativeKernel user_func,
+            NativeKernelInternal user_func,
             void* args,
             IntPtr cb_args,
             cl_uint num_mem_objects,
             [In] cl_mem[] mem_list,
-            [Out] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] IntPtr[] args_mem_loc,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] IntPtr[] args_mem_loc,
             cl_uint num_events_in_wait_list,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] event_wait_list,
             cl_event* _event);
@@ -769,6 +812,16 @@ namespace OpenCLNet
 
         [DllImport(Configuration.Library)]
         public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+
+#if D3D10_Extension
+        // D3D10 extension
+        public static clGetDeviceIDsFromD3D10KHRDelegate clGetDeviceIDsFromD3D10KHR;
+        public static clCreateFromD3D10BufferKHRDelegate clCreateFromD3D10BufferKHR;
+        public static clCreateFromD3D10Texture2DKHRDelegate clCreateFromD3D10Texture2DKHR;
+        public static clCreateFromD3D10Texture3DKHRDelegate clCreateFromD3D10Texture3DKHR;
+        public static clEnqueueAcquireD3D10ObjectsKHRDelegate clEnqueueAcquireD3D10ObjectsKHR;
+        public static clEnqueueReleaseD3D10ObjectsKHRDelegate clEnqueueReleaseD3D10ObjectsKHR;
+#endif
     }
 
 #if false

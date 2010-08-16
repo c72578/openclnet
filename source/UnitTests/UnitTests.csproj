@@ -107,11 +107,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="MemoryTests.cl">
+    <None Include="OpenCL\src\Mandelbrot.cl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Mandelbrot.cl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="OpenCL\src\MemoryTests.cl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -128,6 +128,9 @@
       <Project>{758285C6-1ACA-458A-9906-EE6701D5AF87}</Project>
       <Name>OpenCLNet</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="OpenCL\bin\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

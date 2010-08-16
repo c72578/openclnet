@@ -49,6 +49,11 @@ namespace UnitTests
             InitializeComponent();
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -67,6 +72,11 @@ namespace UnitTests
         private void RunTests()
         {
             TestOpenCLClass();
+            TestOpenCLManager();
+        }
+
+        private void TestOpenCLManager()
+        {
         }
 
         private void TestOpenCLClass()
@@ -221,7 +231,7 @@ namespace UnitTests
         private void TestContext(Context c)
         {
             Device[] devices = c.Devices;
-            OpenCLNet.Program p = c.CreateProgramFromFile("MemoryTests.cl");
+            OpenCLNet.Program p = c.CreateProgramFromFile("OpenCL" + Path.DirectorySeparatorChar + "src" + Path.DirectorySeparatorChar + "MemoryTests.cl");
             Dictionary<string, Kernel> kernelDictionary;
 
             try
@@ -306,7 +316,7 @@ namespace UnitTests
             argIOKernel.SetArg(0, 1);
             argIOKernel.SetArg(1, 65L);
             argIOKernel.SetArg(2, 38.4f);
-            argIOKernel.SetArg(3, (IntPtr)0x01234567);
+            argIOKernel.SetSizeTArg(3, (IntPtr)0x01234567);
             argIOKernel.SetArg(4, outArgBuffer);
 
             Event ev;
@@ -378,7 +388,7 @@ namespace UnitTests
                 buffer.Write(cq, 0L, testData, 0, size);
                 Kernel k = kernelDictionary["TestReadWriteMemory"];
                 k.SetArg(0, buffer);
-                k.SetArg(1, (IntPtr)size);
+                k.SetSizeTArg(1, (IntPtr)size);
                 Event bleh;
                 cq.EnqueueTask(k,0,null,out bleh);
                 cq.EnqueueBarrier();
@@ -415,7 +425,7 @@ namespace UnitTests
 
                 Kernel k = kernelDictionary["TestReadMemory"];
                 k.SetArg(0, buffer);
-                k.SetArg(1, (IntPtr)size);
+                k.SetSizeTArg(1, (IntPtr)size);
                 cq.EnqueueTask(k);
                 cq.Finish();
             }
@@ -437,7 +447,7 @@ namespace UnitTests
 
                 Kernel k = kernelDictionary["TestWriteMemory"];
                 k.SetArg(0, buffer);
-                k.SetArg(1, (IntPtr)size);
+                k.SetSizeTArg(1, (IntPtr)size);
                 cq.EnqueueTask(k);
                 cq.Finish();
                 buffer.Read(cq, 0L, testData, 0, size);
@@ -1720,7 +1730,7 @@ namespace UnitTests
 
         private void TestCommandQueue(Context c, CommandQueue cq )
         {
-            string programName = @"MemoryTests.cl";
+            string programName = "OpenCL" + Path.DirectorySeparatorChar + "src" + Path.DirectorySeparatorChar + "MemoryTests.cl";
 
             Output("Testing compilation of: " + programName);
             OpenCLNet.Program p0 = c.CreateProgramWithSource(File.ReadAllLines(programName));
@@ -1908,5 +1918,6 @@ namespace UnitTests
             listBoxOutput.SelectedIndex = listBoxOutput.Items.Count-1;
             Application.DoEvents();
         }
+
     }
 }

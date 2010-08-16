@@ -23,3 +23,8 @@ C:\Users\olk\Documents\src\blahblah\source\OpenCLNet\bin\Debug\OpenCLNet.dll
 C:\Users\olk\Documents\src\blahblah\source\OpenCLNet\bin\Debug\OpenCLNet.pdb
 C:\Users\olk\Documents\src\blahblah\source\OpenCLNet\obj\Debug\OpenCLNet.dll
 C:\Users\olk\Documents\src\blahblah\source\OpenCLNet\obj\Debug\OpenCLNet.pdb
+C:\Users\olk\Documents\src\OpenCL.Net 0.5 svn\source\OpenCLNet\bin\Debug\OpenCLNet.dll
+C:\Users\olk\Documents\src\OpenCL.Net 0.5 svn\source\OpenCLNet\bin\Debug\OpenCLNet.pdb
+C:\Users\olk\Documents\src\OpenCL.Net 0.5 svn\source\OpenCLNet\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\olk\Documents\src\OpenCL.Net 0.5 svn\source\OpenCLNet\obj\Debug\OpenCLNet.dll
+C:\Users\olk\Documents\src\OpenCL.Net 0.5 svn\source\OpenCLNet\obj\Debug\OpenCLNet.pdb

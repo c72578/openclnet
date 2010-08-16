@@ -48,7 +48,7 @@ namespace OpenCLNet
         /// </summary>
         public string Version { get { return InteropTools.ReadString( this, (uint)PlatformInfo.VERSION ); } }
         /// <summary>
-        /// Platofrm name string
+        /// Platform name string
         /// </summary>
         public string Name { get { return InteropTools.ReadString( this, (uint)PlatformInfo.NAME ); } }
         /// <summary>
@@ -187,6 +187,11 @@ namespace OpenCLNet
             return deviceIDs;
         }
 
+        /// <summary>
+        /// Find all devices of a specififc type
+        /// </summary>
+        /// <param name="deviceType"></param>
+        /// <returns>Array containing the devices</returns>
         public Device[] QueryDevices( DeviceType deviceType )
         {
             IntPtr[] deviceIDs;
@@ -203,11 +208,21 @@ namespace OpenCLNet
                 ExtensionHashSet.Add(s);
         }
 
+        /// <summary>
+        /// Test if this platform supports a specific extension
+        /// </summary>
+        /// <param name="extension"></param>
+        /// <returns>Returns true if the extension is supported</returns>
         public bool HasExtension(string extension)
         {
             return ExtensionHashSet.Contains(extension);
         }
 
+        /// <summary>
+        /// Test if this platform supports a set of exentions
+        /// </summary>
+        /// <param name="extensions"></param>
+        /// <returns>Returns true if all the extensions are supported</returns>
         public bool HasExtensions(string[] extensions)
         {
             foreach (string s in extensions)

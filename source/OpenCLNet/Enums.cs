@@ -95,6 +95,8 @@ namespace OpenCLNet
         internal cl_channel_order image_channel_order;
         internal cl_channel_type image_channel_data_type;
 
+        #region Predefined static Image formats
+
         public static readonly ImageFormat RGB8U = new ImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT8);
         public static readonly ImageFormat RGB8S = new ImageFormat(ChannelOrder.RGB, ChannelType.SIGNED_INT8);
         public static readonly ImageFormat RGB16U = new ImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT16);
@@ -185,6 +187,8 @@ namespace OpenCLNet
         public static readonly ImageFormat LUMINANCEFloat = new ImageFormat(ChannelOrder.LUMINANCE, ChannelType.FLOAT);
         public static readonly ImageFormat LUMINANCEHalf = new ImageFormat(ChannelOrder.LUMINANCE, ChannelType.HALF_FLOAT);
 
+        #endregion
+
         public ImageFormat(ChannelOrder channelOrder, ChannelType channelType)
         {
             image_channel_order = (cl_channel_order)channelOrder;
@@ -267,17 +271,24 @@ namespace OpenCLNet
         INVALID_BUFFER_SIZE                =      -61,
         INVALID_MIP_LEVEL                  =      -62,
         INVALID_GLOBAL_WORK_SIZE           =      -63,
+        INVALID_PROPERTY                   =      -64,
 
 
         // CL_GL Error Codes
         INVALID_GL_SHAREGROUP_REFERENCE_KHR=      -1000,
-    };
+
+        // D3D10 extension Error Codes
+        INVALID_D3D10_DEVICE_KHR           =      -1002,
+        INVALID_D3D10_RESOURCE_KHR         =      -1003,
+        D3D10_RESOURCE_ALREADY_ACQUIRED_KHR=      -1004,
+        D3D10_RESOURCE_NOT_ACQUIRED_KHR    =      -1005,
+    }
 
     public enum Bool
     {
         FALSE                               =     0,
-        TRUE                                =     1
-    };
+        TRUE                                =     1,
+    }
 
     public enum PlatformInfo
     {
@@ -286,7 +297,7 @@ namespace OpenCLNet
         NAME                           = 0x0902,
         VENDOR                         = 0x0903,
         EXTENSIONS                     = 0x0904,
-    };
+    }
 
     // cl_device_type - bitfield
     public enum DeviceType : ulong
@@ -296,7 +307,7 @@ namespace OpenCLNet
         GPU                          = (1 << 2),
         ACCELERATOR                  = (1 << 3),
         ALL                          = 0xFFFFFFFF,
-    };
+    }
 
     // cl_device_info
     public enum DeviceInfo
@@ -363,7 +374,7 @@ namespace OpenCLNet
         NATIVE_VECTOR_WIDTH_DOUBLE       = 0x103B,
         NATIVE_VECTOR_WIDTH_HALF         = 0x103C,
         OPENCL_C_VERSION                 = 0x103D,
-    };	
+    }	
 
     // cl_device_fp_config - bitfield
     public enum FpConfig : ulong
@@ -374,8 +385,8 @@ namespace OpenCLNet
         ROUND_TO_ZERO                        = (1 << 3),
         ROUND_TO_INF                         = (1 << 4),
         FMA                                  = (1 << 5),
-        SOFT_FLOAT                           = (1 << 6)
-    };
+        SOFT_FLOAT                           = (1 << 6),
+    }
 
     // cl_device_mem_cache_type
     public enum DeviceMemCacheType
@@ -383,21 +394,21 @@ namespace OpenCLNet
         NONE                                    = 0x0,
         READ_ONLY_CACHE                         = 0x1,
         READ_WRITE_CACHE                        = 0x2,
-    };
+    }
 
     // cl_device_local_mem_type
     public enum DeviceLocalMemType
     {
         LOCAL                                   = 0x1,
         GLOBAL                                  = 0x2,
-    };
+    }
 
 // cl_device_exec_capabilities - bitfield
     public enum DeviceExecCapabilities : ulong
     {
         KERNEL                             = (1 << 0),
         NATIVE_KERNEL                      = (1 << 1),
-    };
+    }
 
 // cl_command_queue_properties - bitfield
     public enum CommandQueueProperties : ulong
@@ -405,7 +416,7 @@ namespace OpenCLNet
         NONE                              = 0,
         OUT_OF_ORDER_EXEC_MODE_ENABLE     = (1 << 0),
         PROFILING_ENABLE                  = (1 << 1),
-    };
+    }
 
     // cl_context_info
     public enum ContextInfo
@@ -414,14 +425,18 @@ namespace OpenCLNet
         DEVICES = 0x1081,
         PROPERTIES = 0x1082,
         NUM_DEVICES = 0x1083,
-    };
+        
+        // D3D10 extension
+        D3D10_DEVICE_KHR = 0x4014,
+        D3D10_PREFER_SHARED_RESOURCES_KHR = 0x402C,
+    }
 
     // cl_gl_context_info
     public enum GLContextInfo
     {
         CURRENT_DEVICE_FOR_GL_CONTEXT_KHR  = 0x2006,
         DEVICES_FOR_GL_CONTEXT_KHR         = 0x2007,
-    };
+    }
 
     // cl_context_properties
     public enum ContextProperties : ulong
@@ -434,7 +449,7 @@ namespace OpenCLNet
         GLX_DISPLAY_KHR                 = 0x200A,
         WGL_HDC_KHR                     = 0x200B,
         CGL_SHAREGROUP_KHR              = 0x200C,
-    };
+    }
 
     // cl_command_queue_info
     public enum CommandQueueInfo
@@ -443,7 +458,7 @@ namespace OpenCLNet
         DEVICE                            = 0x1091,
         REFERENCE_COUNT                   = 0x1092,
         PROPERTIES                        = 0x1093,
-    };
+    }
 
     // cl_mem_flags - bitfield
     public enum MemFlags : ulong
@@ -454,7 +469,7 @@ namespace OpenCLNet
         USE_HOST_PTR                        = (1 << 3),
         ALLOC_HOST_PTR                      = (1 << 4),
         COPY_HOST_PTR                       = (1 << 5),
-    };
+    }
     
     // cl_channel_order
     public enum ChannelOrder
@@ -472,7 +487,7 @@ namespace OpenCLNet
         Rx                                      = 0x10BA,
         RGx                                     = 0x10BB,
         RGBx                                    = 0x10BC,
-    };
+    }
 
     // cl_channel_type
     public enum ChannelType
@@ -492,7 +507,7 @@ namespace OpenCLNet
         UNSIGNED_INT32                          = 0x10DC,
         HALF_FLOAT                              = 0x10DD,
         FLOAT                                   = 0x10DE,
-    };
+    }
 
     // cl_mem_object_type
     public enum MemObjectType
@@ -500,7 +515,7 @@ namespace OpenCLNet
         BUFFER                       = 0x10F0,
         IMAGE2D                      = 0x10F1,
         IMAGE3D                      = 0x10F2,
-    };
+    }
 
     // cl_mem_info
     public enum MemInfo
@@ -514,7 +529,10 @@ namespace OpenCLNet
         CONTEXT                             = 0x1106,
         ASSOCIATED_MEMOBJECT                = 0x1107,
         OFFSET                              = 0x1108,
-    };
+
+        // D3D10 extension
+        D3D10_RESOURCE_KHR                  = 0x4015,
+    }
 
     // cl_image_info
     public enum ImageInfo
@@ -526,7 +544,10 @@ namespace OpenCLNet
         WIDTH                             = 0x1114,
         HEIGHT                            = 0x1115,
         DEPTH                             = 0x1116,
-    };
+
+        // D3D10 extension
+        D3D10_SUBRESOURCE_KHR             = 0x4016,
+    }
 
     // cl_addressing_mode
     public enum AddressingMode : uint
@@ -536,14 +557,14 @@ namespace OpenCLNet
         CLAMP                           = 0x1132,
         REPEAT                          = 0x1133,
         MIRRORED_REPEAT                 = 0x1134
-    };
+    }
 
     // cl_filter_mode
     public enum FilterMode : uint
     {
         NEAREST                          = 0x1140,
         LINEAR                           = 0x1141,
-    };
+    }
 
     // cl_sampler_info
     public enum SamplerInfo : uint
@@ -553,7 +574,7 @@ namespace OpenCLNet
         NORMALIZED_COORDS               = 0x1152,
         ADDRESSING_MODE                 = 0x1153,
         FILTER_MODE                     = 0x1154,
-    };
+    }
 
     // cl_map_flags - bitfield
     public enum MapFlags : ulong
@@ -561,7 +582,7 @@ namespace OpenCLNet
         READ                                = (1 << 0),
         WRITE                               = (1 << 1),
         READ_WRITE                          = ((ulong)READ+(ulong)WRITE),
-    };
+    }
 
     // cl_program_info
     public enum ProgramInfo
@@ -573,7 +594,7 @@ namespace OpenCLNet
         SOURCE                          = 0x1164,
         BINARY_SIZES                    = 0x1165,
         BINARIES                        = 0x1166,
-    };
+    }
 
     // cl_program_build_info
     public enum ProgramBuildInfo
@@ -581,7 +602,7 @@ namespace OpenCLNet
         STATUS                    = 0x1181,
         OPTIONS                   = 0x1182,
         LOG                       = 0x1183,
-    };
+    }
 
     // cl_build_status
     public enum BuildStatus
@@ -590,7 +611,7 @@ namespace OpenCLNet
         NONE                              = -1,
         ERROR                             = -2,
         IN_PROGRESS                       = -3,
-    };
+    }
 
     // cl_kernel_info
     public enum KernelInfo
@@ -600,7 +621,7 @@ namespace OpenCLNet
         REFERENCE_COUNT                  = 0x1192,
         CONTEXT                          = 0x1193,
         PROGRAM                          = 0x1194,
-    };
+    }
 
     // cl_kernel_work_group_info
     public enum KernelWorkGroupInfo
@@ -610,7 +631,7 @@ namespace OpenCLNet
         LOCAL_MEM_SIZE                     = 0x11B2,
         PREFERRED_WORK_GROUP_SIZE_MULTIPLE = 0x11B3,
         PRIVATE_MEM_SIZE                   = 0x11B4,
-    };
+    }
 
     // cl_event_info
     public enum EventInfo
@@ -620,7 +641,7 @@ namespace OpenCLNet
         REFERENCE_COUNT                   = 0x11D2,
         COMMAND_EXECUTION_STATUS          = 0x11D3,
         CONTEXT                           = 0x11D4,
-    };
+    }
 
     // cl_command_type
     public enum CommandType
@@ -646,7 +667,11 @@ namespace OpenCLNet
         WRITE_BUFFER_RECT               = 0x1202,
         COPY_BUFFER_RECT                = 0x1203,
         USER                            = 0x1204,
-    };
+
+        // D3D10 extension
+        ACQUIRE_D3D10_OBJECTS_KHR       = 0x4017,
+        RELEASE_D3D10_OBJECTS_KHR       = 0x4018,
+    }
 
     // command execution status
     public enum ExecutionStatus
@@ -655,12 +680,12 @@ namespace OpenCLNet
         RUNNING                                 = 0x1,
         SUBMITTED                               = 0x2,
         QUEUED                                  = 0x3,
-    };
+    }
 
     public enum BufferCreateType
     {
         REGION = 0x1220,
-    };
+    }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BufferRegion
@@ -677,7 +702,7 @@ namespace OpenCLNet
         SUBMIT                = 0x1281,
         START                 = 0x1282,
         END                   = 0x1283,
-    };
+    }
 
 
 
@@ -690,13 +715,30 @@ namespace OpenCLNet
         TEXTURE2D         = 0x2001,
         TEXTURE3D         = 0x2002,
         RENDERBUFFER      = 0x2003,
-    };
+    }
 
     public enum CLGLTextureInfo
     {
         TEXTURE_TARGET           = 0x2004,
         MIPMAP_LEVEL             = 0x2005,
-    };
+    }
+
+
+    // ********************************************
+    // * D3D10 enums
+    // ********************************************
+    public enum D3D10DeviceSource
+    {
+        D3D10_DEVICE_KHR = 0x4010,
+        D3D10_DXGI_ADAPTER_KHR = 0x4011,
+    }
+
+    public enum D3D10DeviceSet
+    {
+        PREFERRED_DEVICES_FOR_D3D10_KHR = 0x4012,
+        ALL_DEVICES_FOR_D3D10_KHR       = 0x4013,
+    }
+
 
     #region Vector2
 

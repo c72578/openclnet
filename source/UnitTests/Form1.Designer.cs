@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            OpenCLNet.OCLManFileSystem oclManFileSystem2 = new OpenCLNet.OCLManFileSystem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,6 +39,7 @@
             this.listBoxWarnings = new System.Windows.Forms.ListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.listBoxErrors = new System.Windows.Forms.ListBox();
+            this.openCLManager = new OpenCLNet.OpenCLManager(this.components);
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -135,6 +138,18 @@
             this.listBoxErrors.Size = new System.Drawing.Size(679, 92);
             this.listBoxErrors.TabIndex = 4;
             // 
+            // openCLManager
+            // 
+            this.openCLManager.AttemptUseBinaries = true;
+            this.openCLManager.AttemptUseSource = true;
+            this.openCLManager.BinaryPath = "OpenCL/bin";
+            this.openCLManager.BuildOptions = "";
+            this.openCLManager.Defines = "";
+            this.openCLManager.FileSystem = oclManFileSystem2;
+            this.openCLManager.MaxCachedBinaries = 50;
+            this.openCLManager.RequireImageSupport = false;
+            this.openCLManager.SourcePath = "OpenCL/src";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -147,6 +162,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -168,6 +184,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ListBox listBoxWarnings;
         private System.Windows.Forms.ListBox listBoxErrors;
+        private OpenCLNet.OpenCLManager openCLManager;
     }
 }
 

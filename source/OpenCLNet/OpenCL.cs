@@ -100,7 +100,9 @@ namespace OpenCLNet
 
     public delegate void ContextNotify(string errInfo, byte[] data, IntPtr cb, IntPtr userData);
     public delegate void ProgramNotify(cl_program program, IntPtr userData);
-    public delegate void NativeKernel(IntPtr args);
+    unsafe public delegate void NativeKernel(object o, void*[] pBuffers);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    unsafe public delegate void NativeKernelInternal(void* pArgs);
     public delegate void EventNotify(Event _event, ExecutionStatus eventCommandExecStatus, object userData);
     public delegate void EventNotifyInternal(cl_event _event, cl_int eventCommandExecStatus, IntPtr userData);
 
@@ -583,7 +585,7 @@ namespace OpenCLNet
         }
 
         public static ErrorCode EnqueueNativeKernel(cl_command_queue command_queue,
-            NativeKernel user_func,
+            NativeKernelInternal user_func,
             void* args,
             IntPtr cb_args,
             cl_uint num_mem_objects,
