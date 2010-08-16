@@ -29,13 +29,17 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.IO;
 
 namespace OpenCLNet
 {
-    unsafe public class Device : InteropTools.IPropertyContainer
+    unsafe public class Device : IDisposable, InteropTools.IPropertyContainer
     {
         protected HashSet<string> ExtensionHashSet = new HashSet<string>();
-
+        private bool IsSubDevice;
+        // Track whether Dispose has been called.
+        private bool disposed = false;
+        
         internal Device(Platform platform, IntPtr deviceID)
         {
             Platform = platform;
@@ -44,8 +48,139 @@ namespace OpenCLNet
             InitializeExtensionHashSet();
         }
 
-        //  User-defined conversion from double to Digit
-        public static implicit operator IntPtr( Device d )
+        // Use C# destructor syntax for finalization code.
+        // This destructor will run only if the Dispose method
+        // does not get called.
+        // It gives your base class the opportunity to finalize.
+        // Do not provide destructors in types derived from this class.
+        ~Device()
+        {
+            // Do not re-create Dispose clean-up code here.
+            // Calling Dispose(false) is optimal in terms of
+            // readability and maintainability.
+            Dispose(false);
+        }
+
+        #region IDisposable Members
+
+        // Implement IDisposable.
+        // Do not make this method virtual.
+        // A derived class should not be able to override this method.
+        public void Dispose()
+        {
+            Dispose(true);
+            // This object will be cleaned up by the Dispose method.
+            // Therefore, you should call GC.SupressFinalize to
+            // take this object off the finalization queue
+            // and prevent finalization code for this object
+            // from executing a second time.
+            GC.SuppressFinalize(this);
+        }
+
+        // Dispose(bool disposing) executes in two distinct scenarios.
+        // If disposing equals true, the method has been called directly
+        // or indirectly by a user's code. Managed and unmanaged resources
+        // can be disposed.
+        // If disposing equals false, the method has been called by the
+        // runtime from inside the finalizer and you should not reference
+        // other objects. Only unmanaged resources can be disposed.
+        private void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called.
+            if (!this.disposed)
+            {
+                // If disposing equals true, dispose all managed
+                // and unmanaged resources.
+                if (disposing)
+                {
+                    // Dispose managed resources.
+                }
+
+                // Call the appropriate methods to clean up
+                // unmanaged resources here.
+                // If disposing is false,
+                // only the following code is executed.
+                if( IsSubDevice )
+                    OpenCL.ReleaseDeviceEXT(DeviceID);
+
+                // Note disposing has been done.
+                disposed = true;
+            }
+        }
+
+        #endregion
+
+
+        #region Device Fission API (Extension)
+
+        public void ReleaseDeviceEXT()
+        {
+            ErrorCode result;
+            
+            result = OpenCL.ReleaseDeviceEXT(DeviceID);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("ReleaseDeviceEXT failed with error code: "+result, result);
+        }
+
+        public void RetainDeviceEXT()
+        {
+            ErrorCode result;
+
+            result = OpenCL.RetainDeviceEXT(DeviceID);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("RetainDeviceEXT failed with error code: " + result, result);
+        }
+
+        /// <summary>
+        /// CreateSubDevicesEXT uses a slightly modified API,
+        /// due to the overall messiness of creating a
+        /// cl_device_partition_property_ext in managed C#.
+        /// 
+        /// The object list properties is a linear list of partition properties and arguments
+        /// add the DevicePartition property IDs  and ListTerminators as ulongs and the argument lists as ints
+        /// CreateSubDevicesEXT will use that info to construct a binary block
+        /// </summary>
+        /// <param name="properties"></param>
+        public unsafe Device[] CreateSubDevicesEXT(List<object> properties)
+        {
+            ErrorCode result;
+            MemoryStream ms = new MemoryStream();
+            BinaryWriter bw = new BinaryWriter(ms);
+
+            for (int i = 0; i < properties.Count; i++)
+            {
+                if (properties[i] is ulong)
+                    bw.Write((ulong)properties[i]);
+                else if (properties[i] is int)
+                    bw.Write((int)properties[i]);
+                else
+                    throw new ArgumentException("CreateSubDevicesEXT: property lists only accepts ulongs and ints");
+            }
+            bw.Flush();
+            byte[] propertyArray = ms.ToArray();
+            uint numDevices;
+            result = OpenCL.CreateSubDevicesEXT(DeviceID, propertyArray, 0, null, &numDevices);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateSubDevicesEXT failed with error code: "+result, result);
+
+            IntPtr[] subDeviceIDs = new IntPtr[(int)numDevices];
+            result = OpenCL.CreateSubDevicesEXT(DeviceID, propertyArray, numDevices, subDeviceIDs, null);
+            if (result != ErrorCode.SUCCESS)
+                throw new OpenCLException("CreateSubDevicesEXT failed with error code: " + result, result);
+
+            Device[] subDevices = new Device[(int)numDevices];
+            for (int i = 0; i < (int)numDevices; i++)
+            {
+                Device d = new Device(Platform, subDeviceIDs[i]);
+                d.IsSubDevice = true;
+                subDevices[i] = d;
+            }
+            return subDevices;
+        }
+
+        #endregion
+
+        public static implicit operator IntPtr(Device d)
         {
             return d.DeviceID;
         }
@@ -409,5 +544,6 @@ namespace OpenCLNet
         }
 
         #endregion
+
     }
 }

@@ -276,12 +276,96 @@ namespace OpenCLNet
 
         // CL_GL Error Codes
         INVALID_GL_SHAREGROUP_REFERENCE_KHR=      -1000,
+        
+        // cl_khr_icd extension
+        PLATFORM_NOT_FOUND_KHR             =      -1001,
 
         // D3D10 extension Error Codes
         INVALID_D3D10_DEVICE_KHR           =      -1002,
         INVALID_D3D10_RESOURCE_KHR         =      -1003,
         D3D10_RESOURCE_ALREADY_ACQUIRED_KHR=      -1004,
         D3D10_RESOURCE_NOT_ACQUIRED_KHR    =      -1005,
+
+        // cl_ext_device_fission
+        DEVICE_PARTITION_FAILED_EXT        =      -1057,
+        INVALID_PARTITION_COUNT_EXT        =      -1058,
+        INVALID_PARTITION_NAME_EXT         =      -1059,
+
+    }
+
+    public sealed class OpenCLConstants
+    {
+        public static readonly int CHAR_BIT = 8;
+        public static readonly int SCHAR_MAX = 127;
+        public static readonly int SCHAR_MIN = (-127-1);
+        public static readonly int CHAR_MAX  = SCHAR_MAX;
+        public static readonly int CHAR_MIN  = SCHAR_MIN;
+        public static readonly int UCHAR_MAX = 255;
+        public static readonly int SHRT_MAX  = 32767;
+        public static readonly int SHRT_MIN  = (-32767-1);
+        public static readonly int USHRT_MAX = 65535;
+        public static readonly int INT_MAX   = 2147483647;
+        public static readonly int INT_MIN   = (-2147483647-1);
+        public static readonly uint UINT_MAX  = 0xffffffffU;
+        public static readonly long LONG_MAX  = 0x7FFFFFFFFFFFFFFFL;
+        public static readonly long LONG_MIN = -0x7FFFFFFFFFFFFFFFL - 1L;
+        public static readonly ulong ULONG_MAX = 0xFFFFFFFFFFFFFFFFUL;
+
+        public static readonly int FLT_DIG        =  6;
+        public static readonly int FLT_MANT_DIG   =  24;
+        public static readonly int FLT_MAX_10_EXP =  +38;
+        public static readonly int FLT_MAX_EXP    =  +128;
+        public static readonly int FLT_MIN_10_EXP =  -37;
+        public static readonly int FLT_MIN_EXP    =  -125;
+        public static readonly int FLT_RADIX      =  2;
+        public static readonly float FLT_MAX        =  float.MaxValue;
+        public static readonly float FLT_MIN = float.MinValue;
+        public static readonly float FLT_EPSILON = float.Epsilon;
+
+        public static readonly int DBL_DIG        =  15;
+        public static readonly int DBL_MANT_DIG   =  53;
+        public static readonly int DBL_MAX_10_EXP =  +308;
+        public static readonly int DBL_MAX_EXP    =  +1024;
+        public static readonly int DBL_MIN_10_EXP =  -307;
+        public static readonly int DBL_MIN_EXP    =  -1021;
+        public static readonly int DBL_RADIX      =  2;
+        public static readonly double DBL_MAX        =  double.MaxValue;
+        public static readonly double DBL_MIN = double.MinValue;
+        public static readonly double DBL_EPSILON = double.Epsilon;
+
+        public static readonly double M_E            = 2.718281828459045090796;
+        public static readonly double M_LOG2E        = 1.442695040888963387005;
+        public static readonly double M_LOG10E       = 0.434294481903251816668;
+        public static readonly double M_LN2          = 0.693147180559945286227;
+        public static readonly double M_LN10         = 2.302585092994045901094;
+        public static readonly double M_PI           = 3.141592653589793115998;
+        public static readonly double M_PI_2         = 1.570796326794896557999;
+        public static readonly double M_PI_4         = 0.785398163397448278999;
+        public static readonly double M_1_PI         = 0.318309886183790691216;
+        public static readonly double M_2_PI         = 0.636619772367581382433;
+        public static readonly double M_2_SQRTPI     = 1.128379167095512558561;
+        public static readonly double M_SQRT2        = 1.414213562373095145475;
+        public static readonly double M_SQRT1_2      = 0.707106781186547572737;
+
+        public static readonly float M_E_F          = 2.71828174591064f;
+        public static readonly float M_LOG2E_F      = 1.44269502162933f;
+        public static readonly float M_LOG10E_F     = 0.43429449200630f;
+        public static readonly float M_LN2_F        = 0.69314718246460f;
+        public static readonly float M_LN10_F       = 2.30258512496948f;
+        public static readonly float M_PI_F         = 3.14159274101257f;
+        public static readonly float M_PI_2_F       = 1.57079637050629f;
+        public static readonly float M_PI_4_F       = 0.78539818525314f;
+        public static readonly float M_1_PI_F       = 0.31830987334251f;
+        public static readonly float M_2_PI_F       = 0.63661974668503f;
+        public static readonly float M_2_SQRTPI_F   = 1.12837922573090f;
+        public static readonly float M_SQRT2_F      = 1.41421353816986f;
+        public static readonly float M_SQRT1_2_F    = 0.70710676908493f;
+
+        public static readonly float NAN            =  float.NaN;
+        public static readonly float HUGE_VALF      =  float.PositiveInfinity;
+        public static readonly double HUGE_VAL       =  double.PositiveInfinity;
+        public static readonly float MAXFLOAT       =  FLT_MAX;
+        public static readonly float INFINITY       =  HUGE_VALF;
     }
 
     public enum Bool
@@ -297,6 +381,9 @@ namespace OpenCLNet
         NAME                           = 0x0902,
         VENDOR                         = 0x0903,
         EXTENSIONS                     = 0x0904,
+        
+        // cl_khr_icd extension
+        PLATFORM_ICD_SUFFIX_KHR        = 0x0920,
     }
 
     // cl_device_type - bitfield
@@ -362,8 +449,8 @@ namespace OpenCLNet
         VERSION                          = 0x102F,
         EXTENSIONS                       = 0x1030,
         PLATFORM                         = 0x1031,
-/* 0x1032 reserved for CL_DEVICE_DOUBLE_FP_CONFIG */
-/* 0x1033 reserved for CL_DEVICE_HALF_FP_CONFIG */
+        DOUBLE_FP_CONFIG                 = 0x1032,
+        HALF_FP_CONFIG                   = 0x1033,
         PREFERRED_VECTOR_WIDTH_HALF      = 0x1034,
         HOST_UNIFIED_MEMORY              = 0x1035,
         NATIVE_VECTOR_WIDTH_CHAR         = 0x1036,
@@ -374,6 +461,18 @@ namespace OpenCLNet
         NATIVE_VECTOR_WIDTH_DOUBLE       = 0x103B,
         NATIVE_VECTOR_WIDTH_HALF         = 0x103C,
         OPENCL_C_VERSION                 = 0x103D,
+
+        // cl_nv_device_attribute_query
+        COMPUTE_CAPABILITY_MAJOR_NV      = 0x4000,
+        COMPUTE_CAPABILITY_MINOR_NV      = 0x4001,
+        REGISTERS_PER_BLOCK_NV           = 0x4002,
+        WARP_SIZE_NV                     = 0x4003,
+        GPU_OVERLAP_NV                   = 0x4004,
+        KERNEL_EXEC_TIMEOUT_NV           = 0x4005,
+        INTEGRATED_MEMORY_NV             = 0x4006,
+
+        // cl_amd_device_attribute_query
+        PROFILING_TIMER_OFFSET_AMD       = 0x4036,
     }	
 
     // cl_device_fp_config - bitfield
@@ -739,6 +838,43 @@ namespace OpenCLNet
         ALL_DEVICES_FOR_D3D10_KHR       = 0x4013,
     }
 
+
+    // ********************************************
+    // * cl_ext_device_fission enums
+    // ********************************************
+    public enum DevicePartition : ulong
+    {
+        EQUALLY = 0x4050,
+        BY_COUNTS = 0x4051,
+        BY_NAMES = 0x4052,
+        BY_AFFINITY_DOMAIN = 0x4053,
+    }
+
+    public enum AffinityDomain
+    {
+        L1_CACHE = 0x1,
+        L2_CACHE = 0x2,
+        L3_CACHE = 0x3,
+        L4_CACHE = 0x4,
+        NUMA = 0x10,
+        NEXT_FISSIONABLE = 0x100,
+    }
+
+    public enum DeviceInfoPropertyNames
+    {
+        PARENT_DEVICE = 0x4054,
+        PARITION_TYPES = 0x4055,
+        AFFINITY_DOMAINS = 0x4056,
+        REFERENCE_COUNT = 0x4057,
+        PARTITION_STYLE = 0x4058,
+    }
+
+    public enum ListTerminators : int
+    {
+        PROPERTIES_LIST_END = 0x0,
+        PARTITION_BY_COUNTS_LIST_END = 0x0,
+        PARTITION_BY_NAMES_LIST_END = -1,
+    }
 
     #region Vector2
 

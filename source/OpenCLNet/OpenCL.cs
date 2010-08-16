@@ -96,6 +96,16 @@ namespace OpenCLNet
     using GLuint = UInt32;
     using GLint = Int32;
     using GLenum = Int32;
+
+    using cl_device_partition_property_ext = UInt64;
+
+    using cl_d3d10_device_source_khr = UInt32;
+    using cl_d3d10_device_set_khr = UInt32;
+    using UINT = UInt32;
+    using ID3D10Buffer = IntPtr;
+    using ID3D10Texture2D = IntPtr;
+    using ID3D10Texture3D = IntPtr;
+
     #endregion
 
     public delegate void ContextNotify(string errInfo, byte[] data, IntPtr cb, IntPtr userData);
@@ -866,6 +876,22 @@ namespace OpenCLNet
 
         #endregion
 
+        #region Device Fission API (Extension)
+
+        public static ErrorCode ReleaseDeviceEXT(cl_device_id device)
+        {
+            return OpenCLAPI.clReleaseDeviceEXT(device);
+        }
+        public static ErrorCode RetainDeviceEXT(cl_device_id device)
+        {
+            return OpenCLAPI.clRetainDeviceEXT(device);
+        }
+        public static ErrorCode CreateSubDevicesEXT(cl_device_id in_device, byte[] properties, cl_uint num_entries, cl_device_id[] out_devices, [Out] cl_uint* num_devices)
+        {
+            return OpenCLAPI.clCreateSubDevicesEXT(in_device, properties, num_entries, out_devices, num_devices);
+        }
+
+        #endregion
 
         // Extension function access
         public static IntPtr GetExtensionFunctionAddress(string func_name)

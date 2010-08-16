@@ -25,7 +25,11 @@
 
 // Toggles D3D10 extension support
 // NOTE: The C# API is not done yet, but enabling it will let you call something like the raw C API
-#define nD3D10_Extension
+#define D3D10_Extension
+
+// Toggles Device fission support
+// NOTE: The C# API is not done yet, but enabling it will let you call something like the raw C API
+#define DEVICE_FISSION_Extension
 
 using System;
 using System.Collections.Generic;
@@ -102,6 +106,7 @@ namespace OpenCLNet
     using GLuint=UInt32;
     using GLint=Int32;
     using GLenum=Int32;
+
     using cl_device_partition_property_ext=UInt64;
     
     using cl_d3d10_device_source_khr = UInt32;
@@ -116,12 +121,22 @@ namespace OpenCLNet
 
 #if D3D10_Extension
     // D3D10 Delegates
-    public unsafe delegate cl_int clGetDeviceIDsFromD3D10KHRDelegate(cl_platform_id platform, cl_d3d10_device_source_khr d3d_device_source, void* d3d_object, cl_d3d10_device_set_khr d3d_device_set, cl_uint num_entries, cl_device_id* devices, cl_uint* num_devices);
-    public unsafe delegate cl_mem clCreateFromD3D10BufferKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Buffer* resource, cl_int* errcode_ret);
-    public unsafe delegate cl_mem clCreateFromD3D10Texture2DKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Texture2D* resource, UINT subresource, cl_int* errcode_ret);
-    public unsafe delegate cl_mem clCreateFromD3D10Texture3DKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Texture3D* resource, UINT subresource, cl_int* errcode_ret);
-    public unsafe delegate cl_int clEnqueueAcquireD3D10ObjectsKHRDelegate(cl_command_queue command_queue, cl_uint num_objects, cl_mem* mem_objects, cl_uint num_events_in_wait_list, cl_event* event_wait_list, cl_event* _event);
-    public unsafe delegate cl_int clEnqueueReleaseD3D10ObjectsKHRDelegate(cl_command_queue command_queue, cl_uint num_objects, cl_mem* mem_objects, cl_uint num_events_in_wait_list, cl_event* event_wait_list, cl_event* _event);
+    public unsafe delegate ErrorCode clGetDeviceIDsFromD3D10KHRDelegate(cl_platform_id platform, cl_d3d10_device_source_khr d3d_device_source, void* d3d_object, cl_d3d10_device_set_khr d3d_device_set, cl_uint num_entries, cl_device_id* devices, cl_uint* num_devices);
+    public unsafe delegate cl_mem clCreateFromD3D10BufferKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Buffer* resource, out ErrorCode errcode_ret);
+    public unsafe delegate cl_mem clCreateFromD3D10Texture2DKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Texture2D* resource, UINT subresource, out ErrorCode errcode_ret);
+    public unsafe delegate cl_mem clCreateFromD3D10Texture3DKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Texture3D* resource, UINT subresource, out ErrorCode errcode_ret);
+    public unsafe delegate ErrorCode clEnqueueAcquireD3D10ObjectsKHRDelegate(cl_command_queue command_queue, cl_uint num_objects, cl_mem* mem_objects, cl_uint num_events_in_wait_list, cl_event* event_wait_list, cl_event* _event);
+    public unsafe delegate ErrorCode clEnqueueReleaseD3D10ObjectsKHRDelegate(cl_command_queue command_queue, cl_uint num_objects, cl_mem* mem_objects, cl_uint num_events_in_wait_list, cl_event* event_wait_list, cl_event* _event);
+#endif
+
+#if DEVICE_FISSION_Extension
+        public delegate ErrorCode clReleaseDeviceEXTDelegate(cl_device_id device);
+        public delegate ErrorCode clRetainDeviceEXTDelegate(cl_device_id device);
+        public unsafe delegate ErrorCode clCreateSubDevicesEXTDelegate(cl_device_id in_device,
+            [In] byte[] properties,
+            cl_uint num_entries,
+            [In] [Out] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=4)] cl_device_id[] out_devices,
+            [Out] cl_uint* num_devices );
 #endif
 
     /// <summary>
@@ -139,20 +154,35 @@ namespace OpenCLNet
         {
 
 #if D3D10_Extension
-            // Get function pointers for D3D10 extension
-            IntPtr func;
-            func = OpenCLAPI.clGetExtensionFunctionAddress("clGetDeviceIDsFromD3D10KHR");
-            clGetDeviceIDsFromD3D10KHR = (clGetDeviceIDsFromD3D10KHRDelegate)Marshal.GetDelegateForFunctionPointer(func,typeof(clGetDeviceIDsFromD3D10KHRDelegate));
-            func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10BufferKHR");
-            clCreateFromD3D10BufferKHR = (clCreateFromD3D10BufferKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10BufferKHRDelegate));
-            func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10Texture2DKHR");
-            clCreateFromD3D10Texture2DKHR = (clCreateFromD3D10Texture2DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture2DKHRDelegate));
-            func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10Texture3DKHR");
-            clCreateFromD3D10Texture3DKHR = (clCreateFromD3D10Texture3DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture3DKHRDelegate));
-            func = OpenCLAPI.clGetExtensionFunctionAddress("clEnqueueAcquireD3D10ObjectsKHR");
-            clEnqueueAcquireD3D10ObjectsKHR = (clEnqueueAcquireD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueAcquireD3D10ObjectsKHRDelegate));
-            func = OpenCLAPI.clGetExtensionFunctionAddress("clEnqueueReleaseD3D10ObjectsKHR");
-            clEnqueueReleaseD3D10ObjectsKHR = (clEnqueueReleaseD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueReleaseD3D10ObjectsKHRDelegate));
+            {
+                // Get function pointers for D3D10 extension
+                IntPtr func;
+                func = OpenCLAPI.clGetExtensionFunctionAddress("clGetDeviceIDsFromD3D10KHR");
+                clGetDeviceIDsFromD3D10KHR = (clGetDeviceIDsFromD3D10KHRDelegate)Marshal.GetDelegateForFunctionPointer(func,typeof(clGetDeviceIDsFromD3D10KHRDelegate));
+                func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10BufferKHR");
+                clCreateFromD3D10BufferKHR = (clCreateFromD3D10BufferKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10BufferKHRDelegate));
+                func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10Texture2DKHR");
+                clCreateFromD3D10Texture2DKHR = (clCreateFromD3D10Texture2DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture2DKHRDelegate));
+                func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10Texture3DKHR");
+                clCreateFromD3D10Texture3DKHR = (clCreateFromD3D10Texture3DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture3DKHRDelegate));
+                func = OpenCLAPI.clGetExtensionFunctionAddress("clEnqueueAcquireD3D10ObjectsKHR");
+                clEnqueueAcquireD3D10ObjectsKHR = (clEnqueueAcquireD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueAcquireD3D10ObjectsKHRDelegate));
+                func = OpenCLAPI.clGetExtensionFunctionAddress("clEnqueueReleaseD3D10ObjectsKHR");
+                clEnqueueReleaseD3D10ObjectsKHR = (clEnqueueReleaseD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueReleaseD3D10ObjectsKHRDelegate));
+            }
+#endif
+
+#if DEVICE_FISSION_Extension
+            {
+                // Get function pointers for the device fission extension
+                IntPtr func;
+                func = OpenCLAPI.clGetExtensionFunctionAddress("clReleaseDeviceEXT");
+                clReleaseDeviceEXT = (clReleaseDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clReleaseDeviceEXTDelegate));
+                func = OpenCLAPI.clGetExtensionFunctionAddress("clRetainDeviceEXT");
+                clRetainDeviceEXT = (clRetainDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clRetainDeviceEXTDelegate));
+                func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateSubDevicesEXT");
+                clCreateSubDevicesEXT = (clCreateSubDevicesEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateSubDevicesEXTDelegate));
+            }
 #endif
         }
 
@@ -822,6 +852,13 @@ namespace OpenCLNet
         public static clEnqueueAcquireD3D10ObjectsKHRDelegate clEnqueueAcquireD3D10ObjectsKHR;
         public static clEnqueueReleaseD3D10ObjectsKHRDelegate clEnqueueReleaseD3D10ObjectsKHR;
 #endif
+
+#if DEVICE_FISSION_Extension
+        // cl_ext_device_fission extension
+        public static clReleaseDeviceEXTDelegate clReleaseDeviceEXT;
+        public static clRetainDeviceEXTDelegate clRetainDeviceEXT;
+        public static clCreateSubDevicesEXTDelegate clCreateSubDevicesEXT;
+#endif
     }
 
 #if false
@@ -841,77 +878,6 @@ namespace OpenCLNet
         }
     }
 
-    unsafe public static class DeviceFission
-    {
-
-        public enum DevicePartition
-        {
-            EQUALLY = 0x4050,
-            BY_COUNTS = 0x4051,
-            BY_NAMES = 0x4052,
-            BY_AFFINITY_DOMAIN = 0x4053,
-        }
-
-        public enum AffinityDomain
-        {
-            L1_CACHE = 0x1,
-            L2_CACHE = 0x2,
-            L3_CACHE = 0x3,
-            L4_CACHE = 0x4,
-            NUMA = 0x10,
-            NEXT_FISSIONABLE = 0x100,
-        }
-
-        public enum DeviceInfoPropertyNames
-        {
-            PARENT_DEVICE    =  0x4054,
-            PARITION_TYPES   =  0x4055,
-            AFFINITY_DOMAINS =  0x4056,
-            REFERENCE_COUNT  =  0x4057,
-            PARTITION_STYLE  =  0x4058,
-        }
-
-        public enum ListTerminators
-        {
-            CL_PROPERTIES_LIST_END          =  0x0,
-            CL_PARTITION_BY_COUNTS_LIST_END =  0x0,
-            CL_PARTITION_BY_NAMES_LIST_END  = -1,
-        }
-
-        public enum ErrorCodes
-        {
-            CL_DEVICE_PARTITION_FAILED = -1057,
-            CL_INVALID_PARTITION_COUNT = -1058,
-            CL_INVALID_PARTITION_NAME  = -1059,
-        }
-
-        public delegate cl_int clReleaseDeviceEXTDelegate(cl_device_id device);
-        public delegate cl_int clRetainDeviceEXTDelegate(cl_device_id device);
-        public delegate cl_int clCreateSubDevicesEXTDelegate(cl_device_id in_device,
-        [In] cl_device_partition_property_ext[] properties,
-        cl_uint num_entries,
-        [In] [Out] [MarshalAs(UnmanagedType.LPArray)] cl_device_id[] out_devices,
-        [Out] cl_uint *num_devices );
-
-
-        public static readonly clReleaseDeviceEXTDelegate clReleaseDeviceEXT;
-        public static readonly clRetainDeviceEXTDelegate clRetainDeviceEXT;
-        public static readonly clCreateSubDevicesEXTDelegate clCreateSubDevicesEX;
-        static DeviceFission()
-        {
-            IntPtr func;
-
-            func = OpenCLAPI.clGetExtensionFunctionAddress("clReleaseDeviceEXTDelegate");
-            clReleaseDeviceEXT = (clReleaseDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clReleaseDeviceEXTDelegate));
-
-            func = OpenCLAPI.clGetExtensionFunctionAddress("clRetainDeviceEXT");
-            clRetainDeviceEXT = (clRetainDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clRetainDeviceEXTDelegate));
-
-            func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateSubDevicesEX");
-            clCreateSubDevicesEX = (clCreateSubDevicesEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateSubDevicesEXTDelegate));
-        }
-    }
-
     unsafe public static class GLEvent
     {
         static GLEvent()
@@ -919,11 +885,5 @@ namespace OpenCLNet
         }
     }
 
-    unsafe public static class D3D10Sharing
-    {
-        static D3D10Sharing()
-        {
-        }
-    }
 #endif
 }
