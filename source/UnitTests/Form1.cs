@@ -243,12 +243,12 @@ namespace UnitTests
                 {
                     if ( (d.ExecutionCapabilities & (ulong)DeviceExecCapabilities.NATIVE_KERNEL)!=0 )
                     {
-                    //    Output("Testing native kernel execution");
-                    //    cq.EnqueueNativeKernel(NativeKernelCallRef);
-                    //    cq.Finish();
-                    //    if (NativeKernelCalled != 1)
-                    //        Error("EnqueueNativeKernel failed");
-                    //    Interlocked.Decrement(ref NativeKernelCalled);
+                        Output("Testing native kernel execution");
+                        cq.EnqueueNativeKernel(NativeKernelCallRef, this, null);
+                        cq.Finish();
+                        if (NativeKernelCalled != 1)
+                            Error("EnqueueNativeKernel failed");
+                        Interlocked.Decrement(ref NativeKernelCalled);
                     }
                     else
                     {
@@ -265,7 +265,7 @@ namespace UnitTests
             }
         }
 
-        public unsafe void NativeKernelTest(IntPtr args)
+        public unsafe void NativeKernelTest(object o, void*[] buffers)
         {
             Interlocked.Increment(ref NativeKernelCalled);
         }
