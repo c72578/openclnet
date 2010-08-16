@@ -1,4 +1,29 @@
-﻿using System;
+﻿/*
+ * Copyright (c) 2009 Olav Kalgraf(olav.kalgraf@gmail.com)
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,11 +36,18 @@ using System.Threading;
 
 namespace OpenCLNet
 {
+    /// <summary>
+    /// OpenCLManager is a class that provides generic setup, compilation and caching services.
+    /// 
+    /// </summary>
     public partial class OpenCLManager : Component
     {
         private int _MaxCachedBinaries;
 
         /// <summary>
+        /// <bold>[Replacement filesystem functionality is not fully implemented yet.
+        /// A handful functions are still hardcoded to the regular OS Filesystem]</bold>
+        /// 
         /// FileSystem is an instance of the OCLManFileSystem class containing accessor
         /// methods to a file system.
         /// This property has a default implementation that uses normal .Net file access.
@@ -49,7 +81,7 @@ namespace OpenCLNet
         public string BinaryPath { get; set; }
         /// <summary>
         /// If true, OpenCLManager will attempt to compile sources(Stored at 'SourcePath') to compile programs, and possibly
-        /// to store binaries(If 'AttemptUseBinarues' is true)
+        /// to store binaries(If 'AttemptUseBinaries' is true)
         /// </summary>
         public bool AttemptUseSource { get; set; }
         /// <summary>
@@ -187,7 +219,7 @@ namespace OpenCLNet
         /// <summary>
         /// CompileSource
         /// 
-        /// Attempt to create a program from source and build it. No caching is attempted.
+        /// Attempt to create a program from a source string and build it.
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
@@ -292,7 +324,7 @@ namespace OpenCLNet
                     Device device = context.Devices[i];
                     string binaryFileName;
 
-                    MetaFile mf = bmi.FindMetaFile(source, fileName, context.Platform.Name, device.Name, Defines, BuildOptions);
+                    MetaFile mf = bmi.FindMetaFile(source, fileName, context.Platform.Name, device.Name, device.DriverVersion, Defines, BuildOptions);
                     if( mf==null )
                         mf = bmi.CreateMetaFile(source, fileName, context.Platform.Name, device.Name, device.DriverVersion, Defines, BuildOptions);
 
@@ -318,13 +350,15 @@ namespace OpenCLNet
                 {
                     Device device = context.Devices[i];
                     string binaryFilePath;
-                    MetaFile mf = bmi.FindMetaFile("", fileName, Context.Platform.Name, device.Name, Defines, BuildOptions);
+                    MetaFile mf = bmi.FindMetaFile("", fileName, Context.Platform.Name, device.Name, device.DriverVersion, Defines, BuildOptions);
                     if (mf == null)
                         throw new FileNotFoundException("No compiled binary file present in MetaFile");
                     binaryFilePath = BinaryPath + FileSystem.GetDirectorySeparator() + mf.BinaryName;
-                    if (FileSystem.GetLastWriteTime(binaryFilePath) < sourceDateTime)
-                        throw new Exception("Binary older than source");
-
+                    if (AttemptUseSource)
+                    {
+                        if (FileSystem.GetLastWriteTime(binaryFilePath) < sourceDateTime)
+                            throw new Exception("Binary older than source");
+                    }
                     binaries[i] = FileSystem.ReadAllBytes(binaryFilePath);
                 }
             }
@@ -605,6 +639,7 @@ namespace OpenCLNet
                 {
                     bmi = (BinaryMetaInfo)xml.Deserialize(xmlReader);
                     bmi.FileStream = fs;
+                    bmi.Root = path;
                     xmlReader.Close();
                 }
                 catch (Exception)
@@ -624,11 +659,12 @@ namespace OpenCLNet
                 }
                 catch (Exception)
                 {
-                    // Another process created the file before us. Just call ourselves recursively,
-                    // which should land us in the other section of the if-statement
-                    if( File.Exists(metaFileName) )
-                        return FromPath(path,fileAccess,fileShare);
-                    Thread.CurrentThread.Join(100 + rnd.Next(100));
+                    if (File.Exists(metaFileName))
+                    {
+                        // Another process created the file just before us. Just call ourselves recursively,
+                        // which should land us in the other branch of the if-statement now that the metaFile exists
+                        return FromPath(path, fileAccess, fileShare);
+                    }
                 }
 
                 bmi = new BinaryMetaInfo();
@@ -643,9 +679,9 @@ namespace OpenCLNet
             MetaFiles.Exists(file => file.SourceName == sourceName && file.Defines == defines && file.BuildOptions == buildOptions);
         }
 
-        public MetaFile FindMetaFile(string source, string sourceName, string platform, string device, string defines, string buildOptions)
+        public MetaFile FindMetaFile(string source, string sourceName, string platform, string device, string driverVersion, string defines, string buildOptions)
         {
-            return MetaFiles.Find(file => file.Source==source && file.SourceName == sourceName && file.Platform == platform && file.Device == device && file.Defines == defines && file.BuildOptions == buildOptions);
+            return MetaFiles.Find(file => file.Source==source && file.SourceName == sourceName && file.Platform == platform && file.Device == device  && file.DriverVersion==driverVersion && file.Defines == defines && file.BuildOptions == buildOptions);
         }
 
         public MetaFile CreateMetaFile(string source, string sourceName, string platform, string device, string driverVersion, string defines, string buildOptions)

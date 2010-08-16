@@ -62,6 +62,7 @@ namespace UnitTests
                 listBoxWarnings.Items.Clear();
                 listBoxOutput.Items.Clear();
                 RunTests();
+                Output("Unit testing complete");
             }
             catch (Exception ex)
             {
@@ -77,6 +78,39 @@ namespace UnitTests
 
         private void TestOpenCLManager()
         {
+            Output("======================================================");
+            Output("Testing OpenCLManager");
+            Output("======================================================");
+
+            openCLManager.CreateDefaultContext();
+            openCLManager.BuildOptions = "";
+            openCLManager.Defines = "";
+            OpenCLNet.Program p0 = openCLManager.CompileFile("MemoryTests.cl");
+
+            openCLManager.BuildOptions = "-D TestDefinition=1";
+            openCLManager.Defines = "/*Woo defines!*/";
+            OpenCLNet.Program p1 = openCLManager.CompileFile("MemoryTests.cl");
+
+            openCLManager.BuildOptions = "";
+            openCLManager.Defines = "";
+            OpenCLNet.Program p2 = openCLManager.CompileSource("kernel void NullFunction(){}");
+
+            openCLManager.BuildOptions = "-D TESTDEFINE=1";
+            openCLManager.Defines = "";
+            OpenCLNet.Program p3 = openCLManager.CompileSource("kernel void NullFunction(){ int a=TESTDEFINE; if( a<3 ) ; }");
+
+            openCLManager.BuildOptions = "";
+            openCLManager.Defines = "#define TESTDEFINE 1";
+            OpenCLNet.Program p4 = openCLManager.CompileSource("kernel void NullFunction(){ int a=TESTDEFINE; if( a<3 ) ; }");
+
+            Dictionary<string, Kernel> kernels0 = p0.CreateKernelDictionary();
+            Dictionary<string, Kernel> kernels1 = p1.CreateKernelDictionary();
+            Dictionary<string, Kernel> kernels2 = p2.CreateKernelDictionary();
+            Dictionary<string, Kernel> kernels3 = p3.CreateKernelDictionary();
+            Dictionary<string, Kernel> kernels4 = p4.CreateKernelDictionary();
+
+            Output("");
+            Output("");
         }
 
         private void TestOpenCLClass()
