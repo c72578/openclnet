@@ -82,7 +82,7 @@ namespace UnitTests
             Output("Testing OpenCLManager");
             Output("======================================================");
 
-            openCLManager.CreateDefaultContext();
+            openCLManager.CreateDefaultContext(0,DeviceType.CPU);
             openCLManager.BuildOptions = "";
             openCLManager.Defines = "";
             OpenCLNet.Program p0 = openCLManager.CompileFile("MemoryTests.cl");
@@ -109,6 +109,23 @@ namespace UnitTests
             Dictionary<string, Kernel> kernels3 = p3.CreateKernelDictionary();
             Dictionary<string, Kernel> kernels4 = p4.CreateKernelDictionary();
 
+            if (openCLManager.Context.Devices[0].HasExtension("cl_ext_device_fission"))
+            {
+                Output("Testing CreateSubDevices");
+                List<object> properties = new List<object>();
+                properties.Add((ulong)DevicePartition.EQUALLY);
+                properties.Add((int)2);
+                properties.Add((ulong)ListTerminators.PROPERTIES_LIST_END);
+
+                Device[] subDevices;
+                subDevices = openCLManager.Context.Devices[0].CreateSubDevicesEXT(properties);
+                foreach (Device d in subDevices)
+                    d.Dispose();
+            }
+            else
+            {
+                Output("Skipping test of CreateSubDevices: cl_ext_device_fission not supported");
+            }
             Output("");
             Output("");
         }
