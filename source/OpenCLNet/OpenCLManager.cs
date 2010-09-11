@@ -144,8 +144,8 @@ namespace OpenCLNet
             RequireImageSupport = false;
             BuildOptions = "";
             Defines = "";
-            SourcePath = "OpenCL" + Path.AltDirectorySeparatorChar + "src";
-            BinaryPath = "OpenCL" + Path.AltDirectorySeparatorChar + "bin";
+            SourcePath = "OpenCL" + Path.DirectorySeparatorChar + "src";
+            BinaryPath = "OpenCL" + Path.DirectorySeparatorChar + "bin";
             AttemptUseBinaries = true;
             AttemptUseSource = true;
         }
@@ -162,9 +162,9 @@ namespace OpenCLNet
         }
 
         /// <summary>
-        /// Create a context containing all devices of a given type that satisfy the current RequireImageSupport and RequireExtensions property settings.
+        /// Create a context containing all devices of a given type that satisfy the
+        /// current RequireImageSupport and RequireExtensions property settings.
         /// Default command queues are made available through the CQ property
-        /// 
         /// </summary>
         /// <param name="deviceType"></param>
         public void CreateDefaultContext(int platformNumber, DeviceType deviceType)
@@ -346,9 +346,15 @@ namespace OpenCLNet
 
             using (BinaryMetaInfo bmi = BinaryMetaInfo.FromPath(BinaryPath, FileAccess.Read, FileShare.Read))
             {
-                for (int i = 0; i < context.Devices.Length; i++)
+                Device[] devices;
+
+                devices = context.Devices;
+                for (int i = 0; i < devices.Length; i++)
                 {
-                    Device device = context.Devices[i];
+                    if (binaries[i] != null)
+                        continue;
+
+                    Device device = devices[i];
                     string binaryFilePath;
                     MetaFile mf = bmi.FindMetaFile("", fileName, Context.Platform.Name, device.Name, device.DriverVersion, Defines, BuildOptions);
                     if (mf == null)
@@ -360,6 +366,21 @@ namespace OpenCLNet
                             throw new Exception("Binary older than source");
                     }
                     binaries[i] = FileSystem.ReadAllBytes(binaryFilePath);
+
+                    // Check of there are other identical devices that can use the binary we just loaded
+                    // If there are, patch it in in the proper slots in the list of binaries
+                    for (int j = i+1; j < devices.Length; j++)
+                    {
+                        if (devices[i].Name == devices[j].Name &&
+                            devices[i].Vendor == devices[j].Vendor &&
+                            devices[i].Version == devices[j].Version &&
+                            devices[i].AddressBits == devices[j].AddressBits &&
+                            devices[i].DriverVersion == devices[j].DriverVersion &&
+                            devices[i].EndianLittle == devices[j].EndianLittle)
+                        {
+                            binaries[j] = binaries[i];
+                        }
+                    }
                 }
             }
             return binaries;
@@ -437,7 +458,7 @@ namespace OpenCLNet
         /// <returns></returns>
         public virtual char GetDirectorySeparator()
         {
-            return '\\';
+            return Path.DirectorySeparatorChar;
         }
 
         /// <summary>
@@ -491,21 +512,52 @@ namespace OpenCLNet
             return Directory.GetDirectories(path);
         }
 
+        /// <summary>
+        /// Returns a DateTime object referring to the time of the last write.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public virtual DateTime GetLastWriteTime(string path)
         {
-            return File.GetLastAccessTime(path);
+            return File.GetLastWriteTime(path);
         }
 
+        /// <summary>
+        /// Returns a DateTime object referring to the time of creation
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public virtual DateTime GetCreationTime(string path)
         {
             return File.GetCreationTime(path);
         }
 
+        /// <summary>
+        /// Return the entire contents of the file as a text string using default encoding
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public virtual string ReadAllText(string path)
         {
             return File.ReadAllText(path);
         }
 
+        /// <summary>
+        /// Returns the entire contents of the file as a text string using te specified encoding
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        public virtual string ReadAllText(string path, Encoding encoding)
+        {
+            return File.ReadAllText(path,encoding);
+        }
+
+        /// <summary>
+        /// Returns the entire contents of the file as a byte array
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public virtual byte[] ReadAllBytes(string path)
         {
             return File.ReadAllBytes(path);
@@ -513,7 +565,12 @@ namespace OpenCLNet
 
         public virtual void WriteAllText(string path, string text)
         {
-            File.WriteAllText(path,text);
+            File.WriteAllText(path, text);
+        }
+
+        public virtual void WriteAllText(string path, string text, Encoding encoding)
+        {
+            File.WriteAllText(path, text, encoding);
         }
 
         public virtual void WriteAllBytes(string path, byte[] bytes)
