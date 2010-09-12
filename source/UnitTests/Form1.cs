@@ -41,6 +41,7 @@ namespace UnitTests
 {
     public unsafe partial class Form1 : Form
     {
+        OpenCLManager OpenCLManager = new OpenCLManager();
         Platform[] Platforms;
         Regex ParseOpenCLVersion = new Regex(@"OpenCL (?<MajorVersion>\d+)\.(?<MinorVersion>\d+).*");
 
@@ -82,26 +83,26 @@ namespace UnitTests
             Output("Testing OpenCLManager");
             Output("======================================================");
 
-            openCLManager.CreateDefaultContext(0,DeviceType.CPU);
-            openCLManager.BuildOptions = "";
-            openCLManager.Defines = "";
-            OpenCLNet.Program p0 = openCLManager.CompileFile("MemoryTests.cl");
+            OpenCLManager.CreateDefaultContext(0,DeviceType.CPU);
+            OpenCLManager.BuildOptions = "";
+            OpenCLManager.Defines = "";
+            OpenCLNet.Program p0 = OpenCLManager.CompileFile("MemoryTests.cl");
 
-            openCLManager.BuildOptions = "-D TestDefinition=1";
-            openCLManager.Defines = "/*Woo defines!*/";
-            OpenCLNet.Program p1 = openCLManager.CompileFile("MemoryTests.cl");
+            OpenCLManager.BuildOptions = "-D TestDefinition=1";
+            OpenCLManager.Defines = "/*Woo defines!*/";
+            OpenCLNet.Program p1 = OpenCLManager.CompileFile("MemoryTests.cl");
 
-            openCLManager.BuildOptions = "";
-            openCLManager.Defines = "";
-            OpenCLNet.Program p2 = openCLManager.CompileSource("kernel void NullFunction(){}");
+            OpenCLManager.BuildOptions = "";
+            OpenCLManager.Defines = "";
+            OpenCLNet.Program p2 = OpenCLManager.CompileSource("kernel void NullFunction(){}");
 
-            openCLManager.BuildOptions = "-D TESTDEFINE=1";
-            openCLManager.Defines = "";
-            OpenCLNet.Program p3 = openCLManager.CompileSource("kernel void NullFunction(){ int a=TESTDEFINE; if( a<3 ) ; }");
+            OpenCLManager.BuildOptions = "-D TESTDEFINE=1";
+            OpenCLManager.Defines = "";
+            OpenCLNet.Program p3 = OpenCLManager.CompileSource("kernel void NullFunction(){ int a=TESTDEFINE; if( a<3 ) ; }");
 
-            openCLManager.BuildOptions = "";
-            openCLManager.Defines = "#define TESTDEFINE 1";
-            OpenCLNet.Program p4 = openCLManager.CompileSource("kernel void NullFunction(){ int a=TESTDEFINE; if( a<3 ) ; }");
+            OpenCLManager.BuildOptions = "";
+            OpenCLManager.Defines = "#define TESTDEFINE 1";
+            OpenCLNet.Program p4 = OpenCLManager.CompileSource("kernel void NullFunction(){ int a=TESTDEFINE; if( a<3 ) ; }");
 
             Dictionary<string, Kernel> kernels0 = p0.CreateKernelDictionary();
             Dictionary<string, Kernel> kernels1 = p1.CreateKernelDictionary();
@@ -109,7 +110,7 @@ namespace UnitTests
             Dictionary<string, Kernel> kernels3 = p3.CreateKernelDictionary();
             Dictionary<string, Kernel> kernels4 = p4.CreateKernelDictionary();
 
-            if (openCLManager.Context.Devices[0].HasExtension("cl_ext_device_fission"))
+            if (OpenCLManager.Context.Devices[0].HasExtension("cl_ext_device_fission"))
             {
                 Output("Testing CreateSubDevices");
                 List<object> properties = new List<object>();
@@ -118,7 +119,7 @@ namespace UnitTests
                 properties.Add((ulong)ListTerminators.PROPERTIES_LIST_END);
 
                 Device[] subDevices;
-                subDevices = openCLManager.Context.Devices[0].CreateSubDevicesEXT(properties);
+                subDevices = OpenCLManager.Context.Devices[0].CreateSubDevicesEXT(properties);
                 foreach (Device d in subDevices)
                     d.Dispose();
             }
