@@ -122,11 +122,6 @@
     </Compile>
     <Compile Include="..\..\OpenCLNet\OpenCLManager.cs">
       <Link>OpenCLManager.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\..\OpenCLNet\OpenCLManager.designer.cs">
-      <Link>OpenCLManager.designer.cs</Link>
-      <DependentUpon>OpenCLManager.cs</DependentUpon>
     </Compile>
     <Compile Include="..\..\OpenCLNet\Platform.cs">
       <Link>Platform.cs</Link>
