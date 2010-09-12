@@ -38,16 +38,16 @@ namespace OpenCLNet
 {
     /// <summary>
     /// OpenCLManager is a class that provides generic setup, compilation and caching services.
-    /// 
     /// </summary>
-    public partial class OpenCLManager : Component
+    public partial class OpenCLManager : IDisposable
     {
+        #region Properties
+        
+        private bool disposed = false;
+
         private int _MaxCachedBinaries;
 
         /// <summary>
-        /// <bold>[Replacement filesystem functionality is not fully implemented yet.
-        /// A handful functions are still hardcoded to the regular OS Filesystem]</bold>
-        /// 
         /// FileSystem is an instance of the OCLManFileSystem class containing accessor
         /// methods to a file system.
         /// This property has a default implementation that uses normal .Net file access.
@@ -57,42 +57,52 @@ namespace OpenCLNet
         /// this property.
         /// </summary>
         public OCLManFileSystem FileSystem { get; set; }
+
         /// <summary>
         /// True if OpenCL is available on this machine
         /// </summary>
         public bool OpenCLIsAvailable { get { return OpenCL.NumberOfPlatforms > 0; } }
+
         /// <summary>
         /// Each element in this list is interpreted as the name of an extension.
         /// Any device that does not present this extension in its Extensions
         /// property will be filtered out during context creation.
         /// </summary>
         public List<string> RequiredExtensions = new List<string>();
+
         /// <summary>
         /// If true, OpenCLManager will filter out any devices that don't signal image support through the HasImageSupport property
         /// </summary>
         public bool RequireImageSupport { get; set; }
+
         /// <summary>
         /// If true, OpenCLManager will attempt to use stored binaries(Stored at 'BinaryPath') to avoid recompilation
         /// </summary>
         public bool AttemptUseBinaries { get; set; }
+
         /// <summary>
         /// The location to store and look for compiled binaries
         /// </summary>
         public string BinaryPath { get; set; }
+
         /// <summary>
         /// If true, OpenCLManager will attempt to compile sources(Stored at 'SourcePath') to compile programs, and possibly
         /// to store binaries(If 'AttemptUseBinaries' is true)
         /// </summary>
         public bool AttemptUseSource { get; set; }
+
         /// <summary>
         /// The location where sources are stored
         /// </summary>
         public string SourcePath { get; set; }
+
         public List<DeviceType> DeviceTypes = new List<DeviceType>();
+
         /// <summary>
         /// BuildOptions is passed to the OpenCL build functions that take compiler options
         /// </summary>
         public string BuildOptions { get; set; }
+
         /// <summary>
         /// This string is prepended verbatim to any and all sources that are compiled.
         /// It can contain any kind of useful global definitions.
@@ -100,14 +110,20 @@ namespace OpenCLNet
         public string Defines { get; set; }
         public Platform Platform;
         public Context Context;
+
         /// <summary>
-        /// Array of CommandQueues. Indices correspond to the devices in the Context.Devices.
+        /// Array of CommandQueues. Indices correspond to the devices in Context.Devices.
         /// Simple OpenCL programs will typically just enqueue operations on CQ[0] and ignore any additional devices.
         /// </summary>
         public CommandQueue[] CQ;
 
         /// <summary>
-        /// The maximum number of entries in the binary cache.
+        /// The maximum number of entries in the binary cache. Default value = 50.
+        /// Setting MaxCachedBinaries to a negative number disables cache trimming.
+        /// 
+        /// In general, it's ok to disable cache trimming if your OpenCL code is believed to be fairly static.
+        /// For example if the sources are "user plugins" or in file form.
+        /// However, if you do on-the-fly code generation, it should be set to a reasonable value to avoid excessive disk space consumption.
         /// </summary>
         public int MaxCachedBinaries
         {
@@ -117,25 +133,93 @@ namespace OpenCLNet
             }
             set
             {
-                if (value < 0)
-                    throw new ArgumentOutOfRangeException("MaxCachedBinaries must be >=0");
                 _MaxCachedBinaries = value;
             }
         }
 
+        #endregion
+
+        #region Construction/Destruction
+
         public OpenCLManager()
         {
             DefaultProperties();
-            InitializeComponent();
         }
 
-        public OpenCLManager(IContainer container)
+        // Use C# destructor syntax for finalization code.
+        // This destructor will run only if the Dispose method
+        // does not get called.
+        // It gives your base class the opportunity to finalize.
+        // Do not provide destructors in types derived from this class.
+        ~OpenCLManager()
         {
-            DefaultProperties();
-
-            container.Add(this);
-            InitializeComponent();
+            // Do not re-create Dispose clean-up code here.
+            // Calling Dispose(false) is optimal in terms of
+            // readability and maintainability.
+            Dispose( false );
         }
+
+        #endregion
+
+        #region IDisposable Members
+
+        // Implement IDisposable.
+        // Do not make this method virtual.
+        // A derived class should not be able to override this method.
+        public void Dispose()
+        {
+            Dispose(true);
+            // This object will be cleaned up by the Dispose method.
+            // Therefore, you should call GC.SupressFinalize to
+            // take this object off the finalization queue
+            // and prevent finalization code for this object
+            // from executing a second time.
+            GC.SuppressFinalize(this);
+        }
+
+        // Dispose(bool disposing) executes in two distinct scenarios.
+        // If disposing equals true, the method has been called directly
+        // or indirectly by a user's code. Managed and unmanaged resources
+        // can be disposed.
+        // If disposing equals false, the method has been called by the
+        // runtime from inside the finalizer and you should not reference
+        // other objects. Only unmanaged resources can be disposed.
+        private void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called.
+            if (!this.disposed)
+            {
+                // If disposing equals true, dispose all managed
+                // and unmanaged resources.
+                if (disposing)
+                {
+                    // Dispose managed resources.
+                }
+
+                // Call the appropriate methods to clean up
+                // unmanaged resources here.
+                // If disposing is false,
+                // only the following code is executed.
+
+                if (CQ != null)
+                {
+                    foreach (CommandQueue cq in CQ)
+                        cq.Dispose();
+                    CQ = null;
+                }
+
+                if (Context != null)
+                {
+                    Context.Dispose();
+                    Context = null;
+                }
+
+                // Note disposing has been done.
+                disposed = true;
+            }
+        }
+
+        #endregion
 
         private void DefaultProperties()
         {
@@ -144,8 +228,8 @@ namespace OpenCLNet
             RequireImageSupport = false;
             BuildOptions = "";
             Defines = "";
-            SourcePath = "OpenCL" + Path.DirectorySeparatorChar + "src";
-            BinaryPath = "OpenCL" + Path.DirectorySeparatorChar + "bin";
+            SourcePath = "OpenCL" + FileSystem.GetDirectorySeparator() + "src";
+            BinaryPath = "OpenCL" + FileSystem.GetDirectorySeparator() + "bin";
             AttemptUseBinaries = true;
             AttemptUseSource = true;
         }
@@ -259,8 +343,8 @@ namespace OpenCLNet
         /// <returns></returns>
         public Program CompileFile( string fileName )
         {
-            string sourcePath = SourcePath + Path.DirectorySeparatorChar + fileName;
-            string binaryPath = BinaryPath + Path.DirectorySeparatorChar + fileName;
+            string sourcePath = SourcePath + FileSystem.GetDirectorySeparator() + fileName;
+            string binaryPath = BinaryPath + FileSystem.GetDirectorySeparator() + fileName;
             Program p;
 
             if (!FileSystem.Exists(sourcePath))
@@ -328,9 +412,10 @@ namespace OpenCLNet
                     if( mf==null )
                         mf = bmi.CreateMetaFile(source, fileName, context.Platform.Name, device.Name, device.DriverVersion, Defines, BuildOptions);
 
-                    binaryFileName = BinaryPath + Path.DirectorySeparatorChar + mf.BinaryName;
+                    binaryFileName = BinaryPath + FileSystem.GetDirectorySeparator() + mf.BinaryName;
                     FileSystem.WriteAllBytes(binaryFileName, binaries[i]);
                 }
+                bmi.TrimBinaryCache(FileSystem, MaxCachedBinaries);
                 bmi.Save();
             }
         }
@@ -362,6 +447,7 @@ namespace OpenCLNet
                     binaryFilePath = BinaryPath + FileSystem.GetDirectorySeparator() + mf.BinaryName;
                     if (AttemptUseSource)
                     {
+                        // This exception will be caught inside the manager and cause recompilation
                         if (FileSystem.GetLastWriteTime(binaryFilePath) < sourceDateTime)
                             throw new Exception("Binary older than source");
                     }
@@ -386,45 +472,78 @@ namespace OpenCLNet
             return binaries;
         }
 
+        private void TestAndCreateDirectory(string path)
+        {
+            if (!FileSystem.DirectoryExists(path))
+                FileSystem.CreateDirectory(path);
+        }
+
+        private void TestAndCreateFile(string path)
+        {
+            try
+            {
+                if (!FileSystem.Exists(path))
+                {
+                    FileStream fs = FileSystem.Open(path, FileMode.Create, FileAccess.ReadWrite);
+                    fs.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                if (!FileSystem.Exists(path))
+                    throw e;
+            }
+        }
+
+        private string CreateRandomDirectory(string path)
+        {
+            int tries = 0;
+
+            while (true)
+            {
+                string randomFileName = path + FileSystem.GetDirectorySeparator() + FileSystem.GetRandomFileName();
+                try
+                {
+                    if (!FileSystem.DirectoryExists(randomFileName))
+                        FileSystem.CreateDirectory(randomFileName);
+                    return randomFileName;
+                }
+                catch (IOException e)
+                {
+                    if (tries++ > 50)
+                    {
+                        throw e;
+                    }
+                    if (!FileSystem.DirectoryExists(randomFileName))
+                        throw e;
+                }
+            }
+        }
+
         private string CreateRandomFile(string path)
         {
             int tries = 0;
 
             while (true)
             {
-                string randomFileName = path + FileSystem.GetDirectorySeparator() + Path.GetRandomFileName();
+                string randomFileName = path + FileSystem.GetDirectorySeparator() + FileSystem.GetRandomFileName();
                 try
                 {
-                    FileStream fs = FileSystem.Open(randomFileName, FileMode.CreateNew, FileAccess.ReadWrite);
-                    fs.Close();
-                    return randomFileName;
+                    if (!FileSystem.Exists(randomFileName))
+                    {
+                        FileStream fs = FileSystem.Open(randomFileName, FileMode.CreateNew, FileAccess.ReadWrite);
+                        fs.Close();
+                        return randomFileName;
+                    }
                 }
                 catch (IOException e)
                 {
                     if (tries++ > 50)
                         throw e;
+                    if (!FileSystem.Exists(randomFileName))
+                        throw e;
                 }
             }
-        }
-
-        private void TestAndCreateDirectory(string path)
-        {
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-        }
-
-        private void TestAndCreateFile(string path)
-        {
-            if (!File.Exists(path))
-            {
-                FileStream fs = File.Create(path);
-                fs.Close();
-            }
-        }
-
-        public string GetKeyFromSourceName(string sourceName)
-        {
-            return "SourceName(" + sourceName + ") Defines(" + Defines + ") BuildOptions(" + BuildOptions + ")";
         }
     }
 
@@ -476,30 +595,24 @@ namespace OpenCLNet
             return File.Exists(path);
         }
 
+        public virtual bool DirectoryExists(string path)
+        {
+            return Directory.Exists(path);
+        }
+
         public virtual void CreateDirectory(string path)
         {
             Directory.CreateDirectory(path);
         }
 
-        private string CreateRandomDirectory(string path)
+        public virtual void Delete(string path)
         {
-            int tries = 0;
+            File.Delete(path);
+        }
 
-            while (true)
-            {
-                string randomFileName = path + Path.DirectorySeparatorChar + Path.GetRandomFileName();
-                try
-                {
-                    if (!Exists(randomFileName))
-                        CreateDirectory(randomFileName);
-                    return randomFileName;
-                }
-                catch (IOException e)
-                {
-                    if (tries++ > 50)
-                        throw e;
-                }
-            }
+        public virtual string GetRandomFileName()
+        {
+            return Path.GetRandomFileName();
         }
 
         /// <summary>
@@ -605,42 +718,6 @@ namespace OpenCLNet
 
         // Track whether Dispose has been called.
         private bool disposed = false;
-
-        //#region Xml Serializer code
-
-        //[XmlArray("Directories")]
-        //[XmlArrayItem("Directory", Type = typeof(MetaDir2))]
-        //public MetaDir2[] _DirKeyToMetaDirectoryMap
-        //{
-        //    get
-        //    {
-        //        return DirKeyToMetaDirectoryMap.Values.ToArray<MetaDir2>();
-        //    }
-        //    set
-        //    {
-        //        DirKeyToMetaDirectoryMap.Clear();
-        //        for (int i = 0; i < value.Length; i++)
-        //            DirKeyToMetaDirectoryMap.Add(value[i].GetKey(), value[i]);
-        //    }
-        //}
-
-        //[XmlArray("Files")]
-        //[XmlArrayItem("File", Type = typeof(MetaFile2))]
-        //public MetaFile2[] _SourceKeyMetaFileMap
-        //{
-        //    get
-        //    {
-        //        return SourceKeyMetaFileMap.Values.ToArray<MetaFile2>();
-        //    }
-        //    set
-        //    {
-        //        SourceKeyMetaFileMap.Clear();
-        //        for (int i = 0; i < value.Length; i++)
-        //            SourceKeyMetaFileMap.Add(value[i].GetKey(), value[i]);
-        //    }
-        //}
-
-        //#endregion
 
         #region Construction / Destruction
 
@@ -766,9 +843,17 @@ namespace OpenCLNet
         /// <summary>
         /// Delete excess items in MetaFiles
         /// </summary>
-        public void TrimBinaryCache()
+        public void TrimBinaryCache( OCLManFileSystem fileSystem, int size )
         {
-            throw new NotImplementedException("TrimBinaryCache() not implemented");
+            if (size < 0)
+                return;
+
+            while (MetaFiles.Count > size && MetaFiles.Count>0)
+            {
+                MetaFile mf = MetaFiles[0];
+                fileSystem.Delete(Root + Path.DirectorySeparatorChar + mf.BinaryName);
+                MetaFiles.RemoveAt(0);
+            }
         }
 
         public void Save()

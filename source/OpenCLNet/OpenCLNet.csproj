@@ -97,10 +97,6 @@
     <Compile Include="OpenCL.cs" />
     <Compile Include="OpenCLAPI.cs" />
     <Compile Include="OpenCLManager.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="OpenCLManager.Designer.cs">
-      <DependentUpon>OpenCLManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Platform.cs" />
     <Compile Include="Platforms.cs" />
