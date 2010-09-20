@@ -338,7 +338,6 @@ namespace UnitTests
             internal long outLong;
             internal int outInt;
             internal float outSingle;
-            internal IntPtr outIntPtr;
         }
 
         private unsafe void TestVecKernel(Context c, CommandQueue cq, Kernel k)
@@ -368,8 +367,7 @@ namespace UnitTests
             argIOKernel.SetArg(0, 1);
             argIOKernel.SetArg(1, 65L);
             argIOKernel.SetArg(2, 38.4f);
-            argIOKernel.SetSizeTArg(3, (IntPtr)0x01234567);
-            argIOKernel.SetArg(4, outArgBuffer);
+            argIOKernel.SetArg(3, outArgBuffer);
 
             Event ev;
             cq.EnqueueTask(argIOKernel,0,null,out ev);
@@ -392,8 +390,6 @@ namespace UnitTests
                 if (args.outLong != 65)
                     Error(cq.Device.Name + ": argIOKernel failed to return correct arguments");
                 if (args.outSingle != 38.4f)
-                    Error(cq.Device.Name + ": argIOKernel failed to return correct arguments");
-                if (args.outIntPtr != new IntPtr(0x01234567))
                     Error(cq.Device.Name + ": argIOKernel failed to return correct arguments");
             }            
         }
@@ -440,7 +436,7 @@ namespace UnitTests
                 buffer.Write(cq, 0L, testData, 0, size);
                 Kernel k = kernelDictionary["TestReadWriteMemory"];
                 k.SetArg(0, buffer);
-                k.SetSizeTArg(1, (IntPtr)size);
+                k.SetArg(1, (long)size);
                 Event bleh;
                 cq.EnqueueTask(k,0,null,out bleh);
                 cq.EnqueueBarrier();
@@ -477,7 +473,7 @@ namespace UnitTests
 
                 Kernel k = kernelDictionary["TestReadMemory"];
                 k.SetArg(0, buffer);
-                k.SetSizeTArg(1, (IntPtr)size);
+                k.SetArg(1, (long)size);
                 cq.EnqueueTask(k);
                 cq.Finish();
             }
@@ -499,7 +495,7 @@ namespace UnitTests
 
                 Kernel k = kernelDictionary["TestWriteMemory"];
                 k.SetArg(0, buffer);
-                k.SetSizeTArg(1, (IntPtr)size);
+                k.SetArg(1, (long)size);
                 cq.EnqueueTask(k);
                 cq.Finish();
                 buffer.Read(cq, 0L, testData, 0, size);

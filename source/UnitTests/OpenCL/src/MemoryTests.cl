@@ -27,7 +27,7 @@
 
 constant char TestMemory[] = "TestMemory";
 
-kernel void MemoryCopy( global float* pSrc, global float* pDst, size_t length )
+kernel void MemoryCopy( global float* pSrc, global float* pDst, long length )
 {
 	global float* pEnd;
 	
@@ -51,22 +51,19 @@ struct IOKernelArgs
     long outLong;
     int outInt;
     float outSingle;
-    size_t outIntPtr;
 };
 
 kernel void ArgIO( int i,
   long l,
   float s,
-  size_t p,
   global struct IOKernelArgs* pA)
 {
 	pA->outInt = i;
 	pA->outLong = l;
 	pA->outSingle = s;
-	pA->outIntPtr = p;
 }
 
-kernel void TestReadMemory( global read_only char* pData, size_t length )
+kernel void TestReadMemory( global read_only char* pData, long length )
 {
 	int sum;
 	
@@ -74,13 +71,13 @@ kernel void TestReadMemory( global read_only char* pData, size_t length )
 		sum += pData[i];
 }
 
-kernel void TestWriteMemory( global write_only char* pData, size_t length )
+kernel void TestWriteMemory( global write_only char* pData, long length )
 {
 	for( size_t i=0; i<length; i++ )
 		pData[i] = 1;
 }
 
-kernel void TestReadWriteMemory( global char* pData, size_t length )
+kernel void TestReadWriteMemory( global char* pData, long length )
 {
 	for( size_t i=0; i<length/2; i++ )
 	{
