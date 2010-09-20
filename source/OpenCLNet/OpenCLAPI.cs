@@ -158,17 +158,23 @@ namespace OpenCLNet
                 // Get function pointers for D3D10 extension
                 IntPtr func;
                 func = OpenCLAPI.clGetExtensionFunctionAddress("clGetDeviceIDsFromD3D10KHR");
-                clGetDeviceIDsFromD3D10KHR = (clGetDeviceIDsFromD3D10KHRDelegate)Marshal.GetDelegateForFunctionPointer(func,typeof(clGetDeviceIDsFromD3D10KHRDelegate));
+                if (func != IntPtr.Zero)
+                    clGetDeviceIDsFromD3D10KHR = (clGetDeviceIDsFromD3D10KHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clGetDeviceIDsFromD3D10KHRDelegate));
                 func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10BufferKHR");
-                clCreateFromD3D10BufferKHR = (clCreateFromD3D10BufferKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10BufferKHRDelegate));
+                if (func != IntPtr.Zero)
+                    clCreateFromD3D10BufferKHR = (clCreateFromD3D10BufferKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10BufferKHRDelegate));
                 func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10Texture2DKHR");
-                clCreateFromD3D10Texture2DKHR = (clCreateFromD3D10Texture2DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture2DKHRDelegate));
+                if (func != IntPtr.Zero)
+                    clCreateFromD3D10Texture2DKHR = (clCreateFromD3D10Texture2DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture2DKHRDelegate));
                 func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10Texture3DKHR");
-                clCreateFromD3D10Texture3DKHR = (clCreateFromD3D10Texture3DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture3DKHRDelegate));
+                if (func != IntPtr.Zero)
+                    clCreateFromD3D10Texture3DKHR = (clCreateFromD3D10Texture3DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture3DKHRDelegate));
                 func = OpenCLAPI.clGetExtensionFunctionAddress("clEnqueueAcquireD3D10ObjectsKHR");
-                clEnqueueAcquireD3D10ObjectsKHR = (clEnqueueAcquireD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueAcquireD3D10ObjectsKHRDelegate));
+                if (func != IntPtr.Zero)
+                    clEnqueueAcquireD3D10ObjectsKHR = (clEnqueueAcquireD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueAcquireD3D10ObjectsKHRDelegate));
                 func = OpenCLAPI.clGetExtensionFunctionAddress("clEnqueueReleaseD3D10ObjectsKHR");
-                clEnqueueReleaseD3D10ObjectsKHR = (clEnqueueReleaseD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueReleaseD3D10ObjectsKHRDelegate));
+                if (func != IntPtr.Zero)
+                    clEnqueueReleaseD3D10ObjectsKHR = (clEnqueueReleaseD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueReleaseD3D10ObjectsKHRDelegate));
             }
 #endif
 
@@ -177,11 +183,14 @@ namespace OpenCLNet
                 // Get function pointers for the device fission extension
                 IntPtr func;
                 func = OpenCLAPI.clGetExtensionFunctionAddress("clReleaseDeviceEXT");
-                clReleaseDeviceEXT = (clReleaseDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clReleaseDeviceEXTDelegate));
+                if (func != IntPtr.Zero)
+                    clReleaseDeviceEXT = (clReleaseDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clReleaseDeviceEXTDelegate));
                 func = OpenCLAPI.clGetExtensionFunctionAddress("clRetainDeviceEXT");
-                clRetainDeviceEXT = (clRetainDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clRetainDeviceEXTDelegate));
+                if (func != IntPtr.Zero)
+                    clRetainDeviceEXT = (clRetainDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clRetainDeviceEXTDelegate));
                 func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateSubDevicesEXT");
-                clCreateSubDevicesEXT = (clCreateSubDevicesEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateSubDevicesEXTDelegate));
+                if (func != IntPtr.Zero)
+                    clCreateSubDevicesEXT = (clCreateSubDevicesEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateSubDevicesEXTDelegate));
             }
 #endif
         }
