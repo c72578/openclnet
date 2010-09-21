@@ -1173,6 +1173,14 @@ namespace OpenCLNet
         public sbyte S1;
         public sbyte S2;
         public sbyte S3;
+
+        public Char4(sbyte s0, sbyte s1, sbyte s2, sbyte s3)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1182,6 +1190,14 @@ namespace OpenCLNet
         public byte S1;
         public byte S2;
         public byte S3;
+
+        public UChar4(byte s0, byte s1, byte s2, byte s3)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1191,6 +1207,14 @@ namespace OpenCLNet
         public short S1;
         public short S2;
         public short S3;
+
+        public Short4(short s0, short s1, short s2, short s3)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1200,6 +1224,14 @@ namespace OpenCLNet
         public ushort S1;
         public ushort S2;
         public ushort S3;
+
+        public UShort4(ushort s0, ushort s1, ushort s2, ushort s3)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1209,6 +1241,14 @@ namespace OpenCLNet
         public int S1;
         public int S2;
         public int S3;
+
+        public Int4(int s0, int s1, int s2, int s3)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1218,6 +1258,14 @@ namespace OpenCLNet
         public uint S1;
         public uint S2;
         public uint S3;
+
+        public UInt4(uint s0, uint s1, uint s2, uint s3)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1227,6 +1275,14 @@ namespace OpenCLNet
         public long S1;
         public long S2;
         public long S3;
+
+        public Long4(long s0, long s1, long s2, long s3)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1236,6 +1292,14 @@ namespace OpenCLNet
         public ulong S1;
         public ulong S2;
         public ulong S3;
+
+        public ULong4(ulong s0, ulong s1, ulong s2, ulong s3)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1245,6 +1309,14 @@ namespace OpenCLNet
         public float S1;
         public float S2;
         public float S3;
+
+        public Float4(float s0, float s1, float s2, float s3)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1254,6 +1326,14 @@ namespace OpenCLNet
         public double S1;
         public double S2;
         public double S3;
+
+        public Double4(double s0, double s1, double s2, double s3)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+        }
     }
 
     #endregion
