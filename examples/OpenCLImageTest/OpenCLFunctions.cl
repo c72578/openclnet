@@ -21,6 +21,6 @@ kernel void FilterImage( float inputLeft,
 	float inputY = inputTop+inputHeight*nY;
 	float outputX = outputLeft+width*outputWidth*nX;
 	float outputY = outputTop+height*outputHeight*nY;
-	float4 rgba = read_imagef( input, sampler, (float2)(inputX,inputY) );
-	write_imagef(output,convert_int2((float2)(outputX,outputY)),rgba);
+	uint4 rgba = read_imageui( input, sampler, (float2)(inputX,inputY) );
+	write_imageui(output,convert_int2((float2)(outputX,outputY)),rgba);
 }
