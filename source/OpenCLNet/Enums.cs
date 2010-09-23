@@ -1351,6 +1351,18 @@ namespace OpenCLNet
         public sbyte S5;
         public sbyte S6;
         public sbyte S7;
+
+        public Char8(sbyte s0, sbyte s1, sbyte s2, sbyte s3, sbyte s4, sbyte s5, sbyte s6, sbyte s7)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1364,6 +1376,18 @@ namespace OpenCLNet
         public byte S5;
         public byte S6;
         public byte S7;
+
+        public UChar8(byte s0, byte s1, byte s2, byte s3, byte s4, byte s5, byte s6, byte s7)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1377,6 +1401,18 @@ namespace OpenCLNet
         public short S5;
         public short S6;
         public short S7;
+
+        public Short8(short s0, short s1, short s2, short s3, short s4, short s5, short s6, short s7)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1390,6 +1426,18 @@ namespace OpenCLNet
         public ushort S5;
         public ushort S6;
         public ushort S7;
+
+        public UShort8(ushort s0, ushort s1, ushort s2, ushort s3, ushort s4, ushort s5, ushort s6, ushort s7)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1403,6 +1451,18 @@ namespace OpenCLNet
         public int S5;
         public int S6;
         public int S7;
+
+        public Int8(int s0, int s1, int s2, int s3, int s4, int s5, int s6, int s7)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1416,6 +1476,18 @@ namespace OpenCLNet
         public uint S5;
         public uint S6;
         public uint S7;
+
+        public UInt8(uint s0, uint s1, uint s2, uint s3, uint s4, uint s5, uint s6, uint s7)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1429,6 +1501,18 @@ namespace OpenCLNet
         public long S5;
         public long S6;
         public long S7;
+
+        public Long8(long s0, long s1, long s2, long s3, long s4, long s5, long s6, long s7)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1442,6 +1526,18 @@ namespace OpenCLNet
         public ulong S5;
         public ulong S6;
         public ulong S7;
+
+        public ULong8(ulong s0, ulong s1, ulong s2, ulong s3, ulong s4, ulong s5, ulong s6, ulong s7)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1455,6 +1551,18 @@ namespace OpenCLNet
         public float S5;
         public float S6;
         public float S7;
+
+        public Float8(float s0, float s1, float s2, float s3, float s4, float s5, float s6, float s7)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1468,6 +1576,18 @@ namespace OpenCLNet
         public double S5;
         public double S6;
         public double S7;
+
+        public Double8(double s0, double s1, double s2, double s3, double s4, double s5, double s6, double s7)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+        }
     }
 
     #endregion
@@ -1493,6 +1613,27 @@ namespace OpenCLNet
         public sbyte S13;
         public sbyte S14;
         public sbyte S15;
+
+        public Char16(sbyte s0, sbyte s1, sbyte s2, sbyte s3, sbyte s4, sbyte s5, sbyte s6, sbyte s7,
+            sbyte s8, sbyte s9, sbyte s10, sbyte s11, sbyte s12, sbyte s13, sbyte s14, sbyte s15)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+            S8 = s8;
+            S9 = s9;
+            S10 = s10;
+            S11 = s11;
+            S12 = s12;
+            S13 = s13;
+            S14 = s14;
+            S15 = s15;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1514,6 +1655,27 @@ namespace OpenCLNet
         public byte S13;
         public byte S14;
         public byte S15;
+
+        public UChar16(byte s0, byte s1, byte s2, byte s3, byte s4, byte s5, byte s6, byte s7,
+            byte s8, byte s9, byte s10, byte s11, byte s12, byte s13, byte s14, byte s15)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+            S8 = s8;
+            S9 = s9;
+            S10 = s10;
+            S11 = s11;
+            S12 = s12;
+            S13 = s13;
+            S14 = s14;
+            S15 = s15;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1535,6 +1697,27 @@ namespace OpenCLNet
         public short S13;
         public short S14;
         public short S15;
+
+        public Short16(short s0, short s1, short s2, short s3, short s4, short s5, short s6, short s7,
+            short s8, short s9, short s10, short s11, short s12, short s13, short s14, short s15)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+            S8 = s8;
+            S9 = s9;
+            S10 = s10;
+            S11 = s11;
+            S12 = s12;
+            S13 = s13;
+            S14 = s14;
+            S15 = s15;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1556,6 +1739,27 @@ namespace OpenCLNet
         public ushort S13;
         public ushort S14;
         public ushort S15;
+
+        public UShort16(ushort s0, ushort s1, ushort s2, ushort s3, ushort s4, ushort s5, ushort s6, ushort s7,
+            ushort s8, ushort s9, ushort s10, ushort s11, ushort s12, ushort s13, ushort s14, ushort s15)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+            S8 = s8;
+            S9 = s9;
+            S10 = s10;
+            S11 = s11;
+            S12 = s12;
+            S13 = s13;
+            S14 = s14;
+            S15 = s15;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1577,6 +1781,27 @@ namespace OpenCLNet
         public int S13;
         public int S14;
         public int S15;
+
+        public Int16(int s0, int s1, int s2, int s3, int s4, int s5, int s6, int s7,
+            int s8, int s9, int s10, int s11, int s12, int s13, int s14, int s15)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+            S8 = s8;
+            S9 = s9;
+            S10 = s10;
+            S11 = s11;
+            S12 = s12;
+            S13 = s13;
+            S14 = s14;
+            S15 = s15;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1598,6 +1823,27 @@ namespace OpenCLNet
         public uint S13;
         public uint S14;
         public uint S15;
+
+        public UInt16(uint s0, uint s1, uint s2, uint s3, uint s4, uint s5, uint s6, uint s7,
+            uint s8, uint s9, uint s10, uint s11, uint s12, uint s13, uint s14, uint s15)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+            S8 = s8;
+            S9 = s9;
+            S10 = s10;
+            S11 = s11;
+            S12 = s12;
+            S13 = s13;
+            S14 = s14;
+            S15 = s15;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1619,6 +1865,27 @@ namespace OpenCLNet
         public long S13;
         public long S14;
         public long S15;
+
+        public Long16(long s0, long s1, long s2, long s3, long s4, long s5, long s6, long s7,
+            long s8, long s9, long s10, long s11, long s12, long s13, long s14, long s15)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+            S8 = s8;
+            S9 = s9;
+            S10 = s10;
+            S11 = s11;
+            S12 = s12;
+            S13 = s13;
+            S14 = s14;
+            S15 = s15;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1640,6 +1907,27 @@ namespace OpenCLNet
         public ulong S13;
         public ulong S14;
         public ulong S15;
+
+        public ULong16(ulong s0, ulong s1, ulong s2, ulong s3, ulong s4, ulong s5, ulong s6, ulong s7,
+            ulong s8, ulong s9, ulong s10, ulong s11, ulong s12, ulong s13, ulong s14, ulong s15)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+            S8 = s8;
+            S9 = s9;
+            S10 = s10;
+            S11 = s11;
+            S12 = s12;
+            S13 = s13;
+            S14 = s14;
+            S15 = s15;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1661,6 +1949,27 @@ namespace OpenCLNet
         public float S13;
         public float S14;
         public float S15;
+
+        public Float16(float s0, float s1, float s2, float s3, float s4, float s5, float s6, float s7,
+            float s8, float s9, float s10, float s11, float s12, float s13, float s14, float s15)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+            S8 = s8;
+            S9 = s9;
+            S10 = s10;
+            S11 = s11;
+            S12 = s12;
+            S13 = s13;
+            S14 = s14;
+            S15 = s15;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -1682,6 +1991,27 @@ namespace OpenCLNet
         public double S13;
         public double S14;
         public double S15;
+
+        public Double16(double s0, double s1, double s2, double s3, double s4, double s5, double s6, double s7,
+            double s8, double s9, double s10, double s11, double s12, double s13, double s14, double s15)
+        {
+            S0 = s0;
+            S1 = s1;
+            S2 = s2;
+            S3 = s3;
+            S4 = s4;
+            S5 = s5;
+            S6 = s6;
+            S7 = s7;
+            S8 = s8;
+            S9 = s9;
+            S10 = s10;
+            S11 = s11;
+            S12 = s12;
+            S13 = s13;
+            S14 = s14;
+            S15 = s15;
+        }
     }
 
     #endregion
