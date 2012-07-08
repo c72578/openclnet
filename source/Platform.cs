@@ -173,17 +173,16 @@ namespace OpenCLNet
             IntPtr[] deviceIDs;
 
             result = (ErrorCode)OpenCL.GetDeviceIDs( PlatformID, deviceType, 0, null, out numberOfDevices );
-            if (result == ErrorCode.DEVICE_NOT_FOUND)
+            if (result == ErrorCode.DEVICE_NOT_FOUND || (result == ErrorCode.SUCCESS && numberOfDevices==0))
                 return new IntPtr[0];
 
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "GetDeviceIDs failed: "+((ErrorCode)result).ToString(), result);
 
             deviceIDs = new IntPtr[numberOfDevices];
-            result = (ErrorCode)OpenCL.GetDeviceIDs( PlatformID, deviceType, numberOfDevices, deviceIDs, out numberOfDevices );
+            result = (ErrorCode)OpenCL.GetDeviceIDs(PlatformID, deviceType, numberOfDevices, deviceIDs, out numberOfDevices);
             if (result != ErrorCode.SUCCESS)
-                throw new OpenCLException( "GetDeviceIDs failed: "+((ErrorCode)result).ToString(), result);
-
+                throw new OpenCLException("GetDeviceIDs failed: " + ((ErrorCode)result).ToString(), result);
             return deviceIDs;
         }
 
