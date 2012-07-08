@@ -90,18 +90,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\UnitTests\Form1.cs">
+    <Compile Include="..\..\vs2008\UnitTests\Form1.cs">
       <Link>Form1.cs</Link>
     </Compile>
-    <Compile Include="..\..\UnitTests\Form1.designer.cs">
+    <Compile Include="..\..\vs2008\UnitTests\Form1.designer.cs">
       <Link>Form1.designer.cs</Link>
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\..\UnitTests\Program.cs">
+    <Compile Include="..\..\vs2008\UnitTests\Program.cs">
       <Link>Program.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="..\..\UnitTests\Form1.resx">
+    <EmbeddedResource Include="..\..\vs2008\UnitTests\Form1.resx">
       <Link>Form1.resx</Link>
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -114,14 +114,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="..\..\UnitTests\OpenCL\src\Mandelbrot.cl">
-      <Link>OpenCL\src\Mandelbrot.cl</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\UnitTests\OpenCL\src\MemoryTests.cl">
-      <Link>OpenCL\src\MemoryTests.cl</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -140,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="OpenCL\bin\" />
+    <Folder Include="OpenCL\src\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

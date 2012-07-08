@@ -123,7 +123,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\source\OpenCLNet\OpenCLNet.csproj">
+    <ProjectReference Include="..\..\projects\vs2008\OpenCLNet\OpenCLNet.csproj">
       <Project>{758285C6-1ACA-458A-9906-EE6701D5AF87}</Project>
       <Name>OpenCLNet</Name>
     </ProjectReference>
