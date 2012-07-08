@@ -74,6 +74,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -81,61 +82,61 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\OpenCLNet\AlignedArray.cs">
+    <Compile Include="..\..\..\source\AlignedArray.cs">
       <Link>AlignedArray.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\CommandQueue.cs">
+    <Compile Include="..\..\..\source\CLImage.cs">
+      <Link>CLImage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\CLProgram.cs">
+      <Link>CLProgram.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\CommandQueue.cs">
       <Link>CommandQueue.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Context.cs">
+    <Compile Include="..\..\..\source\Context.cs">
       <Link>Context.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Device.cs">
+    <Compile Include="..\..\..\source\Device.cs">
       <Link>Device.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Enums.cs">
+    <Compile Include="..\..\..\source\Enums.cs">
       <Link>Enums.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Event.cs">
+    <Compile Include="..\..\..\source\Event.cs">
       <Link>Event.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Exceptions.cs">
+    <Compile Include="..\..\..\source\Exceptions.cs">
       <Link>Exceptions.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Image.cs">
-      <Link>Image.cs</Link>
-    </Compile>
-    <Compile Include="..\..\OpenCLNet\InteropTools.cs">
+    <Compile Include="..\..\..\source\InteropTools.cs">
       <Link>InteropTools.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Kernel.cs">
+    <Compile Include="..\..\..\source\Kernel.cs">
       <Link>Kernel.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Mem.cs">
+    <Compile Include="..\..\..\source\Mem.cs">
       <Link>Mem.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\OpenCL.cs">
+    <Compile Include="..\..\..\source\OpenCL.cs">
       <Link>OpenCL.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\OpenCLAPI.cs">
+    <Compile Include="..\..\..\source\OpenCLAPI.cs">
       <Link>OpenCLAPI.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\OpenCLManager.cs">
+    <Compile Include="..\..\..\source\OpenCLManager.cs">
       <Link>OpenCLManager.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Platform.cs">
+    <Compile Include="..\..\..\source\Platform.cs">
       <Link>Platform.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Platforms.cs">
+    <Compile Include="..\..\..\source\Platforms.cs">
       <Link>Platforms.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\Program.cs">
-      <Link>Program.cs</Link>
-    </Compile>
-    <Compile Include="..\..\OpenCLNet\Sampler.cs">
+    <Compile Include="..\..\..\source\Sampler.cs">
       <Link>Sampler.cs</Link>
     </Compile>
-    <Compile Include="..\..\OpenCLNet\SimpleOCLHelper.cs">
+    <Compile Include="..\..\..\source\SimpleOCLHelper.cs">
       <Link>SimpleOCLHelper.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

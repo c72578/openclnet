@@ -73,6 +73,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -83,27 +84,64 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlignedArray.cs" />
-    <Compile Include="CommandQueue.cs" />
-    <Compile Include="Context.cs" />
-    <Compile Include="Device.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Event.cs" />
-    <Compile Include="Exceptions.cs" />
-    <Compile Include="Image.cs" />
-    <Compile Include="InteropTools.cs" />
-    <Compile Include="Kernel.cs" />
-    <Compile Include="Mem.cs" />
-    <Compile Include="OpenCL.cs" />
-    <Compile Include="OpenCLAPI.cs" />
-    <Compile Include="OpenCLManager.cs">
+    <Compile Include="..\..\..\source\AlignedArray.cs">
+      <Link>AlignedArray.cs</Link>
     </Compile>
-    <Compile Include="Platform.cs" />
-    <Compile Include="Platforms.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="..\..\..\source\CLImage.cs">
+      <Link>CLImage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\CLProgram.cs">
+      <Link>CLProgram.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\CommandQueue.cs">
+      <Link>CommandQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Context.cs">
+      <Link>Context.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Device.cs">
+      <Link>Device.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Enums.cs">
+      <Link>Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Event.cs">
+      <Link>Event.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Exceptions.cs">
+      <Link>Exceptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\InteropTools.cs">
+      <Link>InteropTools.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Kernel.cs">
+      <Link>Kernel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Mem.cs">
+      <Link>Mem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\OpenCL.cs">
+      <Link>OpenCL.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\OpenCLAPI.cs">
+      <Link>OpenCLAPI.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\OpenCLManager.cs">
+      <Link>OpenCLManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Platform.cs">
+      <Link>Platform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Platforms.cs">
+      <Link>Platforms.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Sampler.cs">
+      <Link>Sampler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\SimpleOCLHelper.cs">
+      <Link>SimpleOCLHelper.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sampler.cs" />
-    <Compile Include="SimpleOCLHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
