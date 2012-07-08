@@ -70,7 +70,7 @@ namespace OpenCLNet
     {
         public List<string> BuildLogs = new List<string>();
 
-        public OpenCLBuildException(Program program, ErrorCode result)
+        public OpenCLBuildException(CLProgram program, ErrorCode result)
             : base("Build failed with error code " + result, result)
         {
             foreach (Device d in program.Devices)

@@ -29,6 +29,8 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Threading;
 
 namespace OpenCLNet
@@ -1033,6 +1035,36 @@ namespace OpenCLNet
         #endregion
 
         #region EnqueueCopyImage
+
+        public void EnqueueCopyImage(Mem src, Mem dst, int srcX, int srcY, int dstX, int dstY, int width, int height)
+        {
+            EnqueueCopyImage(src, dst, new int[] { srcX, srcY, 0 }, new int[] { dstX, dstY, 0 }, new int[] { width, height, 1 });
+        }
+
+        public void EnqueueCopyImage(Mem src, Mem dst, int srcX, int srcY, int dstX, int dstY, int width, int height, int num_events_in_wait_list, Event[] event_wait_list)
+        {
+            EnqueueCopyImage(src, dst, new int[] { srcX, srcY, 0 }, new int[] { dstX, dstY, 0 }, new int[] { width, height, 1 }, num_events_in_wait_list, event_wait_list);
+        }
+
+        public void EnqueueCopyImage(Mem src, Mem dst, int srcX, int srcY, int dstX, int dstY, int width, int height, int num_events_in_wait_list, Event[] event_wait_list, out Event _event)
+        {
+            EnqueueCopyImage(src, dst, new int[] { srcX, srcY, 0 }, new int[] { dstX, dstY, 0 }, new int[] { width, height, 1 }, num_events_in_wait_list, event_wait_list, out _event);
+        }
+
+        public void EnqueueCopyImage(Mem src, Mem dst, int srcX, int srcY, int srcZ, int dstX, int dstY, int dstZ, int width, int height, int depth)
+        {
+            EnqueueCopyImage(src, dst, new int[] { srcX, srcY, srcZ }, new int[] { dstX, dstY, dstZ }, new int[] { width, height, depth });
+        }
+
+        public void EnqueueCopyImage(Mem src, Mem dst, int srcX, int srcY, int srcZ, int dstX, int dstY, int dstZ, int width, int height, int depth, int num_events_in_wait_list, Event[] event_wait_list)
+        {
+            EnqueueCopyImage(src, dst, new int[] { srcX, srcY, srcZ }, new int[] { dstX, dstY, dstZ }, new int[] { width, height, depth }, num_events_in_wait_list, event_wait_list);
+        }
+
+        public void EnqueueCopyImage(Mem src, Mem dst, int srcX, int srcY, int srcZ, int dstX, int dstY, int dstZ, int width, int height, int depth, int num_events_in_wait_list, Event[] event_wait_list, out Event _event)
+        {
+            EnqueueCopyImage(src, dst, new int[] { srcX, srcY, srcZ }, new int[] { dstX, dstY, dstZ }, new int[] { width, height, depth }, num_events_in_wait_list, event_wait_list, out _event);
+        }
 
         public void EnqueueCopyImage(Mem src_image, Mem dst_image, IntPtr[] src_origin, IntPtr[] dst_origin, IntPtr[] region, int num_events_in_wait_list, Event[] event_wait_list, out Event _event)
         {

@@ -111,7 +111,7 @@ namespace OpenCLNet
     public delegate void ContextNotify(string errInfo, byte[] data, IntPtr cb, IntPtr userData);
     public delegate void ProgramNotify(cl_program program, IntPtr userData);
     unsafe public delegate void NativeKernel(object o, void*[] pBuffers);
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    [UnmanagedFunctionPointer(CallingConvention.StdCall)]
     unsafe public delegate void NativeKernelInternal(void* pArgs);
     public delegate void EventNotify(Event _event, ExecutionStatus eventCommandExecStatus, object userData);
     public delegate void EventNotifyInternal(cl_event _event, cl_int eventCommandExecStatus, IntPtr userData);

@@ -57,10 +57,10 @@ namespace OpenCLNet
         public uint NumArgs { get { return InteropTools.ReadUInt( this, (uint)KernelInfo.NUM_ARGS ); } }
         public uint ReferenceCount { get { return InteropTools.ReadUInt( this, (uint)KernelInfo.REFERENCE_COUNT ); } }
         public Context Context { get; protected set; }
-        public Program Program { get; protected set; }
+        public CLProgram Program { get; protected set; }
         public IntPtr KernelID { get; set; }
 
-        internal Kernel( Context context, Program program, IntPtr kernelID )
+        internal Kernel( Context context, CLProgram program, IntPtr kernelID )
         {
             Context = context;
             Program = program;
@@ -129,6 +129,116 @@ namespace OpenCLNet
             result = (ErrorCode)OpenCL.SetKernelArg( KernelID, (uint)argIndex, argSize, argValue.ToPointer() );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "SetArg failed with error code "+result, result);
+        }
+
+        private void SetArg(int argIndex, object arg)
+        {
+            if (arg is int)
+                SetArg(argIndex, (int)arg);
+            else if (arg is uint)
+                SetArg(argIndex, (uint)arg);
+            else if (arg is float)
+                SetArg(argIndex, (float)arg);
+            else if (arg is double)
+                SetArg(argIndex, (double)arg);
+            else if (arg is Sampler)
+                SetArg(argIndex, (Sampler)arg);
+            else if (arg is CLImage)
+                SetArg(argIndex, (CLImage)arg);
+            else if (arg is Mem)
+                SetArg(argIndex, (Mem)arg);
+            else if (arg is IntPtr)
+                SetArg(argIndex, (IntPtr)arg);
+            else if (arg is short)
+                SetArg(argIndex, (short)arg);
+            else if (arg is ushort)
+                SetArg(argIndex, (ushort)arg);
+            else if (arg is sbyte)
+                SetArg(argIndex, (sbyte)arg);
+            else if (arg is byte)
+                SetArg(argIndex, (byte)arg);
+            else if (arg is Int2)
+                SetArg(argIndex, (Int2)arg);
+            else if (arg is Int3)
+                SetArg(argIndex, (Int3)arg);
+            else if (arg is Int4)
+                SetArg(argIndex, (Int4)arg);
+            else if (arg is Int8)
+                SetArg(argIndex, (Int8)arg);
+            else if (arg is OpenCLNet.Int16)
+                SetArg(argIndex, (OpenCLNet.Int16)arg);
+            else if (arg is Long2)
+                SetArg(argIndex, (Long2)arg);
+            else if (arg is Long3)
+                SetArg(argIndex, (Long3)arg);
+            else if (arg is Long4)
+                SetArg(argIndex, (Long4)arg);
+            else if (arg is Long8)
+                SetArg(argIndex, (Long8)arg);
+            else if (arg is Long16)
+                SetArg(argIndex, (Long16)arg);
+            else if (arg is ULong2)
+                SetArg(argIndex, (ULong2)arg);
+            else if (arg is ULong3)
+                SetArg(argIndex, (ULong3)arg);
+            else if (arg is ULong4)
+                SetArg(argIndex, (ULong4)arg);
+            else if (arg is ULong8)
+                SetArg(argIndex, (ULong8)arg);
+            else if (arg is ULong16)
+                SetArg(argIndex, (ULong16)arg);
+            else if (arg is UInt2)
+                SetArg(argIndex, (UInt2)arg);
+            else if (arg is UInt3)
+                SetArg(argIndex, (UInt3)arg);
+            else if (arg is UInt4)
+                SetArg(argIndex, (UInt4)arg);
+            else if (arg is UInt8)
+                SetArg(argIndex, (UInt8)arg);
+            else if (arg is OpenCLNet.UInt16)
+                SetArg(argIndex, (OpenCLNet.UInt16)arg);
+            else if (arg is Float2)
+                SetArg(argIndex, (Float2)arg);
+            else if (arg is Float3)
+                SetArg(argIndex, (Float3)arg);
+            else if (arg is Float4)
+                SetArg(argIndex, (Float4)arg);
+            else if (arg is Float8)
+                SetArg(argIndex, (Float8)arg);
+            else if (arg is Float16)
+                SetArg(argIndex, (Float16)arg);
+            else if (arg is Double2)
+                SetArg(argIndex, (Double2)arg);
+            else if (arg is Double3)
+                SetArg(argIndex, (Double3)arg);
+            else if (arg is Double4)
+                SetArg(argIndex, (Double4)arg);
+            else if (arg is Double8)
+                SetArg(argIndex, (Double8)arg);
+            else if (arg is Double16)
+                SetArg(argIndex, (Double16)arg);
+            else if (arg is Char2)
+                SetArg(argIndex, (Char2)arg);
+            else if (arg is Char3)
+                SetArg(argIndex, (Char3)arg);
+            else if (arg is Char4)
+                SetArg(argIndex, (Char4)arg);
+            else if (arg is Char8)
+                SetArg(argIndex, (Char8)arg);
+            else if (arg is Char16)
+                SetArg(argIndex, (Char16)arg);
+            else if (arg is UChar2)
+                SetArg(argIndex, (UChar2)arg);
+            else if (arg is UChar3)
+                SetArg(argIndex, (UChar3)arg);
+            else if (arg is UChar4)
+                SetArg(argIndex, (UChar4)arg);
+            else if (arg is UChar8)
+                SetArg(argIndex, (UChar8)arg);
+            else if (arg is UChar16)
+                SetArg(argIndex, (UChar16)arg);
+            else
+                throw new Exception("Unknown argument type");
         }
 
         #region SetArg functions

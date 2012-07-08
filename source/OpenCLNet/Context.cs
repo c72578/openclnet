@@ -286,17 +286,17 @@ namespace OpenCLNet
 
         #region Create Program
 
-        public Program CreateProgramFromFile(string path)
+        public CLProgram CreateProgramFromFile(string path)
         {
             return CreateProgramWithSource(File.ReadAllText(path));
         }
 
-        public Program CreateProgramWithSource( string source )
+        public CLProgram CreateProgramWithSource( string source )
         {
             return CreateProgramWithSource( new string[] { source } );
         }
 
-        public Program CreateProgramWithSource( string[] source )
+        public CLProgram CreateProgramWithSource( string[] source )
         {
             IntPtr programID;
             ErrorCode result;
@@ -304,10 +304,10 @@ namespace OpenCLNet
             programID = (IntPtr)OpenCL.CreateProgramWithSource( ContextID, (uint)source.Length, source, (IntPtr[])null, out result );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateProgramWithSource failed with error code "+result, result);
-            return new Program( this, programID );
+            return new CLProgram( this, programID );
         }
 
-        public Program CreateProgramWithBinary( Device[] devices, byte[][] binaries, ErrorCode[] binaryStatus )
+        public CLProgram CreateProgramWithBinary( Device[] devices, byte[][] binaries, ErrorCode[] binaryStatus )
         {
             IntPtr programID; 
             ErrorCode result;
@@ -328,7 +328,7 @@ namespace OpenCLNet
                 binaryStatus[i] = (ErrorCode)binStatus[i];
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateProgramWithBinary failed with error code " + result, result);
-            return new Program(this, programID);
+            return new CLProgram(this, programID);
         }
 
         #endregion
@@ -350,25 +350,25 @@ namespace OpenCLNet
 
         #region Image2D
 
-        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight)
+        public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, IntPtr.Zero, IntPtr.Zero);
         }
-        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, long imageWidth, long imageHeight)
+        public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, long imageWidth, long imageHeight)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, IntPtr.Zero, IntPtr.Zero);
         }
 
-        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch, IntPtr pHost)
+        public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch, IntPtr pHost)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, pHost);
         }
-        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, long imageWidth, long imageHeight, long imageRowPitch, IntPtr pHost)
+        public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, long imageWidth, long imageHeight, long imageRowPitch, IntPtr pHost)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, pHost);
         }
 
-        public Image CreateImage2D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageRowPitch, IntPtr pHost)
+        public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageRowPitch, IntPtr pHost)
         {
             IntPtr memID;
             ErrorCode result;
@@ -376,24 +376,24 @@ namespace OpenCLNet
             memID = (IntPtr)OpenCL.CreateImage2D(ContextID, (ulong)flags, imageFormat, imageWidth, imageHeight, imageRowPitch, pHost.ToPointer(), out result);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateImage2D failed with error code " + result, result);
-            return new Image(this, memID);
+            return new CLImage(this, memID);
         }
 
         #endregion
 
         #region Image3D
 
-        public Image CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch)
+        public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch)
         {
             return CreateImage3D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageDepth, (IntPtr)imageRowPitch, (IntPtr)imageSlicePitch, IntPtr.Zero);
         }
 
-        public Image CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch, IntPtr pHost)
+        public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch, IntPtr pHost)
         {
             return CreateImage3D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageDepth, (IntPtr)imageRowPitch, (IntPtr)imageSlicePitch, pHost);
         }
 
-        public Image CreateImage3D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageDepth, IntPtr imageRowPitch, IntPtr imageSlicePitch, IntPtr pHost)
+        public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageDepth, IntPtr imageRowPitch, IntPtr imageSlicePitch, IntPtr pHost)
         {
             IntPtr memID;
             ErrorCode result;
@@ -401,7 +401,7 @@ namespace OpenCLNet
             memID = (IntPtr)OpenCL.CreateImage3D(ContextID, (ulong)flags, imageFormat, imageWidth, imageHeight, imageDepth, imageRowPitch, imageSlicePitch, pHost.ToPointer(), out result);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateImage3D failed with error code " + result, result);
-            return new Image(this, memID);
+            return new CLImage(this, memID);
         }
 
         #endregion

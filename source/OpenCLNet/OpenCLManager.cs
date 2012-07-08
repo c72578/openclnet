@@ -307,9 +307,9 @@ namespace OpenCLNet
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public Program CompileSource(string source)
+        public CLProgram CompileSource(string source)
         {
-            Program p;
+            CLProgram p;
 
             try
             {
@@ -341,11 +341,11 @@ namespace OpenCLNet
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public Program CompileFile( string fileName )
+        public CLProgram CompileFile( string fileName )
         {
             string sourcePath = SourcePath + FileSystem.GetDirectorySeparator() + fileName;
             string binaryPath = BinaryPath + FileSystem.GetDirectorySeparator() + fileName;
-            Program p;
+            CLProgram p;
 
             if (!FileSystem.Exists(sourcePath))
                 throw new FileNotFoundException(sourcePath);

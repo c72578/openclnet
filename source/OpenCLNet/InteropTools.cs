@@ -30,10 +30,13 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.IO;
+using System.Security;
 
 namespace OpenCLNet
 {
-    public class InteropTools
+
+    [SuppressUnmanagedCodeSecurityAttribute()]
+    internal class InteropTools
     {
         public unsafe interface IPropertyContainer
         {
