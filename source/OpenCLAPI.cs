@@ -23,14 +23,6 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// Toggles D3D10 extension support
-// NOTE: The C# API is not done yet, but enabling it will let you call something like the raw C API
-#define D3D10_Extension
-
-// Toggles Device fission support
-// NOTE: The C# API is not done yet, but enabling it will let you call something like the raw C API
-#define DEVICE_FISSION_Extension
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,27 +110,6 @@ namespace OpenCLNet
 
     #endregion
 
-
-#if D3D10_Extension
-    // D3D10 Delegates
-    public unsafe delegate ErrorCode clGetDeviceIDsFromD3D10KHRDelegate(cl_platform_id platform, cl_d3d10_device_source_khr d3d_device_source, void* d3d_object, cl_d3d10_device_set_khr d3d_device_set, cl_uint num_entries, cl_device_id* devices, cl_uint* num_devices);
-    public unsafe delegate cl_mem clCreateFromD3D10BufferKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Buffer* resource, out ErrorCode errcode_ret);
-    public unsafe delegate cl_mem clCreateFromD3D10Texture2DKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Texture2D* resource, UINT subresource, out ErrorCode errcode_ret);
-    public unsafe delegate cl_mem clCreateFromD3D10Texture3DKHRDelegate(cl_context context, cl_mem_flags flags, ID3D10Texture3D* resource, UINT subresource, out ErrorCode errcode_ret);
-    public unsafe delegate ErrorCode clEnqueueAcquireD3D10ObjectsKHRDelegate(cl_command_queue command_queue, cl_uint num_objects, cl_mem* mem_objects, cl_uint num_events_in_wait_list, cl_event* event_wait_list, cl_event* _event);
-    public unsafe delegate ErrorCode clEnqueueReleaseD3D10ObjectsKHRDelegate(cl_command_queue command_queue, cl_uint num_objects, cl_mem* mem_objects, cl_uint num_events_in_wait_list, cl_event* event_wait_list, cl_event* _event);
-#endif
-
-#if DEVICE_FISSION_Extension
-        public delegate ErrorCode clReleaseDeviceEXTDelegate(cl_device_id device);
-        public delegate ErrorCode clRetainDeviceEXTDelegate(cl_device_id device);
-        public unsafe delegate ErrorCode clCreateSubDevicesEXTDelegate(cl_device_id in_device,
-            [In] byte[] properties,
-            cl_uint num_entries,
-            [In] [Out] [MarshalAs(UnmanagedType.LPArray,SizeParamIndex=4)] cl_device_id[] out_devices,
-            [Out] cl_uint* num_devices );
-#endif
-
     /// <summary>
     /// OpenCLAPI - native bindings
     /// </summary>
@@ -157,6 +128,7 @@ namespace OpenCLNet
             {
                 // Get function pointers for D3D10 extension
                 IntPtr func;
+                
                 func = OpenCLAPI.clGetExtensionFunctionAddress("clGetDeviceIDsFromD3D10KHR");
                 if (func != IntPtr.Zero)
                     clGetDeviceIDsFromD3D10KHR = (clGetDeviceIDsFromD3D10KHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clGetDeviceIDsFromD3D10KHRDelegate));
@@ -262,8 +234,10 @@ namespace OpenCLNet
             ProgramNotify pfn_notify,
             IntPtr user_data);
         [DllImport(Configuration.Library)]
-        [Obsolete("Deprecated in OpenCL 1.2")]
+        [Obsolete("Deprecated in OpenCL 1.2. Use clUnloadPlatformCompiler.")]
         public extern static cl_int clUnloadCompiler();
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clUnloadPlatformCompiler(cl_platform_id platform);
         [DllImport(Configuration.Library)]
         public extern static cl_int clGetProgramInfo(cl_program program, cl_program_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
         [DllImport(Configuration.Library)]
@@ -851,6 +825,35 @@ namespace OpenCLNet
 
         #endregion
 
+        #region DEVICE_FISSION
+
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clReleaseDevice(cl_device_id device);
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clRetainDevice(cl_device_id device);
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clCreateSubDevices(cl_device_id in_device,
+            [In] byte[] properties,
+            uint num_entries,
+            [In] [Out] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] cl_device_id[] out_devices,
+            out uint num_devices );
+
+        #endregion
 
         // Extension function access
         [DllImport(Configuration.Library)]
@@ -862,23 +865,6 @@ namespace OpenCLNet
 
         [DllImport(Configuration.Library)]
         public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
-
-#if D3D10_Extension
-        // D3D10 extension
-        public static clGetDeviceIDsFromD3D10KHRDelegate clGetDeviceIDsFromD3D10KHR;
-        public static clCreateFromD3D10BufferKHRDelegate clCreateFromD3D10BufferKHR;
-        public static clCreateFromD3D10Texture2DKHRDelegate clCreateFromD3D10Texture2DKHR;
-        public static clCreateFromD3D10Texture3DKHRDelegate clCreateFromD3D10Texture3DKHR;
-        public static clEnqueueAcquireD3D10ObjectsKHRDelegate clEnqueueAcquireD3D10ObjectsKHR;
-        public static clEnqueueReleaseD3D10ObjectsKHRDelegate clEnqueueReleaseD3D10ObjectsKHR;
-#endif
-
-#if DEVICE_FISSION_Extension
-        // cl_ext_device_fission extension
-        public static clReleaseDeviceEXTDelegate clReleaseDeviceEXT;
-        public static clRetainDeviceEXTDelegate clRetainDeviceEXT;
-        public static clCreateSubDevicesEXTDelegate clCreateSubDevicesEXT;
-#endif
     }
 
 #if false

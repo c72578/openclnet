@@ -101,7 +101,7 @@ namespace OpenCLNet
                 // If disposing is false,
                 // only the following code is executed.
                 if( IsSubDevice )
-                    OpenCL.ReleaseDeviceEXT(DeviceID);
+                    OpenCL.ReleaseDevice(DeviceID);
 
                 // Note disposing has been done.
                 disposed = true;
@@ -113,39 +113,50 @@ namespace OpenCLNet
 
         #region Device Fission API (Extension)
 
-        public void ReleaseDeviceEXT()
+        public void ReleaseDevice()
         {
             ErrorCode result;
-            
-            result = OpenCL.ReleaseDeviceEXT(DeviceID);
+
+            if (!Platform.VersionCheck(1, 2))
+                throw new OpenCLException("ReleaseDevice() requires OpenCL 1.2");
+
+            result = OpenCL.ReleaseDevice(DeviceID);
             if (result != ErrorCode.SUCCESS)
-                throw new OpenCLException("ReleaseDeviceEXT failed with error code: "+result, result);
+                throw new OpenCLException("ReleaseDevice failed with error code: "+result, result);
         }
 
-        public void RetainDeviceEXT()
+        public void RetainDevice()
         {
             ErrorCode result;
 
-            result = OpenCL.RetainDeviceEXT(DeviceID);
+            if (!Platform.VersionCheck(1, 2))
+                throw new OpenCLException("RetainDevice() requires OpenCL 1.2");
+
+            result = OpenCL.RetainDevice(DeviceID);
             if (result != ErrorCode.SUCCESS)
-                throw new OpenCLException("RetainDeviceEXT failed with error code: " + result, result);
+                throw new OpenCLException("RetainDevice failed with error code: " + result, result);
         }
 
         /// <summary>
-        /// CreateSubDevicesEXT uses a slightly modified API,
+        /// CreateSubDevices uses a slightly modified API,
         /// due to the overall messiness of creating a
-        /// cl_device_partition_property_ext in managed C#.
+        /// cl_device_partition_property array in managed C#.
         /// 
-        /// The object list properties is a linear list of partition properties and arguments
-        /// add the DevicePartition property IDs  and ListTerminators as ulongs and the argument lists as ints
-        /// CreateSubDevicesEXT will use that info to construct a binary block
+        /// The object list "properties" is a linear list of partition properties and arguments.
+        /// 
+        /// Add the DevicePartition property IDs  and ListTerminators as ulongs and the argument lists as ints.
+        /// CreateSubDevicesEXT will use the type information to distinguish them and construct a binary argument block
+        /// to pass to clCreateSubDevices
         /// </summary>
         /// <param name="properties"></param>
-        public unsafe Device[] CreateSubDevicesEXT(List<object> properties)
+        public unsafe Device[] CreateSubDevices(List<object> properties)
         {
             ErrorCode result;
             MemoryStream ms = new MemoryStream();
             BinaryWriter bw = new BinaryWriter(ms);
+
+            if (!Platform.VersionCheck(1, 2))
+                throw new OpenCLException("CreateSubDevices() requires OpenCL 1.2");
 
             for (int i = 0; i < properties.Count; i++)
             {
@@ -154,17 +165,17 @@ namespace OpenCLNet
                 else if (properties[i] is int)
                     bw.Write((int)properties[i]);
                 else
-                    throw new ArgumentException("CreateSubDevicesEXT: property lists only accepts ulongs and ints");
+                    throw new ArgumentException("CreateSubDevices: property lists only accepts ulongs and ints");
             }
             bw.Flush();
             byte[] propertyArray = ms.ToArray();
             uint numDevices;
-            result = OpenCL.CreateSubDevicesEXT(DeviceID, propertyArray, 0, null, &numDevices);
+            result = OpenCL.CreateSubDevices(DeviceID, propertyArray, 0, null, out numDevices);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateSubDevicesEXT failed with error code: "+result, result);
 
             IntPtr[] subDeviceIDs = new IntPtr[(int)numDevices];
-            result = OpenCL.CreateSubDevicesEXT(DeviceID, propertyArray, numDevices, subDeviceIDs, null);
+            result = OpenCL.CreateSubDevices(DeviceID, propertyArray, numDevices, subDeviceIDs, out numDevices);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateSubDevicesEXT failed with error code: " + result, result);
 

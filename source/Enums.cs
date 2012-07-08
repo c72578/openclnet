@@ -297,6 +297,12 @@ namespace OpenCLNet
         D3D10_RESOURCE_ALREADY_ACQUIRED_KHR=      -1004,
         D3D10_RESOURCE_NOT_ACQUIRED_KHR    =      -1005,
 
+        // D3D11 extension Error Codes
+        INVALID_D3D11_DEVICE_KHR           =      -1006,
+        INVALID_D3D11_RESOURCE_KHR         =      -1007,
+        D3D11_RESOURCE_ALREADY_ACQUIRED_KHR=      -1008,
+        D3D11_RESOURCE_NOT_ACQUIRED_KHR    =      -1009,
+
         // cl_ext_device_fission
         DEVICE_PARTITION_FAILED_EXT        =      -1057,
         INVALID_PARTITION_COUNT_EXT        =      -1058,
@@ -552,10 +558,14 @@ namespace OpenCLNet
         DEVICES = 0x1081,
         PROPERTIES = 0x1082,
         NUM_DEVICES = 0x1083,
-        
+
         // D3D10 extension
         D3D10_DEVICE_KHR = 0x4014,
         D3D10_PREFER_SHARED_RESOURCES_KHR = 0x402C,
+        
+        // D3D11 extension
+        D3D11_DEVICE_KHR                  = 0x401D,
+        D3D11_PREFER_SHARED_RESOURCES_KHR = 0x402D,
     }
 
     // cl_gl_context_info
@@ -695,7 +705,9 @@ namespace OpenCLNet
         OFFSET                              = 0x1108,
 
         // D3D10 extension
-        D3D10_RESOURCE_KHR                  = 0x4015,
+        D3D10_RESOURCE_KHR = 0x4015,
+        // D3D11 extension
+        D3D11_RESOURCE_KHR = 0x401e,
     }
 
     // cl_image_info
@@ -715,6 +727,8 @@ namespace OpenCLNet
 
         // D3D10 extension
         D3D10_SUBRESOURCE_KHR             = 0x4016,
+        // D3D11 extension
+        D3D11_SUBRESOURCE_KHR             = 0x401f,
     }
 
     // cl_addressing_mode
@@ -936,6 +950,9 @@ namespace OpenCLNet
         // D3D10 extension
         ACQUIRE_D3D10_OBJECTS_KHR       = 0x4017,
         RELEASE_D3D10_OBJECTS_KHR       = 0x4018,
+        // D3D11 extension
+        ACQUIRE_D3D11_OBJECTS_KHR       = 0x4020,
+        RELEASE_D3D11_OBJECTS_KHR       = 0x4021,
     }
 
     // command execution status
@@ -1001,7 +1018,22 @@ namespace OpenCLNet
     public enum D3D10DeviceSet
     {
         PREFERRED_DEVICES_FOR_D3D10_KHR = 0x4012,
-        ALL_DEVICES_FOR_D3D10_KHR       = 0x4013,
+        ALL_DEVICES_FOR_D3D10_KHR = 0x4013,
+    }
+
+    // ********************************************
+    // * D3D11 enums
+    // ********************************************
+    public enum D3D11DeviceSource
+    {
+        D3D11_DEVICE_KHR = 0x4019,
+        D3D11_DXGI_ADAPTER_KHR = 0x401a,
+    }
+
+    public enum D3D11DeviceSet
+    {
+        PREFERRED_DEVICES_FOR_D3D11_KHR = 0x401b,
+        ALL_DEVICES_FOR_D3D11_KHR = 0x401c,
     }
 
     public enum DeviceInfoPropertyNames

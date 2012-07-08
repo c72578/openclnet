@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Security;
 
 namespace OpenCLNet
 {
@@ -116,6 +117,7 @@ namespace OpenCLNet
     public delegate void EventNotify(Event _event, ExecutionStatus eventCommandExecStatus, object userData);
     public delegate void EventNotifyInternal(cl_event _event, cl_int eventCommandExecStatus, IntPtr userData);
 
+    [SuppressUnmanagedCodeSecurity()]
     public unsafe static class OpenCL
     {
         static Dictionary<IntPtr, Platform> _Platforms = new Dictionary<IntPtr, Platform>();
@@ -294,9 +296,15 @@ namespace OpenCLNet
             return (ErrorCode)OpenCLAPI.clBuildProgram(program, num_devices, device_list, options, pfn_notify, user_data);
         }
 
+        [Obsolete("Deprecated in OpenCL 1.2. Use UnloadPlatformCompiler")]
         public static ErrorCode UnloadCompiler()
         {
             return (ErrorCode)OpenCLAPI.clUnloadCompiler();
+        }
+
+        public static ErrorCode UnloadPlatformCompiler(IntPtr platform)
+        {
+            return (ErrorCode)OpenCLAPI.clUnloadPlatformCompiler(platform);
         }
 
         public static ErrorCode GetProgramInfo(IntPtr program, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret)
@@ -350,11 +358,13 @@ namespace OpenCLNet
             return OpenCLAPI.clCreateBuffer(context, flags, size, host_ptr, out errcode_ret);
         }
 
+        [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
         public static IntPtr CreateImage2D(IntPtr context, ulong flags, ImageFormat image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clCreateImage2D(context, flags, &image_format, image_width, image_height, image_row_pitch, host_ptr, out errcode_ret);
         }
 
+        [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
         public static IntPtr CreateImage3D(IntPtr context, ulong flags, ImageFormat image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clCreateImage3D(context, flags, &image_format, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch, host_ptr, out errcode_ret);
@@ -876,27 +886,53 @@ namespace OpenCLNet
 
         #endregion
 
-        #region Device Fission API (Extension)
+        #region DEVICE_FISSION
 
-        public static ErrorCode ReleaseDeviceEXT(cl_device_id device)
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        public static ErrorCode ReleaseDevice(cl_device_id device)
         {
-            return OpenCLAPI.clReleaseDeviceEXT(device);
+            return OpenCLAPI.clReleaseDevice(device);
         }
-        public static ErrorCode RetainDeviceEXT(cl_device_id device)
+
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        public static ErrorCode RetainDevice(cl_device_id device)
         {
-            return OpenCLAPI.clRetainDeviceEXT(device);
+            return OpenCLAPI.clReleaseDevice(device);
         }
-        public static ErrorCode CreateSubDevicesEXT(cl_device_id in_device, byte[] properties, cl_uint num_entries, cl_device_id[] out_devices, [Out] cl_uint* num_devices)
+
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        public static ErrorCode CreateSubDevices(cl_device_id in_device,
+            byte[] properties,
+            uint num_entries,
+            cl_device_id[] out_devices,
+            out uint num_devices)
         {
-            return OpenCLAPI.clCreateSubDevicesEXT(in_device, properties, num_entries, out_devices, num_devices);
+            return OpenCLAPI.clCreateSubDevices(in_device, properties, num_entries, out_devices, out num_devices);
         }
 
         #endregion
-
         // Extension function access
+        [Obsolete("Deprecated in OpenCL 1.2. Use clGetExtensionFunctionAddressForPlatform", false)]
         public static IntPtr GetExtensionFunctionAddress(string func_name)
         {
             return OpenCLAPI.clGetExtensionFunctionAddress(func_name);
+        }
+
+        public static IntPtr GetExtensionFunctionAddressForPlatform(cl_platform_id platform, string func_name)
+        {
+            return OpenCLAPI.clGetExtensionFunctionAddressForPlatform( platform, func_name );
         }
 
         public static ErrorCode GetEventProfilingInfo(cl_event _event, ProfilingInfo param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret)

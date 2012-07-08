@@ -50,6 +50,7 @@ namespace OpenCLNet
 
         // Mapping between OpenCL handles and .Net wrapper objects we've created
         protected Dictionary<IntPtr, WeakReference> OpenCLObjectList = new Dictionary<IntPtr, WeakReference>();
+        protected int OpenCLObjectListAddCounter = 0;
 
         #region Construction / Destruction
 
@@ -194,7 +195,9 @@ namespace OpenCLNet
 
         #endregion
 
-        internal object ReverseLookupOpenCLHandle(IntPtr ptr)
+        #region Reverse lookup mechanics
+
+        public object ReverseLookupOpenCLHandle(IntPtr ptr)
         {
             WeakReference wref;
 
@@ -206,19 +209,41 @@ namespace OpenCLNet
             // that it's a good idea to clear out trash from the object list
             if (!wref.IsAlive)
             {
-                List<IntPtr> toBeRemoved = new List<IntPtr>();
-                foreach( KeyValuePair<IntPtr,WeakReference> k in OpenCLObjectList )
-                {
-                    if (!k.Value.IsAlive)
-                        toBeRemoved.Add(k.Key);
-                }
-                foreach (IntPtr p in toBeRemoved)
-                    OpenCLObjectList.Remove(p);
+                RemoveStaleWeakReferences();
                 return null;
             }
             return wref.Target;
         }
 
+        private void AddWeakReference(IntPtr handle, object o)
+        {
+            lock (OpenCLObjectList)
+            {
+                if (!OpenCLObjectList.ContainsKey(handle))
+                {
+                    OpenCLObjectList[handle] = new WeakReference(o);
+                    OpenCLObjectListAddCounter++;
+                    if (OpenCLObjectListAddCounter > 100)
+                    {
+                        OpenCLObjectListAddCounter = 0;
+                    }
+                }
+            }
+        }
+
+        private void RemoveStaleWeakReferences()
+        {
+            List<IntPtr> toBeRemoved = new List<IntPtr>();
+            foreach (KeyValuePair<IntPtr, WeakReference> k in OpenCLObjectList)
+            {
+                if (!k.Value.IsAlive)
+                    toBeRemoved.Add(k.Key);
+            }
+            foreach (IntPtr p in toBeRemoved)
+                OpenCLObjectList.Remove(p);
+        }
+
+        #endregion
 
         #region Create Command Queue
 
@@ -382,24 +407,29 @@ namespace OpenCLNet
 
         #region Create Image2D
 
+        [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
         public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, IntPtr.Zero, IntPtr.Zero);
         }
+        [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
         public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, long imageWidth, long imageHeight)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, IntPtr.Zero, IntPtr.Zero);
         }
 
+        [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
         public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch, IntPtr pHost)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, pHost);
         }
+        [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
         public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, long imageWidth, long imageHeight, long imageRowPitch, IntPtr pHost)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, pHost);
         }
 
+        [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
         public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageRowPitch, IntPtr pHost)
         {
             CLImage mem;
@@ -418,16 +448,19 @@ namespace OpenCLNet
 
         #region Create Image3D
 
+        [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
         public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch)
         {
             return CreateImage3D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageDepth, (IntPtr)imageRowPitch, (IntPtr)imageSlicePitch, IntPtr.Zero);
         }
 
+        [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
         public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch, IntPtr pHost)
         {
             return CreateImage3D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageDepth, (IntPtr)imageRowPitch, (IntPtr)imageSlicePitch, pHost);
         }
 
+        [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
         public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageDepth, IntPtr imageRowPitch, IntPtr imageSlicePitch, IntPtr pHost)
         {
             CLImage mem;

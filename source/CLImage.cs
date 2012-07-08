@@ -57,9 +57,21 @@ namespace OpenCLNet
         public long Width { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.WIDTH).ToInt64(); } }
         public long Height { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.HEIGHT).ToInt64(); } }
         public long Depth { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.DEPTH).ToInt64(); } }
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
         public long ArraySize { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.ARRAY_SIZE).ToInt64(); } }
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
         public IntPtr Buffer { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.BUFFER); } }
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
         public uint NumMipLevels { get { return InteropTools.ReadUInt(this, (uint)ImageInfo.NUM_MIP_LEVELS); } }
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
         public uint NumSamples { get { return InteropTools.ReadUInt(this, (uint)ImageInfo.NUM_SAMPLES); } }
 
         #endregion
