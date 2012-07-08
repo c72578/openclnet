@@ -86,23 +86,23 @@ namespace UnitTests
             OpenCLManager.CreateDefaultContext(0,DeviceType.CPU);
             OpenCLManager.BuildOptions = "";
             OpenCLManager.Defines = "";
-            OpenCLNet.Program p0 = OpenCLManager.CompileFile("MemoryTests.cl");
+            OpenCLNet.CLProgram p0 = OpenCLManager.CompileFile("MemoryTests.cl");
 
             OpenCLManager.BuildOptions = "-D TestDefinition=1";
             OpenCLManager.Defines = "/*Woo defines!*/";
-            OpenCLNet.Program p1 = OpenCLManager.CompileFile("MemoryTests.cl");
+            OpenCLNet.CLProgram p1 = OpenCLManager.CompileFile("MemoryTests.cl");
 
             OpenCLManager.BuildOptions = "";
             OpenCLManager.Defines = "";
-            OpenCLNet.Program p2 = OpenCLManager.CompileSource("kernel void NullFunction(){}");
+            OpenCLNet.CLProgram p2 = OpenCLManager.CompileSource("kernel void NullFunction(){}");
 
             OpenCLManager.BuildOptions = "-D TESTDEFINE=1";
             OpenCLManager.Defines = "";
-            OpenCLNet.Program p3 = OpenCLManager.CompileSource("kernel void NullFunction(){ int a=TESTDEFINE; if( a<3 ) ; }");
+            OpenCLNet.CLProgram p3 = OpenCLManager.CompileSource("kernel void NullFunction(){ int a=TESTDEFINE; if( a<3 ) ; }");
 
             OpenCLManager.BuildOptions = "";
             OpenCLManager.Defines = "#define TESTDEFINE 1";
-            OpenCLNet.Program p4 = OpenCLManager.CompileSource("kernel void NullFunction(){ int a=TESTDEFINE; if( a<3 ) ; }");
+            OpenCLNet.CLProgram p4 = OpenCLManager.CompileSource("kernel void NullFunction(){ int a=TESTDEFINE; if( a<3 ) ; }");
 
             Dictionary<string, Kernel> kernels0 = p0.CreateKernelDictionary();
             Dictionary<string, Kernel> kernels1 = p1.CreateKernelDictionary();
@@ -283,7 +283,7 @@ namespace UnitTests
         private void TestContext(Context c)
         {
             Device[] devices = c.Devices;
-            OpenCLNet.Program p = c.CreateProgramFromFile("OpenCL" + Path.DirectorySeparatorChar + "src" + Path.DirectorySeparatorChar + "MemoryTests.cl");
+            OpenCLNet.CLProgram p = c.CreateProgramFromFile("OpenCL" + Path.DirectorySeparatorChar + "src" + Path.DirectorySeparatorChar + "MemoryTests.cl");
             Dictionary<string, Kernel> kernelDictionary;
 
             try
@@ -613,7 +613,7 @@ namespace UnitTests
 
             Output("Testing MapBuffer");
 
-            OpenCLNet.Image img0 = null;
+            OpenCLNet.CLImage img0 = null;
             OpenCLNet.Mem mem0 = null;
             int imgWidth = 1024;
             int imgHeight = 1024;
@@ -1180,7 +1180,7 @@ namespace UnitTests
 
             Output("Testing CopyImageToBuffer and CopyBufferToImage");
 
-            OpenCLNet.Image img0 = null;
+            OpenCLNet.CLImage img0 = null;
             OpenCLNet.Mem mem0 = null;
             int imgWidth = 1024;
             int imgHeight = 1024;
@@ -1384,9 +1384,9 @@ namespace UnitTests
 
             Output("Testing image read/write/copy functions");
 
-            OpenCLNet.Image img0 = null;
-            OpenCLNet.Image img1 = null;
-            OpenCLNet.Image img2 = null;
+            OpenCLNet.CLImage img0 = null;
+            OpenCLNet.CLImage img1 = null;
+            OpenCLNet.CLImage img2 = null;
             int imgWidth = 1024;
             int imgHeight = 1024;
             int bufLen = imgWidth*4*imgHeight;
@@ -1781,8 +1781,8 @@ namespace UnitTests
             string programName = "OpenCL" + Path.DirectorySeparatorChar + "src" + Path.DirectorySeparatorChar + "MemoryTests.cl";
 
             Output("Testing compilation of: " + programName);
-            OpenCLNet.Program p0 = c.CreateProgramWithSource(File.ReadAllLines(programName));
-            OpenCLNet.Program p = c.CreateProgramWithSource(File.ReadAllText(programName));
+            OpenCLNet.CLProgram p0 = c.CreateProgramWithSource(File.ReadAllLines(programName));
+            OpenCLNet.CLProgram p = c.CreateProgramWithSource(File.ReadAllText(programName));
             p0.Build();
             p.Build();
             Kernel k = p.CreateKernel(@"LoopAndDoNothing");

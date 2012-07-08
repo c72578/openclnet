@@ -18,7 +18,7 @@ namespace OpenCLTools
     public class OpenCLBackedBitmap : IDisposable
     {
         public Bitmap Bitmap { get; set; }
-        public OpenCLNet.Image Image { get; set; }
+        public OpenCLNet.CLImage Image { get; set; }
         public BitmapData BitmapData;
         protected ImageLockMode ImageLockMode;
         protected Context Context;
