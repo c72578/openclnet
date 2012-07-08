@@ -303,7 +303,7 @@ namespace UnitTests
                 d = devices[deviceIndex];
                 using (CommandQueue cq = c.CreateCommandQueue(d))
                 {
-                    if ( (d.ExecutionCapabilities & (ulong)DeviceExecCapabilities.NATIVE_KERNEL)!=0 )
+                    if ( ((ulong)d.ExecutionCapabilities & (ulong)DeviceExecCapabilities.NATIVE_KERNEL)!=0 )
                     {
                         Output("Testing native kernel execution");
                         cq.EnqueueNativeKernel(NativeKernelCallRef, this, null);
