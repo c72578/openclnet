@@ -107,6 +107,9 @@ namespace OpenCLNet
     using ID3D10Buffer = IntPtr;
     using ID3D10Texture2D = IntPtr;
     using ID3D10Texture3D = IntPtr;
+    using cl_device_partition_property = IntPtr;
+    using cl_device_affinity_domain = UInt64;
+    using cl_buffer_create_type = UInt32;
 
     #endregion
 
@@ -123,48 +126,6 @@ namespace OpenCLNet
     
         static OpenCLAPI()
         {
-
-#if D3D10_Extension
-            {
-                // Get function pointers for D3D10 extension
-                IntPtr func;
-                
-                func = OpenCLAPI.clGetExtensionFunctionAddress("clGetDeviceIDsFromD3D10KHR");
-                if (func != IntPtr.Zero)
-                    clGetDeviceIDsFromD3D10KHR = (clGetDeviceIDsFromD3D10KHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clGetDeviceIDsFromD3D10KHRDelegate));
-                func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10BufferKHR");
-                if (func != IntPtr.Zero)
-                    clCreateFromD3D10BufferKHR = (clCreateFromD3D10BufferKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10BufferKHRDelegate));
-                func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10Texture2DKHR");
-                if (func != IntPtr.Zero)
-                    clCreateFromD3D10Texture2DKHR = (clCreateFromD3D10Texture2DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture2DKHRDelegate));
-                func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateFromD3D10Texture3DKHR");
-                if (func != IntPtr.Zero)
-                    clCreateFromD3D10Texture3DKHR = (clCreateFromD3D10Texture3DKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateFromD3D10Texture3DKHRDelegate));
-                func = OpenCLAPI.clGetExtensionFunctionAddress("clEnqueueAcquireD3D10ObjectsKHR");
-                if (func != IntPtr.Zero)
-                    clEnqueueAcquireD3D10ObjectsKHR = (clEnqueueAcquireD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueAcquireD3D10ObjectsKHRDelegate));
-                func = OpenCLAPI.clGetExtensionFunctionAddress("clEnqueueReleaseD3D10ObjectsKHR");
-                if (func != IntPtr.Zero)
-                    clEnqueueReleaseD3D10ObjectsKHR = (clEnqueueReleaseD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clEnqueueReleaseD3D10ObjectsKHRDelegate));
-            }
-#endif
-
-#if DEVICE_FISSION_Extension
-            {
-                // Get function pointers for the device fission extension
-                IntPtr func;
-                func = OpenCLAPI.clGetExtensionFunctionAddress("clReleaseDeviceEXT");
-                if (func != IntPtr.Zero)
-                    clReleaseDeviceEXT = (clReleaseDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clReleaseDeviceEXTDelegate));
-                func = OpenCLAPI.clGetExtensionFunctionAddress("clRetainDeviceEXT");
-                if (func != IntPtr.Zero)
-                    clRetainDeviceEXT = (clRetainDeviceEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clRetainDeviceEXTDelegate));
-                func = OpenCLAPI.clGetExtensionFunctionAddress("clCreateSubDevicesEXT");
-                if (func != IntPtr.Zero)
-                    clCreateSubDevicesEXT = (clCreateSubDevicesEXTDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clCreateSubDevicesEXTDelegate));
-            }
-#endif
         }
 
         #region Platform API
@@ -187,6 +148,38 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static cl_int clGetDeviceInfo(cl_device_id device, cl_device_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="device"></param>
+        /// <param name="properties"></param>
+        /// <param name="num_devices"></param>
+        /// <param name="out_devices"></param>
+        /// <param name="num_devices_ret"></param>
+        /// <returns></returns>
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clCreateSubDevices(cl_device_id in_device,
+            [In] byte[] properties,
+            uint num_entries,
+            [In] [Out] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] cl_device_id[] out_devices,
+            out uint num_devices);
+
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clRetainDevice(cl_device_id device);
+
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clReleaseDevice(cl_device_id device);
+    
         #endregion
 
         #region Context API
@@ -205,46 +198,6 @@ namespace OpenCLNet
 
         #endregion
 
-        #region Program Object API
-
-        // Program Object APIs
-        [DllImport(Configuration.Library)]
-        public extern static cl_program clCreateProgramWithSource(cl_context context,
-            cl_uint count,
-            [In] string[] strings,
-            [In] IntPtr[] lengths,
-            [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
-        [DllImport(Configuration.Library)]
-        public extern static cl_program clCreateProgramWithBinary(cl_context context,
-            cl_uint num_devices,
-            [In] cl_device_id[] device_list,
-            [In] IntPtr[] lengths,
-            [In] IntPtr[] pBinaries,
-            [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] cl_int[] binary_status,
-            [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
-        [DllImport(Configuration.Library)]
-        public extern static cl_int clRetainProgram(cl_program program);
-        [DllImport(Configuration.Library)]
-        public extern static cl_int clReleaseProgram(cl_program program);
-        [DllImport(Configuration.Library)]
-        public extern static cl_int clBuildProgram(cl_program program,
-            cl_uint num_devices,
-            [In] cl_device_id[] device_list,
-            string options,
-            ProgramNotify pfn_notify,
-            IntPtr user_data);
-        [DllImport(Configuration.Library)]
-        [Obsolete("Deprecated in OpenCL 1.2. Use clUnloadPlatformCompiler.")]
-        public extern static cl_int clUnloadCompiler();
-        [DllImport(Configuration.Library)]
-        public extern static cl_int clUnloadPlatformCompiler(cl_platform_id platform);
-        [DllImport(Configuration.Library)]
-        public extern static cl_int clGetProgramInfo(cl_program program, cl_program_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
-        [DllImport(Configuration.Library)]
-        public extern static cl_int clGetProgramBuildInfo(cl_program program, cl_device_id device, cl_program_build_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
-
-        #endregion
-
         #region Command Queue API
 
         // Command Queue APIs
@@ -257,7 +210,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clGetCommandQueueInfo(cl_command_queue command_queue, cl_command_queue_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
         [DllImport(Configuration.Library)]
-        [Obsolete("Function deprecated in OpenCL 1.1 due to being inherently unsafe",false)]
+        [Obsolete("Function deprecated in OpenCL 1.1 due to being inherently unsafe", false)]
         public extern static ErrorCode clSetCommandQueueProperty(cl_command_queue command_queue, cl_command_queue_properties properties, [MarshalAs(UnmanagedType.I4)]bool enable, out cl_command_queue_properties old_properties);
 
         #endregion
@@ -294,6 +247,85 @@ namespace OpenCLNet
         public extern static cl_mem clCreateSubBuffer(cl_mem buffer, cl_mem_flags flags, BufferCreateType buffer_create_type, void* buffer_create_info, out ErrorCode errcode_ret );
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clSetMemObjectDestructorCallback(cl_mem memobj, void* pfn_notify, void* user_data);
+        
+        // OpenCL 1.2
+        [DllImport(Configuration.Library)]
+        public extern static cl_mem clCreateSubBuffer(cl_mem buffer, cl_mem_flags flags, cl_buffer_create_type buffer_create_type, void* buffer_create_info, cl_int* errcode_ret);
+        #endregion
+
+        #region Sampler API
+
+        // Sampler APIs
+        [DllImport(Configuration.Library)]
+        public extern static cl_sampler clCreateSampler(cl_context context, cl_bool normalized_coords, cl_addressing_mode addressing_mode, cl_filter_mode filter_mode, out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clRetainSampler(cl_sampler sampler);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clReleaseSampler(cl_sampler sampler);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clGetSamplerInfo(cl_sampler sampler, cl_sampler_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+
+        #endregion
+
+        #region Program Object API
+
+        // Program Object APIs
+        [DllImport(Configuration.Library)]
+        public extern static cl_program clCreateProgramWithSource(cl_context context,
+            cl_uint count,
+            [In] string[] strings,
+            [In] IntPtr[] lengths,
+            [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_program clCreateProgramWithBinary(cl_context context,
+            cl_uint num_devices,
+            [In] cl_device_id[] device_list,
+            [In] IntPtr[] lengths,
+            [In] IntPtr[] pBinaries,
+            [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] cl_int[] binary_status,
+            [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clRetainProgram(cl_program program);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clReleaseProgram(cl_program program);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clBuildProgram(cl_program program,
+            cl_uint num_devices,
+            [In] cl_device_id[] device_list,
+            string options,
+            ProgramNotify pfn_notify,
+            IntPtr user_data);
+        [DllImport(Configuration.Library)]
+        [Obsolete("Deprecated in OpenCL 1.2. Use clUnloadPlatformCompiler.")]
+        public extern static cl_int clUnloadCompiler();
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetProgramInfo(cl_program program, cl_program_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clGetProgramBuildInfo(cl_program program, cl_device_id device, cl_program_build_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+
+        // OpenCL 1.2
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="num_devices"></param>
+        /// <param name="device_list"></param>
+        /// <param name="kernel_names"></param>
+        /// <param name="errcode_ret"></param>
+        /// <returns></returns>
+        [DllImport(Configuration.Library)]
+        public extern static cl_program clCreateProgramWithBuiltInKernels(cl_context context, cl_uint num_devices, cl_device_id* device_list, char* kernel_names, cl_int* errcode_ret );
+        // public extern static cl_int clCompileProgram(cl_program program,cl_uint num_devices,const cl_device_id * device_list,const char * options, cl_uint num_input_headers,const cl_program * input_headers,const char ** header_include_names,void (CL_CALLBACK * pfn_notify )(cl_program program, void * user_data ),void * user_data ) ;
+        //public extern static cl_program clLinkProgram(cl_context context,cl_uint num_devices,const cl_device_id * device_list,const char * options, cl_uint num_input_programs,const cl_program * input_programs,void (CL_CALLBACK * pfn_notify)(cl_program program, void * user_data),void * user_data,cl_int * errcode_ret ) ;
+        
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        /// <param name="platform"></param>
+        /// <returns></returns>
+        [DllImport(Configuration.Library)]
+        public extern static cl_int clUnloadPlatformCompiler(cl_platform_id platform);
+
         #endregion
 
         #region Kernel Object API
@@ -316,6 +348,9 @@ namespace OpenCLNet
         public extern static ErrorCode clGetKernelInfo(cl_kernel kernel, cl_kernel_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clGetKernelWorkGroupInfo(cl_kernel kernel, cl_device_id device, cl_kernel_work_group_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+
+        // OpenCL 1.2
+        //public extern static cl_int clGetKernelArgInfo(cl_kernel kernel,cl_uint arg_indx,cl_kernel_arg_info param_name,size_t param_value_size,void * param_value,size_t * param_value_size_ret);
 
         #endregion
 
@@ -722,6 +757,16 @@ namespace OpenCLNet
                                 cl_uint num_events_in_wait_list,
                                 cl_event* _event_wait_list,
                                 cl_event* _event);
+
+        // OpenCL 1.2
+
+        //public extern static cl_int clEnqueueFillBuffer(cl_command_queue command_queue,cl_mem buffer, const void * pattern, size_t pattern_size, size_t offset, size_t size, cl_uint num_events_in_wait_list, const cl_event * event_wait_list, cl_event * _event );
+        //public extern static cl_int clEnqueueFillImage(cl_command_queue command_queue,cl_mem image, const void * fill_color, const size_t * origin[3], const size_t * region[3], cl_uint num_events_in_wait_list, const cl_event * event_wait_list, cl_event * _event) ;
+        // extern  cl_int clEnqueueMigrateMemObjects(cl_command_queue command_queue,cl_uint num_mem_objects,const cl_mem * mem_objects,cl_mem_migration_flags flags ,cl_uint  num_events_in_wait_list,const cl_event * event_wait_list,cl_event * event ) ;
+        // extern  cl_int clEnqueueMarkerWithWaitList(cl_command_queue command_queue,cl_uint num_events_in_wait_list,const cl_event * event_wait_list,cl_event * event);
+        // extern  cl_int clEnqueueBarrierWithWaitList(cl_command_queue command_queue,cl_uint num_events_in_wait_list,const cl_event * event_wait_list,cl_event * event);
+        // extern  cl_int clSetPrintfCallback(cl_context context,void (CL_CALLBACK * pfn_notify)(cl_context program, cl_uint printf_data_len, char * printf_data_ptr, void * user_data),void * user_data);
+
         #endregion
 
         #region Flush and Finish API
@@ -756,20 +801,6 @@ namespace OpenCLNet
         public extern static ErrorCode clSetUserEventStatus(cl_event _event, ExecutionStatus execution_status);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clSetEventCallback(cl_event _event, cl_int command_exec_callback_type, EventNotifyInternal pfn_notify, IntPtr user_data);
-        #endregion
-
-        #region Sampler API
-
-        // Sampler APIs
-        [DllImport(Configuration.Library)]
-        public extern static cl_sampler clCreateSampler(cl_context context, cl_bool normalized_coords, cl_addressing_mode addressing_mode, cl_filter_mode filter_mode, out ErrorCode errcode_ret);
-        [DllImport(Configuration.Library)]
-        public extern static ErrorCode clRetainSampler(cl_sampler sampler);
-        [DllImport(Configuration.Library)]
-        public extern static ErrorCode clReleaseSampler(cl_sampler sampler);
-        [DllImport(Configuration.Library)]
-        public extern static ErrorCode clGetSamplerInfo(cl_sampler sampler, cl_sampler_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
-
         #endregion
 
         #region GLObject API
@@ -822,36 +853,6 @@ namespace OpenCLNet
             cl_uint num_events_in_wait_list,
             [In] cl_event[] event_wait_list,
             cl_event* _event);
-
-        #endregion
-
-        #region DEVICE_FISSION
-
-        /// <summary>
-        /// OpenCL 1.2
-        /// </summary>
-        /// <param name="device"></param>
-        /// <returns></returns>
-        [DllImport(Configuration.Library)]
-        public extern static ErrorCode clReleaseDevice(cl_device_id device);
-        /// <summary>
-        /// OpenCL 1.2
-        /// </summary>
-        /// <param name="device"></param>
-        /// <returns></returns>
-        [DllImport(Configuration.Library)]
-        public extern static ErrorCode clRetainDevice(cl_device_id device);
-        /// <summary>
-        /// OpenCL 1.2
-        /// </summary>
-        /// <param name="device"></param>
-        /// <returns></returns>
-        [DllImport(Configuration.Library)]
-        public extern static ErrorCode clCreateSubDevices(cl_device_id in_device,
-            [In] byte[] properties,
-            uint num_entries,
-            [In] [Out] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)] cl_device_id[] out_devices,
-            out uint num_devices );
 
         #endregion
 

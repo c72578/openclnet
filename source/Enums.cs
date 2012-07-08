@@ -594,20 +594,19 @@ namespace OpenCLNet
     public enum DevicePartition : ulong
     {
         NONE = 0x0,
-        EQUALLY = 0x4050,
-        BY_COUNTS = 0x4051,
-        BY_NAMES = 0x4052,
-        BY_AFFINITY_DOMAIN = 0x4053,
+        EQUALLY = 0x1086,
+        BY_COUNTS = 0x1087,
+        BY_AFFINITY_DOMAIN = 0x1088,
     }
 
     public enum AffinityDomain : ulong
     {
-        L1_CACHE = 0x1,
-        L2_CACHE = 0x2,
-        L3_CACHE = 0x3,
-        L4_CACHE = 0x4,
-        NUMA = 0x10,
-        NEXT_FISSIONABLE = 0x100,
+        NUMA    = (1 << 0),
+        L4_CACHE = (1 << 1),
+        L3_CACHE = (1 << 2),
+        L2_CACHE = (1 << 3),
+        L1_CACHE = (1 << 4),
+        NEXT_PARTITIONABLE = (1<<5),
     }
 
     // cl_command_queue_info
@@ -705,9 +704,9 @@ namespace OpenCLNet
         OFFSET                              = 0x1108,
 
         // D3D10 extension
-        D3D10_RESOURCE_KHR = 0x4015,
+        D3D10_RESOURCE_KHR                  = 0x4015,
         // D3D11 extension
-        D3D11_RESOURCE_KHR = 0x401e,
+        D3D11_RESOURCE_KHR                  = 0x401e,
     }
 
     // cl_image_info

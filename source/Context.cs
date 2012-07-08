@@ -388,6 +388,10 @@ namespace OpenCLNet
             return new CLProgram(this, programID);
         }
 
+        //public CLProgram CreateProgramWithBuiltInKernels(IList<Device> devices, string kernelnames, out ErrorCode status)
+        //{
+        //    status = OpenCL.
+        //}
         #endregion
 
         #region Create Sampler
