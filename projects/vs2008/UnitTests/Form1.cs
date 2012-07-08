@@ -83,7 +83,7 @@ namespace UnitTests
             Output("Testing OpenCLManager");
             Output("======================================================");
 
-            OpenCLManager.CreateDefaultContext(0,DeviceType.CPU);
+            OpenCLManager.CreateDefaultContext(0,DeviceType.DEFAULT);
             OpenCLManager.BuildOptions = "";
             OpenCLManager.Defines = "";
             OpenCLNet.CLProgram p0 = OpenCLManager.CompileFile("MemoryTests.cl");
