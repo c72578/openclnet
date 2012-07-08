@@ -6,7 +6,7 @@ Imports OpenCLNet
 Public Class Form1
     Dim platform As OpenCLNet.Platform
     Dim context As OpenCLNet.Context
-    Dim program As OpenCLNet.Program
+    Dim program As OpenCLNet.CLProgram
     Dim kernel As OpenCLNet.Kernel
     Dim bitmap As System.Drawing.Bitmap
     Dim cq As OpenCLNet.CommandQueue

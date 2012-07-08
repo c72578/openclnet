@@ -55,7 +55,7 @@ namespace OpenCLTest
         Device[] openCLDevices;
         Context openCLContext;
         CommandQueue openCLCQ;
-        Program mandelBrotProgram;
+        CLProgram mandelBrotProgram;
         Kernel mandelbrotKernel;
         Mem mandelbrotMemBuffer;
 

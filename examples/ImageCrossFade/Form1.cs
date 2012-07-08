@@ -50,7 +50,7 @@ namespace ImageCrossFade
         Bitmap OutputBitmap;
 
         OpenCLManager OCLMan;
-        OpenCLNet.Program OCLProgram;
+        OpenCLNet.CLProgram OCLProgram;
         Mem InputBuffer0;
         Mem InputBuffer1;
         Kernel CrossFadeKernel;

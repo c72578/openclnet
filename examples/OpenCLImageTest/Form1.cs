@@ -56,9 +56,9 @@ namespace OpenCLImageTest
         CommandQueue oclCQ;
 
         // Current program+data
-        CL.Program oclProgram;
-        CL.Image OCLInputImage;
-        CL.Image OCLOutputImage;
+        CL.CLProgram oclProgram;
+        CL.CLImage OCLInputImage;
+        CL.CLImage OCLOutputImage;
         Sampler OCLSampler;
         Kernel FilterKernel;
 
@@ -201,9 +201,9 @@ namespace OpenCLImageTest
             comboBoxOpenCLPlatforms.SelectedIndex = 0;
         }
 
-        public CL.Image CreateOCLBitmapFromBitmap(Bitmap bitmap)
+        public CL.CLImage CreateOCLBitmapFromBitmap(Bitmap bitmap)
         {
-            CL.Image oclImage;
+            CL.CLImage oclImage;
 
             BitmapData bd = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
             oclImage = oclContext.CreateImage2D((MemFlags)((long)MemFlags.READ_ONLY | (long)MemFlags.COPY_HOST_PTR),
