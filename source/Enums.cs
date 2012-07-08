@@ -64,6 +64,8 @@ namespace OpenCLNet
     using cl_device_local_mem_type=UInt32;
     using cl_device_exec_capabilities=UInt64;
     using cl_command_queue_properties=UInt64;
+    using cl_device_partition_property=IntPtr;
+    using cl_device_affinity_domain=UInt64;
 
     using cl_context_properties=IntPtr;
     using cl_context_info=UInt32;
@@ -236,6 +238,11 @@ namespace OpenCLNet
         MAP_FAILURE                        =      -12,
         MISALIGNED_SUB_BUFFER_OFFSET       =      -13,
         EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST=-14,
+        COMPILE_PROGRAM_FAILURE            =      -15,
+        LINKER_NOT_AVAILABLE               =      -16,
+        LINK_PROGRAM_FAILURE               =      -17,
+        DEVICE_PARTITION_FAILED            =      -18,
+        KERNEL_ARG_INFO_NOT_AVAILABLE      =      -19,
 
         INVALID_VALUE                      =      -30,
         INVALID_DEVICE_TYPE                =      -31,
@@ -272,6 +279,10 @@ namespace OpenCLNet
         INVALID_MIP_LEVEL                  =      -62,
         INVALID_GLOBAL_WORK_SIZE           =      -63,
         INVALID_PROPERTY                   =      -64,
+        INVALID_IMAGE_DESCRIPTOR           =      -65,
+        INVALID_COMPILER_OPTIONS           =      -66,
+        INVALID_LINKER_OPTIONS             =      -67,
+        INVALID_DEVICE_PARTITION_COUNT     =      -68,
 
 
         // CL_GL Error Codes
@@ -372,6 +383,8 @@ namespace OpenCLNet
     {
         FALSE                               =     0,
         TRUE                                =     1,
+        BLOCKING                            =     TRUE,
+        NON_BLOCKING                        =     FALSE,
     }
 
     public enum PlatformInfo
@@ -393,6 +406,7 @@ namespace OpenCLNet
         CPU                          = (1 << 1),
         GPU                          = (1 << 2),
         ACCELERATOR                  = (1 << 3),
+        CUSTOM                       = (1 << 4),
         ALL                          = 0xFFFFFFFF,
     }
 
@@ -461,6 +475,19 @@ namespace OpenCLNet
         NATIVE_VECTOR_WIDTH_DOUBLE       = 0x103B,
         NATIVE_VECTOR_WIDTH_HALF         = 0x103C,
         OPENCL_C_VERSION                 = 0x103D,
+        LINKER_AVAILABLE                 = 0x103E, // OpenCL 1.2
+        BUILT_IN_KERNELS                 = 0x103F,
+        IMAGE_MAX_BUFFER_SIZE            = 0x1040,
+        IMAGE_MAX_ARRAY_SIZE             = 0x1041,
+        PARENT_DEVICE                    = 0x1042,
+        PARTITION_MAX_SUB_DEVICES        = 0x1043,
+        PARTITION_PROPERTIES             = 0x1044,
+        PARTITION_AFFINITY_DOMAIN        = 0x1045,
+        PARTITION_TYPE                   = 0x1046,
+        REFERENCE_COUNT                  = 0x1047,
+        PREFERRED_INTEROP_USER_SYNC      = 0x1048,
+        PRINTF_BUFFER_SIZE               = 0x1049,
+
 
         // cl_nv_device_attribute_query
         COMPUTE_CAPABILITY_MAJOR_NV      = 0x4000,
@@ -485,6 +512,7 @@ namespace OpenCLNet
         ROUND_TO_INF                         = (1 << 4),
         FMA                                  = (1 << 5),
         SOFT_FLOAT                           = (1 << 6),
+        CORRECTLY_ROUNDED_DIVIDE_SQRT        = (1 << 7),
     }
 
     // cl_device_mem_cache_type
@@ -550,6 +578,28 @@ namespace OpenCLNet
         CGL_SHAREGROUP_KHR              = 0x200C,
     }
 
+    // ********************************************
+    // * cl_ext_device_fission enums DevicePartition and AffinityDomain
+    // ********************************************
+    public enum DevicePartition : ulong
+    {
+        NONE = 0x0,
+        EQUALLY = 0x4050,
+        BY_COUNTS = 0x4051,
+        BY_NAMES = 0x4052,
+        BY_AFFINITY_DOMAIN = 0x4053,
+    }
+
+    public enum AffinityDomain : ulong
+    {
+        L1_CACHE = 0x1,
+        L2_CACHE = 0x2,
+        L3_CACHE = 0x3,
+        L4_CACHE = 0x4,
+        NUMA = 0x10,
+        NEXT_FISSIONABLE = 0x100,
+    }
+
     // cl_command_queue_info
     public enum CommandQueueInfo
     {
@@ -568,6 +618,17 @@ namespace OpenCLNet
         USE_HOST_PTR                        = (1 << 3),
         ALLOC_HOST_PTR                      = (1 << 4),
         COPY_HOST_PTR                       = (1 << 5),
+        // Reserved (1<<6)
+        HOST_WRITE_ONLY                     = (1 << 7),
+        HOST_READ_ONLY                      = (1 << 8),
+        HOST_NO_ACCESS                      = (1 << 9),
+    }
+
+/* cl_mem_migration_flags - bitfield (OpenCL 1.2)*/
+    public enum Migrate
+    {
+        MEM_OBJECT_HOST                     = (1 << 0),
+        MEM_OBJECT_CONTENT_UNDEFINED        = (1 << 1),
     }
     
     // cl_channel_order
@@ -614,6 +675,10 @@ namespace OpenCLNet
         BUFFER                       = 0x10F0,
         IMAGE2D                      = 0x10F1,
         IMAGE3D                      = 0x10F2,
+        IMAGE2D_ARRAY                = 0x10F3, // OpenCL 1.2
+        IMAGE1D                      = 0x10F4,
+        IMAGE1D_ARRAY                = 0x10F5,
+        IMAGE1D_BUFFER               = 0x10F6,
     }
 
     // cl_mem_info
@@ -643,6 +708,10 @@ namespace OpenCLNet
         WIDTH                             = 0x1114,
         HEIGHT                            = 0x1115,
         DEPTH                             = 0x1116,
+        ARRAY_SIZE                        = 0x1117, // OpenCL 1.2
+        BUFFER                            = 0x1118,
+        NUM_MIP_LEVELS                    = 0x1119,
+        NUM_SAMPLES                       = 0x111A,
 
         // D3D10 extension
         D3D10_SUBRESOURCE_KHR             = 0x4016,
@@ -681,6 +750,7 @@ namespace OpenCLNet
         READ                                = (1 << 0),
         WRITE                               = (1 << 1),
         READ_WRITE                          = ((ulong)READ+(ulong)WRITE),
+        WRITE_INVALIDATE_REGION             = (1 << 2), //OpenCL 1.2
     }
 
     // cl_program_info
@@ -693,6 +763,14 @@ namespace OpenCLNet
         SOURCE                          = 0x1164,
         BINARY_SIZES                    = 0x1165,
         BINARIES                        = 0x1166,
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        NUM_KERNELS                     = 0x1167,
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        KERNEL_NAMES                    = 0x1168,
     }
 
     // cl_program_build_info
@@ -701,6 +779,21 @@ namespace OpenCLNet
         STATUS                    = 0x1181,
         OPTIONS                   = 0x1182,
         LOG                       = 0x1183,
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        BINARY_TYPE               = 0x1184,
+    }
+
+    /// <summary>
+    /// OpenCL 1.2
+    /// </summary>
+    public enum ProgramBinaryType
+    {
+        NONE                      = 0x0,
+        COMPILED_OBJECT           = 0x1,
+        LIBRARY                   = 0x2,
+        EXECUTABLE                = 0x4,
     }
 
     // cl_build_status
@@ -720,6 +813,59 @@ namespace OpenCLNet
         REFERENCE_COUNT                  = 0x1192,
         CONTEXT                          = 0x1193,
         PROGRAM                          = 0x1194,
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        ATTRIBUTES                       = 0x1195,
+    }
+
+    //cl_kernel_arg_info
+    /// <summary>
+    /// OpenCL 1.2
+    /// </summary>
+    public enum KernelArgInfo
+    {
+        ADDRESS_QUALIFIER               = 0x1196,
+        ACCESS_QUALIFIER                = 0x1197,
+        TYPE_NAME                       = 0x1198,
+        TYPE_QUALIFIER                  = 0x1199,
+        NAME                            = 0x119A,
+    }
+
+    // cl_kernel_arg_address_qualifier
+    /// <summary>
+    /// OpenCL 1.2
+    /// </summary>
+    public enum KernelArgAddressQualifier
+    {
+        GLOBAL                          = 0x119B,
+        LOCAL                           = 0x119C,
+        CONSTANT                        = 0x119D,
+        PRIVATE                         = 0x119E,
+    }
+
+    // cl_kernel_arg_access_qualifier
+    /// <summary>
+    /// OpenCL 1.2
+    /// </summary>
+    public enum KernelArgAccessQualifier
+    {
+        READ_ONLY                       = 0x11A0,
+        WRITE_ONLY                      = 0x11A1,
+        READ_WRITE                      = 0x11A2,
+        NONE                            = 0x11A3,
+    }
+
+    // cl_kernel_arg_type_qualifer
+    /// <summary>
+    /// OpenCL 1.2
+    /// </summary>
+    public enum KernelArgTypeQualifier
+    {
+        NONE                            = 0,
+        CONST                           = (1 << 0),
+        RESTRICT                        = (1 << 1),
+        VOLATILE                        = (1 << 2),
     }
 
     // cl_kernel_work_group_info
@@ -730,6 +876,10 @@ namespace OpenCLNet
         LOCAL_MEM_SIZE                     = 0x11B2,
         PREFERRED_WORK_GROUP_SIZE_MULTIPLE = 0x11B3,
         PRIVATE_MEM_SIZE                   = 0x11B4,
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        GLOBAL_WORK_SIZE                   = 0x11B5,
     }
 
     // cl_event_info
@@ -766,6 +916,22 @@ namespace OpenCLNet
         WRITE_BUFFER_RECT               = 0x1202,
         COPY_BUFFER_RECT                = 0x1203,
         USER                            = 0x1204,
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        BARRIER                         = 0x1205,
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        MIGRATE_MEM_OBJECTS             = 0x1206,
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        FILL_BUFFER                     = 0x1207,
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        FILL_IMAGE                      = 0x1208,
 
         // D3D10 extension
         ACQUIRE_D3D10_OBJECTS_KHR       = 0x4017,
@@ -836,28 +1002,6 @@ namespace OpenCLNet
     {
         PREFERRED_DEVICES_FOR_D3D10_KHR = 0x4012,
         ALL_DEVICES_FOR_D3D10_KHR       = 0x4013,
-    }
-
-
-    // ********************************************
-    // * cl_ext_device_fission enums
-    // ********************************************
-    public enum DevicePartition : ulong
-    {
-        EQUALLY = 0x4050,
-        BY_COUNTS = 0x4051,
-        BY_NAMES = 0x4052,
-        BY_AFFINITY_DOMAIN = 0x4053,
-    }
-
-    public enum AffinityDomain
-    {
-        L1_CACHE = 0x1,
-        L2_CACHE = 0x2,
-        L3_CACHE = 0x3,
-        L4_CACHE = 0x4,
-        NUMA = 0x10,
-        NEXT_FISSIONABLE = 0x100,
     }
 
     public enum DeviceInfoPropertyNames

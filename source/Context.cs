@@ -48,6 +48,9 @@ namespace OpenCLNet
         // Track whether Dispose has been called.
         private bool disposed = false;
 
+        // Mapping between OpenCL handles and .Net wrapper objects we've created
+        protected Dictionary<IntPtr, WeakReference> OpenCLObjectList = new Dictionary<IntPtr, WeakReference>();
+
         #region Construction / Destruction
 
         internal Context( Platform platform, IntPtr contextID )
@@ -191,6 +194,32 @@ namespace OpenCLNet
 
         #endregion
 
+        internal object ReverseLookupOpenCLHandle(IntPtr ptr)
+        {
+            WeakReference wref;
+
+            if (!OpenCLObjectList.ContainsKey(ptr))
+                return null;
+
+            wref = OpenCLObjectList[ptr];
+            // If the object isn't live anymore, take this as an indication
+            // that it's a good idea to clear out trash from the object list
+            if (!wref.IsAlive)
+            {
+                List<IntPtr> toBeRemoved = new List<IntPtr>();
+                foreach( KeyValuePair<IntPtr,WeakReference> k in OpenCLObjectList )
+                {
+                    if (!k.Value.IsAlive)
+                        toBeRemoved.Add(k.Key);
+                }
+                foreach (IntPtr p in toBeRemoved)
+                    OpenCLObjectList.Remove(p);
+                return null;
+            }
+            return wref.Target;
+        }
+
+
         #region Create Command Queue
 
         public CommandQueue CreateCommandQueue(Device device)
@@ -225,13 +254,16 @@ namespace OpenCLNet
 
         public Mem CreateBuffer( MemFlags flags, long size, void* pHost )
         {
+            Mem mem;
             IntPtr memID;
             ErrorCode result;
 
             memID = (IntPtr)OpenCL.CreateBuffer( ContextID, (ulong)flags, new IntPtr(size), pHost, out result );
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException( "CreateBuffer failed with error code "+result, result);
-            return new Mem( this, memID );
+            mem = new Mem( this, memID );
+            OpenCLObjectList[memID] = new WeakReference(mem);
+            return mem;
         }
 
         #endregion
@@ -348,7 +380,7 @@ namespace OpenCLNet
 
         #endregion
 
-        #region Image2D
+        #region Create Image2D
 
         public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight)
         {
@@ -370,18 +402,21 @@ namespace OpenCLNet
 
         public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageRowPitch, IntPtr pHost)
         {
+            CLImage mem;
             IntPtr memID;
             ErrorCode result;
 
             memID = (IntPtr)OpenCL.CreateImage2D(ContextID, (ulong)flags, imageFormat, imageWidth, imageHeight, imageRowPitch, pHost.ToPointer(), out result);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateImage2D failed with error code " + result, result);
-            return new CLImage(this, memID);
+            mem = new CLImage(this, memID);
+            OpenCLObjectList[memID] = new WeakReference(mem);
+            return mem;
         }
 
         #endregion
 
-        #region Image3D
+        #region Create Image3D
 
         public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch)
         {
@@ -395,13 +430,16 @@ namespace OpenCLNet
 
         public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageDepth, IntPtr imageRowPitch, IntPtr imageSlicePitch, IntPtr pHost)
         {
+            CLImage mem;
             IntPtr memID;
             ErrorCode result;
 
             memID = (IntPtr)OpenCL.CreateImage3D(ContextID, (ulong)flags, imageFormat, imageWidth, imageHeight, imageDepth, imageRowPitch, imageSlicePitch, pHost.ToPointer(), out result);
             if (result != ErrorCode.SUCCESS)
                 throw new OpenCLException("CreateImage3D failed with error code " + result, result);
-            return new CLImage(this, memID);
+            mem = new CLImage(this, memID);
+            OpenCLObjectList[memID] = new WeakReference(mem);
+            return mem;
         }
 
         #endregion

@@ -100,6 +100,11 @@ namespace OpenCLNet
                 OpenCLMajorVersion = 1;
                 OpenCLMinorVersion = 0;
             }
+
+            if (OpenCLMajorVersion == 1 && OpenCLMajorVersion == 2)
+            {
+#warning Todo Move extension initialization here for 1.2 to let each platform have its own extensions
+            }
         }
 
         public Context CreateDefaultContext()
@@ -161,9 +166,17 @@ namespace OpenCLNet
             return new Context(this, contextID);
         }
 
-        public Device GetDevice( IntPtr index )
+        /// <summary>
+        /// Get a Device structure, given an OpenCL device handle
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Device GetDevice(IntPtr index)
         {
-            return _Devices[index];
+            if (_Devices.ContainsKey(index))
+                return _Devices[index];
+            else
+                return null;
         }
 
         protected IntPtr[] QueryDeviceIntPtr( DeviceType deviceType )

@@ -274,7 +274,17 @@ namespace OpenCLNet
         /// <summary>
         /// Max depth of 3D image in pixels. The minimum value is 2048 if CL_DEVICE_IMAGE_SUPPORT is true.
         /// </summary>
-        public long Image3DMaxDepth { get { return InteropTools.ReadIntPtr( this, (uint)DeviceInfo.IMAGE3D_MAX_DEPTH ).ToInt64(); } }
+        public long Image3DMaxDepth { get { return InteropTools.ReadIntPtr(this, (uint)DeviceInfo.IMAGE3D_MAX_DEPTH).ToInt64(); } }
+        /// <summary>
+        /// Max number of pixels for a 1D image created from a buffer object. The minimum value is 65536 if CL_DEVICE_IMAGE_SUPPORT is CL_TRUE.
+        /// OpenCL 1.2
+        /// </summary>
+        public long ImageMaxBufferSize { get { return InteropTools.ReadIntPtr(this, (uint)DeviceInfo.IMAGE_MAX_BUFFER_SIZE).ToInt64(); } }
+        /// <summary>
+        /// Max number of images in a 1D or 2D image array. The minimum value is 2048 if CL_DEVICE_IMAGE_SUPPORT is CL_TRUE.
+        /// OpenCL 1.2
+        /// </summary>
+        public long ImageMaxArraySize { get { return InteropTools.ReadIntPtr(this, (uint)DeviceInfo.IMAGE_MAX_ARRAY_SIZE).ToInt64(); } }
         /// <summary>
         /// Maximum number of samplers that can be used in a kernel. Refer to section 6.11.8 for a detailed
         /// description on samplers. The minimum value is 16 if CL_DEVICE_IMAGE_SUPPORT is true.
@@ -360,7 +370,7 @@ namespace OpenCLNet
         /// CL_EXEC_NATIVE_KERNEL – The OpenCL device can execute native kernels.
         /// The mandated minimum capability is: CL_EXEC_KERNEL.
         /// </summary>
-        public ulong ExecutionCapabilities { get { return InteropTools.ReadULong( this, (uint)DeviceInfo.EXECUTION_CAPABILITIES ); } }
+        public DeviceExecCapabilities ExecutionCapabilities { get { return (DeviceExecCapabilities)InteropTools.ReadULong(this, (uint)DeviceInfo.EXECUTION_CAPABILITIES); } }
         /// <summary>
         /// Describes the command-queue properties supported by the device.
         /// This is a bit-field that describes one or more of the following values:
@@ -408,23 +418,157 @@ namespace OpenCLNet
         /// OpenCL&lt;space&gt;C&lt;space&gt;&lt;major_version.minor_version&gt;&lt;space&gt;&lt;vendor-specific information&gt;
         /// </summary>
         public string OpenCL_C_Version { get { return InteropTools.ReadString(this, (uint)DeviceInfo.OPENCL_C_VERSION); } }
+
+        /// <summary>
+        /// Is CL_FALSE if the implementation does not have a linker available.
+        /// Is CL_TRUE if the linker is available.
+        /// This can be CL_FALSE for the embedded
+        /// platform profile only.
+        /// This must be CL_TRUE if
+        /// CL_DEVICE_COMPILER_AVAILABLE is
+        /// CL_TRUE.
+        /// OpenCL 1.2
+        /// </summary>
+        public bool LinkerAvailable{get { return InteropTools.ReadBool(this, (uint)DeviceInfo.LINKER_AVAILABLE); }}
+
+        /// <summary>
+        /// A semi-colon separated list of built-in kernels
+        /// supported by the device. An empty string is
+        /// returned if no built-in kernels are supported
+        /// by the device.
+        /// OpenCL 1.2
+        /// </summary>
+        public string BuiltInKernels { get { return InteropTools.ReadString(this, (uint)DeviceInfo.BUILT_IN_KERNELS); } }
+
+        /// <summary>
+        /// Maximum size of the internal buffer that
+        /// holds the output of printf calls from a kernel.
+        /// The minimum value for the FULL profile is 1
+        /// MB.
+        /// OpenCL 1.2
+        /// </summary>
+        public long PrintfBufferSize { get { return InteropTools.ReadIntPtr(this, (uint)DeviceInfo.PRINTF_BUFFER_SIZE).ToInt64(); } }
+
+        /// <summary>
+        /// Is CL_TRUE if the device’s preference is for
+        /// the user to be responsible for synchronization,
+        /// when sharing memory objects between
+        /// OpenCL and other APIs such as DirectX,
+        /// CL_FALSE if the device / implementation has
+        /// a performant path for performing
+        /// synchronization of memory object shared
+        /// between OpenCL and other APIs such as
+        /// DirectX.
+        /// OpenCL 1.2
+        /// </summary>
+        public bool PreferredInteropUserSync { get { return InteropTools.ReadBool(this, (uint)DeviceInfo.PREFERRED_INTEROP_USER_SYNC); } }
+
+        /// <summary>
+        /// Returns the Device object of the parent device
+        /// to which this sub-device belongs. If device is
+        /// a root-level device, a NULL value is returned
+        /// OpenCL 1.2
+        /// </summary>
+        public Device ParentDevice { get { return Platform.GetDevice(InteropTools.ReadIntPtr(this, (uint)DeviceInfo.PARENT_DEVICE)); } }
+
+        /// <summary>
+        /// Returns the list of supported affinity domains
+        /// for partitioning the device using
+        /// CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN.
+        /// This is a bit-field that describes one or more
+        /// of the following values:
+        /// CL_DEVICE_AFFINITY_DOMAIN_NUMA
+        /// CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE
+        /// CL_DEVICE_AFFINITY_DOMAIN_L3_CACHE
+        /// CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE
+        /// CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE
+        /// CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONA
+        /// BLE
+        /// If the device does not support any affinity
+        /// domains, a value of 0 will be returned.
+        /// OpenCL 1.2
+        /// </summary>
+        public AffinityDomain AffinityDomain { get { return (AffinityDomain)InteropTools.ReadULong(this, (uint)DeviceInfo.PARTITION_AFFINITY_DOMAIN); } }
+
+        /// <summary>
+        /// Returns the maximum number of sub-devices
+        /// that can be created when a device is
+        /// partitioned.
+        /// The value returned cannot exceed
+        /// CL_DEVICE_MAX_COMPUTE_UNITS.
+        /// OpenCL 1.2
+        /// </summary>
+        public uint PartitionMaxSubDevices { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.PARTITION_AFFINITY_DOMAIN); } }
+        
+        /// <summary>
+        /// Returns the list of partition types supported by
+        /// device. The is an array of
+        /// cl_device_partition_property values drawn
+        /// from the following list:
+        /// CL_DEVICE_PARTITION_EQUALLY
+        /// CL_DEVICE_PARTITION_BY_COUNTS
+        /// CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN
+        /// If the device does not support any partition
+        /// types, a value of 0 will be returned
+        /// OpenCL 1.2
+        /// </summary>
+        public DevicePartition[] PartitionProperties 
+        {
+            get
+            {
+                IntPtr[] array = InteropTools.ReadIntPtrArray(this, (uint)DeviceInfo.PARTITION_AFFINITY_DOMAIN);
+                if( array==null )
+                    return null;
+                return Array.ConvertAll<IntPtr,DevicePartition>( array, x => (DevicePartition)x );
+            }
+        }
+
+        /// <summary>
+        /// Returns the properties argument specified in
+        /// clCreateSubDevices if device is a subdevice.
+        /// Otherwise the implementation may
+        /// either return a param_value_size_ret of 0 i.e.
+        /// there is no partition type associated with
+        /// device or can return a property value of 0
+        /// (where 0 is used to terminate the partition
+        /// property list) in the memory that param_value
+        /// points to.
+        /// OpenCL 1.2
+        /// </summary>
+        public DevicePartition[] PartitionType
+        {
+            get
+            {
+                IntPtr[] array = InteropTools.ReadIntPtrArray(this, (uint)DeviceInfo.PARTITION_AFFINITY_DOMAIN);
+                if (array == null)
+                    return null;
+                return Array.ConvertAll<IntPtr, DevicePartition>(array, x => (DevicePartition)x);
+            }
+        }
+
         /// <summary>
         /// Returns a space separated list of extension names
         /// (the extension names themselves do not contain any spaces).
         /// The list of extension names returned currently can include one or more of
         /// the following approved extension names:
-        /// cl_khr_fp64
         /// cl_khr_select_fprounding_mode
+        /// cl_khr_int64_base_atomics
+        /// cl_khr_int64_extended_atomics
+        /// cl_khr_fp16
+        /// cl_khr_gl_sharing
+        /// cl_khr_gl_event
+        /// cl_khr_d3d10_sharing
+        /// cl_khr_media_sharing
+        /// cl_khr_d3d11_sharing
+        /// 
+        /// The following extensions are mandatory by OpenCL 1.2 Devices
         /// cl_khr_global_int32_base_atomics
         /// cl_khr_global_int32_extended_atomics
         /// cl_khr_local_int32_base_atomics
         /// cl_khr_local_int32_extended_atomics
-        /// cl_khr_int64_base_atomics
-        /// cl_khr_int64_extended_atomics
-        /// cl_khr_3d_image_writes
         /// cl_khr_byte_addressable_store
-        /// cl_khr_fp16
-        /// cl_khr_gl_sharing
+        /// cl_khr_fp64
+        /// 
         /// Please refer to the OpenCL specification for a detailed
         /// description of these extensions.
         /// </summary>

@@ -262,6 +262,7 @@ namespace OpenCLNet
             ProgramNotify pfn_notify,
             IntPtr user_data);
         [DllImport(Configuration.Library)]
+        [Obsolete("Deprecated in OpenCL 1.2")]
         public extern static cl_int clUnloadCompiler();
         [DllImport(Configuration.Library)]
         public extern static cl_int clGetProgramInfo(cl_program program, cl_program_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
@@ -293,8 +294,10 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, IntPtr size, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
+        [Obsolete("Deprecated in OpenCL 1.2. See clCreateImage",false)]
         public extern static cl_mem clCreateImage2D(cl_context context, cl_mem_flags flags, ImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
+        [Obsolete("Deprecated in OpenCL 1.2. See clCreateImage",false)]
         public extern static cl_mem clCreateImage3D(cl_context context, cl_mem_flags flags, ImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clRetainMemObject(cl_mem memobj);
@@ -636,18 +639,22 @@ namespace OpenCLNet
             cl_event* _event);
 
         [DllImport(Configuration.Library)]
+        [Obsolete("Deprecated in OpenCL 1.2. Use clEnqueueMarkerWithWaitList.",false)]
         public extern static ErrorCode clEnqueueMarker(cl_command_queue command_queue, cl_event* _event);
 
         [DllImport(Configuration.Library)]
+        [Obsolete("Deprecated in OpenCL 1.2. Use clEnqueueMarkerWithWaitList.", false)]
         public extern static ErrorCode clEnqueueWaitForEvents(cl_command_queue command_queue,
             cl_uint num_events,
             [In] [MarshalAs(UnmanagedType.LPArray)] cl_event[] _event_list);
         [DllImport(Configuration.Library)]
+        [Obsolete("Deprecated in OpenCL 1.2 Use clEnqueueMarkerWithWaitList.", false)]
         public extern static ErrorCode clEnqueueWaitForEvents(cl_command_queue command_queue,
             cl_uint num_events,
             IntPtr* _event_list);
         
         [DllImport(Configuration.Library)]
+        [Obsolete("Deprecated in OpenCL 1.2. Use clEnqueueBarrierWithWaitList.", false)]
         public extern static ErrorCode clEnqueueBarrier(cl_command_queue command_queue);
 
         // OpenCL 1.1
@@ -847,7 +854,11 @@ namespace OpenCLNet
 
         // Extension function access
         [DllImport(Configuration.Library)]
+        [Obsolete("Deprecated in OpenCL 1.2. Use clGetExtensionFunctionAddressForPlatform", false)]
         public extern static IntPtr clGetExtensionFunctionAddress(string func_name);
+
+        [DllImport(Configuration.Library)]
+        public extern static IntPtr clGetExtensionFunctionAddressForPlatform(cl_platform_id platform, string func_name);
 
         [DllImport(Configuration.Library)]
         public extern static cl_int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);

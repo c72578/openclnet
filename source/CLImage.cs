@@ -51,12 +51,16 @@ namespace OpenCLNet
                 return (ImageFormat)Marshal.PtrToStructure((IntPtr)pBuffer, typeof(ImageFormat));
             }
         }
-        public IntPtr ElementSize { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.ELEMENT_SIZE); } }
-        public IntPtr RowPitch { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.ROW_PITCH); } }
-        public IntPtr SlicePitch { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.SLICE_PITCH); } }
-        public IntPtr Width { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.WIDTH); } }
-        public IntPtr Height { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.HEIGHT); } }
-        public IntPtr Depth { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.DEPTH); } }
+        public long ElementSize { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.ELEMENT_SIZE).ToInt64(); } }
+        public long RowPitch { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.ROW_PITCH).ToInt64(); } }
+        public long SlicePitch { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.SLICE_PITCH).ToInt64(); } }
+        public long Width { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.WIDTH).ToInt64(); } }
+        public long Height { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.HEIGHT).ToInt64(); } }
+        public long Depth { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.DEPTH).ToInt64(); } }
+        public long ArraySize { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.ARRAY_SIZE).ToInt64(); } }
+        public IntPtr Buffer { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.BUFFER); } }
+        public uint NumMipLevels { get { return InteropTools.ReadUInt(this, (uint)ImageInfo.NUM_MIP_LEVELS); } }
+        public uint NumSamples { get { return InteropTools.ReadUInt(this, (uint)ImageInfo.NUM_SAMPLES); } }
 
         #endregion
 

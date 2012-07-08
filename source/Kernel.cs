@@ -53,12 +53,20 @@ namespace OpenCLNet
         // Track whether Dispose has been called.
         private bool disposed = false;
 
+        #region Properties
+
         public string FunctionName { get { return InteropTools.ReadString( this, (uint)KernelInfo.FUNCTION_NAME ); } }
         public uint NumArgs { get { return InteropTools.ReadUInt( this, (uint)KernelInfo.NUM_ARGS ); } }
         public uint ReferenceCount { get { return InteropTools.ReadUInt( this, (uint)KernelInfo.REFERENCE_COUNT ); } }
+        /// <summary>
+        /// OpenCL 1.2
+        /// </summary>
+        public string Attributes { get { return InteropTools.ReadString(this, (uint)KernelInfo.ATTRIBUTES); } }
         public Context Context { get; protected set; }
         public CLProgram Program { get; protected set; }
         public IntPtr KernelID { get; set; }
+
+        #endregion
 
         internal Kernel( Context context, CLProgram program, IntPtr kernelID )
         {
