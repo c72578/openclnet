@@ -12,26 +12,30 @@ namespace OpenCLNet
     {
         #region Delegates
 
-        // D3D11 Delegates
-        internal unsafe delegate ErrorCode clGetDeviceIDsFromD3D11KHRDelegate(
+        // DX9 Delegates
+        internal unsafe delegate ErrorCode clGetDeviceIDsFromDX9MediaAdapterKHRDelegate(
             IntPtr platform,
-            uint d3d_device_source,
-            IntPtr d3d_object,
-            uint d3d_device_set,
+            uint num_media_adapters,
+            uint* media_adapter_type,
+            uint media_adapter_set,
             uint num_entries,
             [In][Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)]IntPtr[] devices,
             uint* num_devices);
-        internal unsafe delegate IntPtr clCreateFromD3D11BufferKHRDelegate(IntPtr context, ulong flags, IntPtr resource, out ErrorCode errcode_ret);
-        internal unsafe delegate IntPtr clCreateFromD3D11Texture2DKHRDelegate(IntPtr context, ulong flags, IntPtr resource, uint subresource, out ErrorCode errcode_ret);
-        internal unsafe delegate IntPtr clCreateFromD3D11Texture3DKHRDelegate(IntPtr context, ulong flags, IntPtr resource, uint subresource, out ErrorCode errcode_ret);
-        internal unsafe delegate ErrorCode clEnqueueAcquireD3D11ObjectsKHRDelegate(
+        internal unsafe delegate IntPtr clCreateFromDX9MediaSurfaceKHRDelegate(
+            IntPtr context,
+            ulong flags,
+            uint adapter_type,
+            IntPtr surface_info,
+            uint plane,
+            out ErrorCode errcode_ret);
+        internal unsafe delegate ErrorCode clEnqueueAcquireDX9MediaSurfacesKHRDelegate(
             IntPtr command_queue,
             uint num_objects,
             [In][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] mem_objects,
             uint num_events_in_wait_list,
             [In][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] IntPtr[] event_wait_list,
             IntPtr* _event);
-        internal unsafe delegate ErrorCode clEnqueueReleaseD3D11ObjectsKHRDelegate(
+        internal unsafe delegate ErrorCode clEnqueueReleaseDX9MediaSurfacesKHRDelegate(
             IntPtr command_queue,
             uint num_objects,
             [In][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] mem_objects,
@@ -43,12 +47,10 @@ namespace OpenCLNet
 
         public static readonly string ExtensionName = "cl_dx9_media_sharing";
 
-        internal clGetDeviceIDsFromD3D11KHRDelegate clGetDeviceIDsFromD3D11KHR;
-        internal clCreateFromD3D11BufferKHRDelegate clCreateFromD3D11BufferKHR;
-        internal clCreateFromD3D11Texture2DKHRDelegate clCreateFromD3D11Texture2DKHR;
-        internal clCreateFromD3D11Texture3DKHRDelegate clCreateFromD3D11Texture3DKHR;
-        internal clEnqueueAcquireD3D11ObjectsKHRDelegate clEnqueueAcquireD3D11ObjectsKHR;
-        internal clEnqueueReleaseD3D11ObjectsKHRDelegate clEnqueueReleaseD3D11ObjectsKHR;
+        internal clGetDeviceIDsFromDX9MediaAdapterKHRDelegate clGetDeviceIDsFromDX9MediaAdapterKHR;
+        internal clCreateFromDX9MediaSurfaceKHRDelegate clCreateFromDX9MediaSurfaceKHR;
+        internal clEnqueueAcquireDX9MediaSurfacesKHRDelegate clEnqueueAcquireDX9MediaSurfacesKHR;
+        internal clEnqueueReleaseDX9MediaSurfacesKHRDelegate clEnqueueReleaseDX9MediaSurfacesKHR;
 
         #region Constructors
 
@@ -63,25 +65,18 @@ namespace OpenCLNet
             if (!platform.VersionCheck(1, 2))
                 return;
 
-            entryPoint = OpenCL.GetExtensionFunctionAddressForPlatform(platform, "clGetDeviceIDsFromDX9MediaAdapterKHR_fn");
-            if (entryPoint == IntPtr.Zero)
-                throw new OpenCLException("Error when importing cl_dx9_media_sharing extension");
-            clGetDeviceIDsFromD3D11KHR = (clGetDeviceIDsFromD3D11KHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clGetDeviceIDsFromD3D11KHRDelegate));
 
-            entryPoint = OpenCL.GetExtensionFunctionAddressForPlatform(platform, "clCreateFromDX9MediaSurfaceKHR_fn");
-            if (entryPoint == IntPtr.Zero)
-                throw new OpenCLException("Error when importing cl_dx9_media_sharing extension");
-            clCreateFromD3D11BufferKHR = (clCreateFromD3D11BufferKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clCreateFromD3D11BufferKHRDelegate));
+            entryPoint = ImportFunction("clGetDeviceIDsFromDX9MediaAdapterKHR_fn");
+            clGetDeviceIDsFromDX9MediaAdapterKHR = (clGetDeviceIDsFromDX9MediaAdapterKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clGetDeviceIDsFromDX9MediaAdapterKHRDelegate));
 
-            entryPoint = OpenCL.GetExtensionFunctionAddressForPlatform(platform, "clEnqueueAcquireDX9MediaSurfacesKHR_fn");
-            if (entryPoint == IntPtr.Zero)
-                throw new OpenCLException("Error when importing cl_dx9_media_sharing extension");
-            clCreateFromD3D11Texture2DKHR = (clCreateFromD3D11Texture2DKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clCreateFromD3D11Texture2DKHRDelegate));
+            entryPoint = ImportFunction("clCreateFromDX9MediaSurfaceKHR_fn");
+            clCreateFromDX9MediaSurfaceKHR = (clCreateFromDX9MediaSurfaceKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clCreateFromDX9MediaSurfaceKHRDelegate));
 
-            entryPoint = OpenCL.GetExtensionFunctionAddressForPlatform(platform, "clEnqueueReleaseDX9MediaSurfacesKHR_fn");
-            if (entryPoint == IntPtr.Zero)
-                throw new OpenCLException("Error when importing cl_dx9_media_sharing extension");
-            clCreateFromD3D11Texture3DKHR = (clCreateFromD3D11Texture3DKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clCreateFromD3D11Texture3DKHRDelegate));
+            entryPoint = ImportFunction("clEnqueueAcquireDX9MediaSurfacesKHR_fn");
+            clEnqueueAcquireDX9MediaSurfacesKHR = (clEnqueueAcquireDX9MediaSurfacesKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clEnqueueAcquireDX9MediaSurfacesKHRDelegate));
+
+            entryPoint = ImportFunction("clEnqueueReleaseDX9MediaSurfacesKHR_fn");
+            clEnqueueReleaseDX9MediaSurfacesKHR = (clEnqueueReleaseDX9MediaSurfacesKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clEnqueueReleaseDX9MediaSurfacesKHRDelegate));
 
             IsAvailable = true;
         }
@@ -93,7 +88,8 @@ namespace OpenCLNet
         {
             return ExtensionName;
         }
-
+#warning Implement entry points for the DX9 extension
+#if false
         public unsafe Device[] GetDeviceIDsFromD3D11(Platform platform, D3D11DeviceSource d3d_device_source, IntPtr d3d_object, D3D11DeviceSet d3d_device_set)
         {
             ErrorCode status;
@@ -232,5 +228,6 @@ namespace OpenCLNet
             *_event = tmpEvent;
             return status;
         }
+#endif
     }
 }

@@ -82,12 +82,12 @@ namespace OpenCLNet
         IntPtr[] DeviceIDs;
 
         protected HashSet<string> ExtensionHashSet = new HashSet<string>();
-
-        #endregion
-
+        protected Dictionary<string, Extension> extensionSupport = new Dictionary<string, Extension>();
         DirectX9Extension DirectX9Extension;
         DirectX10Extension DirectX10Extension;
         DirectX11Extension DirectX11Extension;
+
+        #endregion
 
         #region Constructors
 
@@ -287,7 +287,6 @@ namespace OpenCLNet
             return true;
         }
 
-        protected Dictionary<string, Extension> extensionSupport = new Dictionary<string, Extension>();
         /// <summary>
         /// <para>
         /// Add user created extension support to this platform.
@@ -307,7 +306,10 @@ namespace OpenCLNet
         {
             if (extension == null)
                 throw new ArgumentNullException();
-            
+
+            if (!extension.IsAvailable || !HasExtension(extension.GetName()))
+                return;
+
             if (extensionSupport.ContainsKey(extension.GetName()))
             {
                 extensionSupport.Remove(extension.GetName());
@@ -342,6 +344,7 @@ namespace OpenCLNet
 
         internal void InitializeBuiltInExtensions()
         {
+            DirectX9Extension = (DirectX9Extension)GetExtension(DirectX9Extension.ExtensionName);
             DirectX10Extension = (DirectX10Extension)GetExtension(DirectX10Extension.ExtensionName);
             DirectX11Extension = (DirectX11Extension)GetExtension(DirectX11Extension.ExtensionName);
         }
