@@ -119,7 +119,7 @@ namespace UnitTests
                 properties.Add((ulong)ListTerminators.PROPERTIES_LIST_END);
 
                 Device[] subDevices;
-                subDevices = OpenCLManager.Context.Devices[0].CreateSubDevicesEXT(properties);
+                subDevices = OpenCLManager.Context.Devices[0].CreateSubDevices(properties);
                 foreach (Device d in subDevices)
                     d.Dispose();
             }

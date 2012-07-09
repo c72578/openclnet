@@ -102,6 +102,15 @@
     <Compile Include="..\..\..\source\Device.cs">
       <Link>Device.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\source\DirectX10Extension.cs">
+      <Link>DirectX10Extension.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\DirectX11Extension.cs">
+      <Link>DirectX11Extension.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\DirectX9Extension.cs">
+      <Link>DirectX9Extension.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\source\Enums.cs">
       <Link>Enums.cs</Link>
     </Compile>
@@ -110,6 +119,9 @@
     </Compile>
     <Compile Include="..\..\..\source\Exceptions.cs">
       <Link>Exceptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\source\Extension.cs">
+      <Link>Extension.cs</Link>
     </Compile>
     <Compile Include="..\..\..\source\InteropTools.cs">
       <Link>InteropTools.cs</Link>
