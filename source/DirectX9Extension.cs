@@ -66,16 +66,16 @@ namespace OpenCLNet
                 return;
 
 
-            entryPoint = ImportFunction("clGetDeviceIDsFromDX9MediaAdapterKHR_fn");
+            entryPoint = ImportFunction("clGetDeviceIDsFromDX9MediaAdapterKHR");
             clGetDeviceIDsFromDX9MediaAdapterKHR = (clGetDeviceIDsFromDX9MediaAdapterKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clGetDeviceIDsFromDX9MediaAdapterKHRDelegate));
 
-            entryPoint = ImportFunction("clCreateFromDX9MediaSurfaceKHR_fn");
+            entryPoint = ImportFunction("clCreateFromDX9MediaSurfaceKHR");
             clCreateFromDX9MediaSurfaceKHR = (clCreateFromDX9MediaSurfaceKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clCreateFromDX9MediaSurfaceKHRDelegate));
 
-            entryPoint = ImportFunction("clEnqueueAcquireDX9MediaSurfacesKHR_fn");
+            entryPoint = ImportFunction("clEnqueueAcquireDX9MediaSurfacesKHR");
             clEnqueueAcquireDX9MediaSurfacesKHR = (clEnqueueAcquireDX9MediaSurfacesKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clEnqueueAcquireDX9MediaSurfacesKHRDelegate));
 
-            entryPoint = ImportFunction("clEnqueueReleaseDX9MediaSurfacesKHR_fn");
+            entryPoint = ImportFunction("clEnqueueReleaseDX9MediaSurfacesKHR");
             clEnqueueReleaseDX9MediaSurfacesKHR = (clEnqueueReleaseDX9MediaSurfacesKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clEnqueueReleaseDX9MediaSurfacesKHRDelegate));
 
             IsAvailable = true;

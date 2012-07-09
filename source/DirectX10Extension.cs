@@ -65,22 +65,22 @@ namespace OpenCLNet
             if (!platform.VersionCheck(1, 2))
                 return;
 
-            entryPoint = ImportFunction("clGetDeviceIDsFromD3D10KHR_fn");
+            entryPoint = ImportFunction("clGetDeviceIDsFromD3D10KHR");
             clGetDeviceIDsFromD3D10KHR = (clGetDeviceIDsFromD3D10KHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clGetDeviceIDsFromD3D10KHRDelegate));
 
-            entryPoint = ImportFunction("clCreateFromD3D10BufferKHR_fn");
+            entryPoint = ImportFunction("clCreateFromD3D10BufferKHR");
             clCreateFromD3D10BufferKHR = (clCreateFromD3D10BufferKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clCreateFromD3D10BufferKHRDelegate));
 
-            entryPoint = ImportFunction("clCreateFromD3D10Texture2DKHR_fn");
+            entryPoint = ImportFunction("clCreateFromD3D10Texture2DKHR");
             clCreateFromD3D10Texture2DKHR = (clCreateFromD3D10Texture2DKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clCreateFromD3D10Texture2DKHRDelegate));
 
-            entryPoint = ImportFunction("clCreateFromD3D10Texture3DKHR_fn");
+            entryPoint = ImportFunction("clCreateFromD3D10Texture3DKHR");
             clCreateFromD3D10Texture3DKHR = (clCreateFromD3D10Texture3DKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clCreateFromD3D10Texture3DKHRDelegate));
 
-            entryPoint = ImportFunction("clEnqueueAcquireD3D10ObjectsKHR_fn");
+            entryPoint = ImportFunction("clEnqueueAcquireD3D10ObjectsKHR");
             clEnqueueAcquireD3D10ObjectsKHR = (clEnqueueAcquireD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clEnqueueAcquireD3D10ObjectsKHRDelegate));
 
-            entryPoint = ImportFunction("clEnqueueReleaseD3D10ObjectsKHR_fn");
+            entryPoint = ImportFunction("clEnqueueReleaseD3D10ObjectsKHR");
             clEnqueueReleaseD3D10ObjectsKHR = (clEnqueueReleaseD3D10ObjectsKHRDelegate)Marshal.GetDelegateForFunctionPointer(entryPoint, typeof(clEnqueueReleaseD3D10ObjectsKHRDelegate));
 
             IsAvailable = true;

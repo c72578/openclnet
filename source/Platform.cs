@@ -115,7 +115,7 @@ namespace OpenCLNet
                 OpenCLMinorVersion = 0;
             }
 
-            if (OpenCLMajorVersion == 1 && OpenCLMajorVersion == 2)
+            if ( VersionCheck(1,2) )
             {
                 AddExtensionSupport(new DirectX9Extension(this));
                 AddExtensionSupport(new DirectX10Extension(this));

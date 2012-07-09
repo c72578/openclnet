@@ -29,73 +29,12 @@ using System.Runtime.InteropServices;
 
 namespace OpenCLNet
 {
-    #region Using statements
-
-    using cl_char=SByte;
-    using cl_uchar=Byte;
-    using cl_short=Byte;
-    using cl_ushort=Byte;
-    using cl_int=Int32;
-    using cl_uint=UInt32;
-    using cl_long=Int64;
-    using cl_ulong=UInt64;
-    using cl_half=UInt16;
-    using cl_float=Single;
-    using cl_double=Double;
-
-    using cl_platform_id=IntPtr;
-    using cl_device_id=IntPtr;
-    using cl_context=IntPtr;
-    using cl_command_queue=IntPtr;
-    using cl_mem=IntPtr;
-    using cl_program=IntPtr;
-    using cl_kernel=IntPtr;
-    using cl_event=IntPtr;
-    using cl_sampler=IntPtr;
-
-    using cl_bool=UInt32;
-    using cl_bitfield=UInt64;
-    using cl_device_type=UInt64;
-    using cl_platform_info=UInt32;
-    using cl_device_info=UInt32;
-    using cl_device_address_info=UInt64;
-    using cl_device_fp_config=UInt64;
-    using cl_device_mem_cache_type=UInt32;
-    using cl_device_local_mem_type=UInt32;
-    using cl_device_exec_capabilities=UInt64;
-    using cl_command_queue_properties=UInt64;
-    using cl_device_partition_property=IntPtr;
-    using cl_device_affinity_domain=UInt64;
-
-    using cl_context_properties=IntPtr;
-    using cl_context_info=UInt32;
-    using cl_command_queue_info=UInt32;
-    using cl_channel_order=UInt32;
-    using cl_channel_type=UInt32;
-    using cl_mem_flags=UInt64;
-    using cl_mem_object_type=UInt32;
-    using cl_mem_info=UInt32;
-    using cl_image_info=UInt32;
-    using cl_addressing_mode=UInt32;
-    using cl_filter_mode=UInt32;
-    using cl_sampler_info=UInt32;
-    using cl_map_flags=UInt64;
-    using cl_program_info=UInt32;
-    using cl_program_build_info=UInt32;
-    using cl_build_status=Int32;
-    using cl_kernel_info=UInt32;
-    using cl_kernel_work_group_info=UInt32;
-    using cl_event_info=UInt32;
-    using cl_command_type=UInt32;
-    using cl_profiling_info=UInt32;
-
-    #endregion
 
     [StructLayout(LayoutKind.Sequential,Pack=1)]
     public struct ImageFormat
     {
-        internal cl_channel_order image_channel_order;
-        internal cl_channel_type image_channel_data_type;
+        internal uint image_channel_order;
+        internal uint image_channel_data_type;
 
         #region Predefined static Image formats
 
@@ -193,8 +132,8 @@ namespace OpenCLNet
 
         public ImageFormat(ChannelOrder channelOrder, ChannelType channelType)
         {
-            image_channel_order = (cl_channel_order)channelOrder;
-            image_channel_data_type = (cl_channel_type)channelType;
+            image_channel_order = (uint)channelOrder;
+            image_channel_data_type = (uint)channelType;
         }
 
         public ChannelOrder ChannelOrder
@@ -205,7 +144,7 @@ namespace OpenCLNet
             }
             set
             {
-                image_channel_order = (cl_channel_order)value;
+                image_channel_order = (uint)value;
             }
         }
         public ChannelType ChannelType
@@ -216,7 +155,7 @@ namespace OpenCLNet
             }
             set
             {
-                image_channel_data_type = (cl_channel_type)value;
+                image_channel_data_type = (uint)value;
             }
         }
     }

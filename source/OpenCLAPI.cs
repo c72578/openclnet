@@ -52,6 +52,9 @@ namespace OpenCLNet
 
     #endregion
 
+    // void (CL_CALLBACK * pfn_notify)(cl_context program, uint printf_data_len, char * printf_data_ptr, void * user_data)
+    public unsafe delegate void PrintFCallbackDelegate(cl_context contect, uint printf_data_len, [MarshalAs(UnmanagedType.LPStr,SizeParamIndex=1)]string printf_data_ptr, void* user_data);
+
     /// <summary>
     /// OpenCLAPI - native bindings
     /// </summary>
@@ -724,12 +727,58 @@ namespace OpenCLNet
 
         // OpenCL 1.2
 
-        //public extern static int clEnqueueFillBuffer(cl_command_queue command_queue,cl_mem buffer, const void * pattern, size_t pattern_size, size_t offset, size_t size, uint num_events_in_wait_list, const cl_event * event_wait_list, cl_event * _event );
-        //public extern static int clEnqueueFillImage(cl_command_queue command_queue,cl_mem image, const void * fill_color, const size_t * origin[3], const size_t * region[3], uint num_events_in_wait_list, const cl_event * event_wait_list, cl_event * _event) ;
-        // extern  int clEnqueueMigrateMemObjects(cl_command_queue command_queue,uint num_mem_objects,const cl_mem * mem_objects,cl_mem_migration_flags flags ,uint  num_events_in_wait_list,const cl_event * event_wait_list,cl_event * event ) ;
-        // extern  int clEnqueueMarkerWithWaitList(cl_command_queue command_queue,uint num_events_in_wait_list,const cl_event * event_wait_list,cl_event * event);
-        // extern  int clEnqueueBarrierWithWaitList(cl_command_queue command_queue,uint num_events_in_wait_list,const cl_event * event_wait_list,cl_event * event);
-        // extern  int clSetPrintfCallback(cl_context context,void (CL_CALLBACK * pfn_notify)(cl_context program, uint printf_data_len, char * printf_data_ptr, void * user_data),void * user_data);
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueFillBuffer(
+            cl_command_queue command_queue,
+            cl_mem buffer,
+            void*  pattern,
+            IntPtr pattern_size,
+            IntPtr offset,
+            IntPtr size,
+            uint num_events_in_wait_list,
+            cl_event* event_wait_list,
+            cl_event* _event );
+
+        [DllImport(Configuration.Library)]
+        public extern static int clEnqueueFillImage(
+            cl_command_queue command_queue,
+            cl_mem image,
+            void * fill_color,
+            IntPtr* origin,
+            IntPtr* region,
+            uint num_events_in_wait_list,
+            cl_event* event_wait_list,
+            cl_event* _event);
+
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueMigrateMemObjects(
+            cl_command_queue command_queue,
+            uint num_mem_objects,
+            cl_mem * mem_objects,
+            ulong flags,
+            uint num_events_in_wait_list,
+            cl_event* event_wait_list,
+            cl_event* _event ) ;
+
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueMarkerWithWaitList(
+            cl_command_queue command_queue,
+            uint num_events_in_wait_list,
+            cl_event* event_wait_list,
+            cl_event* _event);
+
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clEnqueueBarrierWithWaitList(
+            cl_command_queue command_queue,
+            uint num_events_in_wait_list,
+            cl_event* event_wait_list,
+            cl_event* _event);
+
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clSetPrintfCallback(
+            cl_context context,
+            PrintFCallbackDelegate pfn_notify,
+            void * user_data);
 
         #endregion
 
