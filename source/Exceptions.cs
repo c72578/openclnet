@@ -87,4 +87,12 @@ namespace OpenCLNet
         {
         }
     }
+
+    public class ExtensionNotSupportException : OpenCLException
+    {
+        public ExtensionNotSupportException()
+            : base("OpenCL extension not supported")
+        {
+        }
+    }
 }

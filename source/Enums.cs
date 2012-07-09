@@ -303,6 +303,12 @@ namespace OpenCLNet
         D3D11_RESOURCE_ALREADY_ACQUIRED_KHR=      -1008,
         D3D11_RESOURCE_NOT_ACQUIRED_KHR    =      -1009,
 
+        //cl_khr_dx9_media_sharing
+        INVALID_DX9_MEDIA_ADAPTER_KHR      =      -1010,
+        INVALID_DX9_MEDIA_SURFACE_KHR      =      -1011,
+        DX9_MEDIA_SURFACE_ALREADY_ACQUIRED_KHR=   -1012,
+        DX9_MEDIA_SURFACE_NOT_ACQUIRED_KHR =      -1013,
+
         // cl_ext_device_fission
         DEVICE_PARTITION_FAILED_EXT        =      -1057,
         INVALID_PARTITION_COUNT_EXT        =      -1058,
@@ -554,10 +560,15 @@ namespace OpenCLNet
     // cl_context_info
     public enum ContextInfo
     {
-        REFERENCE_COUNT = 0x1080,
-        DEVICES = 0x1081,
-        PROPERTIES = 0x1082,
-        NUM_DEVICES = 0x1083,
+        REFERENCE_COUNT                   = 0x1080,
+        DEVICES                           = 0x1081,
+        PROPERTIES                        = 0x1082,
+        NUM_DEVICES                       = 0x1083,
+
+        // DX9 extension
+        ADAPTER_D3D9_KHR                  = 0x2025,
+        ADAPTER_D3D9EX_KHR                = 0x2026,
+        ADAPTER_DXVA_KHR                  = 0x2027,
 
         // D3D10 extension
         D3D10_DEVICE_KHR = 0x4014,
@@ -703,6 +714,9 @@ namespace OpenCLNet
         ASSOCIATED_MEMOBJECT                = 0x1107,
         OFFSET                              = 0x1108,
 
+        // DX9 extension
+        DX9_MEDIA_ADAPTER_TYPE_KHR          = 0x2028,
+        DX9_MEDIA_SURFACE_INFO_KHR          = 0x2029,
         // D3D10 extension
         D3D10_RESOURCE_KHR                  = 0x4015,
         // D3D11 extension
@@ -724,6 +738,8 @@ namespace OpenCLNet
         NUM_MIP_LEVELS                    = 0x1119,
         NUM_SAMPLES                       = 0x111A,
 
+        // DX9 extension
+        DX9_MEDIA_PLANE_KHR               = 0x202A,
         // D3D10 extension
         D3D10_SUBRESOURCE_KHR             = 0x4016,
         // D3D11 extension
@@ -946,6 +962,9 @@ namespace OpenCLNet
         /// </summary>
         FILL_IMAGE                      = 0x1208,
 
+        // DX9 extension
+        ACQUIRE_DX9_MEDIA_SURFACES_KHR  = 0x202B,
+        RELEASE_DX9_MEDIA_SURFACES_KHR  = 0x202C,
         // D3D10 extension
         ACQUIRE_D3D10_OBJECTS_KHR       = 0x4017,
         RELEASE_D3D10_OBJECTS_KHR       = 0x4018,
@@ -1034,6 +1053,35 @@ namespace OpenCLNet
         PREFERRED_DEVICES_FOR_D3D11_KHR = 0x401b,
         ALL_DEVICES_FOR_D3D11_KHR = 0x401c,
     }
+
+    // ********************************************
+    // * DX9 enums
+    // ********************************************
+
+    public enum MediaAdapterType
+    {
+        D3D9_KHR = 0x2020,
+        D3D9EX_KHR = 0x2021,
+        DXVA_KHR = 0x2022,
+    }
+
+    public enum MediaAdapterSet
+    {
+        PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR = 0x2023,
+        ALL_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR = 0x2024,
+    }
+
+    [StructLayout(LayoutKind.Sequential,Pack=1)]
+    public struct DX9SurfaceInfo
+    {
+        /// <summary>
+        /// An IDirect3DSurface9
+        /// </summary>
+        IntPtr resource;
+        IntPtr shared_handle;
+    }
+
+
 
     public enum DeviceInfoPropertyNames
     {
