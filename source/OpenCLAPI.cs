@@ -35,7 +35,6 @@ namespace OpenCLNet
 {
     #region Using statements
 
-#warning Todo: map these things to native types if they aren't IntPtrs
     using cl_platform_id = IntPtr;
     using cl_device_id=IntPtr;
     using cl_context=IntPtr;
@@ -45,59 +44,11 @@ namespace OpenCLNet
     using cl_kernel=IntPtr;
     using cl_event=IntPtr;
     using cl_sampler=IntPtr;
-
-    using cl_bool=UInt32;
-    using cl_device_type=UInt64;
-    using cl_platform_info=UInt32;
-    using cl_device_info=UInt32;
-    using cl_device_address_info=UInt64;
-    using cl_device_fp_config=UInt64;
-    using cl_device_mem_cache_type=UInt32;
-    using cl_device_local_mem_type=UInt32;
-    using cl_device_exec_capabilities=UInt64;
-    using cl_command_queue_properties=UInt64;
-
+    using cl_device_partition_property = IntPtr;
     using cl_context_properties=IntPtr;
-    using cl_context_info=UInt32;
-    using cl_command_queue_info=UInt32;
-    using cl_channel_order=UInt32;
-    using cl_channel_type=UInt32;
-    using cl_mem_flags=UInt64;
-    using cl_mem_object_type=UInt32;
-    using cl_mem_info=UInt32;
-    using cl_image_info=UInt32;
-    using cl_addressing_mode=UInt32;
-    using cl_filter_mode=UInt32;
-    using cl_sampler_info=UInt32;
-    using cl_map_flags=UInt64;
-    using cl_program_info=UInt32;
-    using cl_program_build_info=UInt32;
-    using cl_build_status=Int32;
-    using cl_kernel_info=UInt32;
-    using cl_kernel_work_group_info=UInt32;
-    using cl_event_info=UInt32;
-    using cl_command_type=UInt32;
-    using cl_profiling_info=UInt32;
-
-    using cl_gl_object_type=UInt32;
-    using cl_gl_texture_info=UInt32;
-    using cl_gl_platform_info=UInt32;
-    using cl_gl_context_info=UInt32;
-    using GLuint=UInt32;
-    using GLint=Int32;
-    using GLenum=Int32;
-
-    using cl_device_partition_property_ext=UInt64;
-    
-    using cl_d3d10_device_source_khr = UInt32;
-    using cl_d3d10_device_set_khr = UInt32;
-    using UINT = UInt32;
     using ID3D10Buffer = IntPtr;
     using ID3D10Texture2D = IntPtr;
     using ID3D10Texture3D = IntPtr;
-    using cl_device_partition_property = IntPtr;
-    using cl_device_affinity_domain = UInt64;
-    using cl_buffer_create_type = UInt32;
 
     #endregion
 
@@ -125,7 +76,7 @@ namespace OpenCLNet
         public extern static int clGetPlatformIDs(uint num_entries, IntPtr* pPlatforms, out uint num_platforms);
 
         [DllImport(Configuration.Library)]
-        public extern static int clGetPlatformInfo(cl_platform_id platform, cl_platform_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static int clGetPlatformInfo(cl_platform_id platform, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         #endregion
 
@@ -138,7 +89,7 @@ namespace OpenCLNet
         public extern static int clGetDeviceIDs(IntPtr platform, ulong device_type, uint num_entries, IntPtr* pDevices, out uint num_devices);
 
         [DllImport(Configuration.Library)]
-        public extern static int clGetDeviceInfo(cl_device_id device, cl_device_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static int clGetDeviceInfo(cl_device_id device, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         /// <summary>
         /// OpenCL 1.2
@@ -196,7 +147,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static int clReleaseContext(cl_context context);
         [DllImport(Configuration.Library)]
-        public extern static int clGetContextInfo(cl_context context, cl_context_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static int clGetContextInfo(cl_context context, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         #endregion
 
@@ -204,16 +155,16 @@ namespace OpenCLNet
 
         // Command Queue APIs
         [DllImport(Configuration.Library)]
-        public extern static IntPtr clCreateCommandQueue(cl_context context, cl_device_id device, cl_command_queue_properties properties, [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
+        public extern static IntPtr clCreateCommandQueue(cl_context context, cl_device_id device, ulong properties, [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clRetainCommandQueue(cl_command_queue command_queue);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clReleaseCommandQueue(cl_command_queue command_queue);
         [DllImport(Configuration.Library)]
-        public extern static ErrorCode clGetCommandQueueInfo(cl_command_queue command_queue, cl_command_queue_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static ErrorCode clGetCommandQueueInfo(cl_command_queue command_queue, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
         [DllImport(Configuration.Library)]
         [Obsolete("Function deprecated in OpenCL 1.1 due to being inherently unsafe", false)]
-        public extern static ErrorCode clSetCommandQueueProperty(cl_command_queue command_queue, cl_command_queue_properties properties, [MarshalAs(UnmanagedType.I4)]bool enable, out cl_command_queue_properties old_properties);
+        public extern static ErrorCode clSetCommandQueueProperty(cl_command_queue command_queue, ulong properties, [MarshalAs(UnmanagedType.I4)]bool enable, out ulong old_properties);
 
         #endregion
 
@@ -221,51 +172,51 @@ namespace OpenCLNet
 
         // Memory Object APIs
         [DllImport(Configuration.Library)]
-        public extern static cl_mem clCreateBuffer(cl_context context, cl_mem_flags flags, IntPtr size, void* host_ptr, out ErrorCode errcode_ret);
+        public extern static cl_mem clCreateBuffer(cl_context context, ulong flags, IntPtr size, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         [Obsolete("Deprecated in OpenCL 1.2. See clCreateImage",false)]
-        public extern static cl_mem clCreateImage2D(cl_context context, cl_mem_flags flags, ImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret);
+        public extern static cl_mem clCreateImage2D(cl_context context, ulong flags, ImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         [Obsolete("Deprecated in OpenCL 1.2. See clCreateImage",false)]
-        public extern static cl_mem clCreateImage3D(cl_context context, cl_mem_flags flags, ImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret);
+        public extern static cl_mem clCreateImage3D(cl_context context, ulong flags, ImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clRetainMemObject(cl_mem memobj);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clReleaseMemObject(cl_mem memobj);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clGetSupportedImageFormats(cl_context context,
-            cl_mem_flags flags,
-            cl_mem_object_type image_type,
+            ulong flags,
+            uint image_type,
             uint num_entries,
             [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] ImageFormat[] image_formats,
             out uint num_image_formats);
         [DllImport(Configuration.Library)]
-        public extern static ErrorCode clGetMemObjectInfo(cl_mem memobj, cl_mem_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static ErrorCode clGetMemObjectInfo(cl_mem memobj, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
         [DllImport(Configuration.Library)]
-        public extern static ErrorCode clGetImageInfo(cl_mem image, cl_image_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static ErrorCode clGetImageInfo(cl_mem image, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         // OpenCL 1.1
         [DllImport(Configuration.Library)]
-        public extern static cl_mem clCreateSubBuffer(cl_mem buffer, cl_mem_flags flags, BufferCreateType buffer_create_type, void* buffer_create_info, out ErrorCode errcode_ret );
+        public extern static cl_mem clCreateSubBuffer(cl_mem buffer, ulong flags, BufferCreateType buffer_create_type, void* buffer_create_info, out ErrorCode errcode_ret );
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clSetMemObjectDestructorCallback(cl_mem memobj, void* pfn_notify, void* user_data);
         
         // OpenCL 1.2
         [DllImport(Configuration.Library)]
-        public extern static cl_mem clCreateSubBuffer(cl_mem buffer, cl_mem_flags flags, cl_buffer_create_type buffer_create_type, void* buffer_create_info, int* errcode_ret);
+        public extern static cl_mem clCreateSubBuffer(cl_mem buffer, ulong flags, uint buffer_create_type, void* buffer_create_info, int* errcode_ret);
         #endregion
 
         #region Sampler API
 
         // Sampler APIs
         [DllImport(Configuration.Library)]
-        public extern static cl_sampler clCreateSampler(cl_context context, cl_bool normalized_coords, cl_addressing_mode addressing_mode, cl_filter_mode filter_mode, out ErrorCode errcode_ret);
+        public extern static cl_sampler clCreateSampler(cl_context context, uint normalized_coords, uint addressing_mode, uint filter_mode, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clRetainSampler(cl_sampler sampler);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clReleaseSampler(cl_sampler sampler);
         [DllImport(Configuration.Library)]
-        public extern static ErrorCode clGetSamplerInfo(cl_sampler sampler, cl_sampler_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static ErrorCode clGetSamplerInfo(cl_sampler sampler, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         #endregion
 
@@ -301,9 +252,9 @@ namespace OpenCLNet
         [Obsolete("Deprecated in OpenCL 1.2. Use clUnloadPlatformCompiler.")]
         public extern static int clUnloadCompiler();
         [DllImport(Configuration.Library)]
-        public extern static int clGetProgramInfo(cl_program program, cl_program_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static int clGetProgramInfo(cl_program program, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
         [DllImport(Configuration.Library)]
-        public extern static int clGetProgramBuildInfo(cl_program program, cl_device_id device, cl_program_build_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static int clGetProgramBuildInfo(cl_program program, cl_device_id device, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         // OpenCL 1.2
         /// <summary>
@@ -347,9 +298,9 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clSetKernelArg(cl_kernel kernel, uint arg_index, IntPtr arg_size, void* arg_value);
         [DllImport(Configuration.Library)]
-        public extern static ErrorCode clGetKernelInfo(cl_kernel kernel, cl_kernel_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static ErrorCode clGetKernelInfo(cl_kernel kernel, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
         [DllImport(Configuration.Library)]
-        public extern static ErrorCode clGetKernelWorkGroupInfo(cl_kernel kernel, cl_device_id device, cl_kernel_work_group_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static ErrorCode clGetKernelWorkGroupInfo(cl_kernel kernel, cl_device_id device, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         // OpenCL 1.2
         //public extern static int clGetKernelArgInfo(cl_kernel kernel,uint arg_indx,cl_kernel_arg_info param_name,size_t param_value_size,void * param_value,size_t * param_value_size_ret);
@@ -362,7 +313,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueReadBuffer(cl_command_queue command_queue,
             cl_mem buffer,
-            cl_bool blocking_read,
+            uint blocking_read,
             IntPtr offset,
             IntPtr cb,
             void* ptr,
@@ -372,7 +323,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueReadBuffer(cl_command_queue command_queue,
             cl_mem buffer,
-            cl_bool blocking_read,
+            uint blocking_read,
             IntPtr offset,
             IntPtr cb,
             void* ptr,
@@ -384,7 +335,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWriteBuffer(cl_command_queue command_queue,
             cl_mem buffer,
-            cl_bool blocking_write,
+            uint blocking_write,
             IntPtr offset,
             IntPtr cb,
             void* ptr,
@@ -394,7 +345,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWriteBuffer(cl_command_queue command_queue,
             cl_mem buffer,
-            cl_bool blocking_write,
+            uint blocking_write,
             IntPtr offset,
             IntPtr cb,
             void* ptr,
@@ -426,7 +377,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueReadImage(cl_command_queue command_queue,
             cl_mem image,
-            cl_bool blocking_read,
+            uint blocking_read,
             [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] origin,
             [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] region,
             IntPtr row_pitch,
@@ -438,7 +389,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueReadImage(cl_command_queue command_queue,
             cl_mem image,
-            cl_bool blocking_read,
+            uint blocking_read,
             IntPtr* origin,
             IntPtr* region,
             IntPtr row_pitch,
@@ -451,7 +402,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWriteImage(cl_command_queue command_queue,
             cl_mem image,
-            cl_bool blocking_write,
+            uint blocking_write,
             [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] origin,
             [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] region,
             IntPtr input_row_pitch,
@@ -463,7 +414,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWriteImage(cl_command_queue command_queue,
             cl_mem image,
-            cl_bool blocking_write,
+            uint blocking_write,
             IntPtr* origin,
             IntPtr* region,
             IntPtr input_row_pitch,
@@ -541,8 +492,8 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static void* clEnqueueMapBuffer(cl_command_queue command_queue,
             cl_mem buffer,
-            cl_bool blocking_map,
-            cl_map_flags map_flags,
+            uint blocking_map,
+            ulong map_flags,
             IntPtr offset,
             IntPtr cb,
             uint num_events_in_wait_list,
@@ -552,8 +503,8 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static void* clEnqueueMapBuffer(cl_command_queue command_queue,
             cl_mem buffer,
-            cl_bool blocking_map,
-            cl_map_flags map_flags,
+            uint blocking_map,
+            ulong map_flags,
             IntPtr offset,
             IntPtr cb,
             uint num_events_in_wait_list,
@@ -564,8 +515,8 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static void* clEnqueueMapImage(cl_command_queue command_queue,
             cl_mem image,
-            cl_bool blocking_map,
-            cl_map_flags map_flags,
+            uint blocking_map,
+            ulong map_flags,
             [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] origin,
             [In] [MarshalAs(UnmanagedType.LPArray, SizeConst = 3)]IntPtr[] region,
             out IntPtr image_row_pitch,
@@ -577,8 +528,8 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static void* clEnqueueMapImage(cl_command_queue command_queue,
             cl_mem image,
-            cl_bool blocking_map,
-            cl_map_flags map_flags,
+            uint blocking_map,
+            ulong map_flags,
             IntPtr* origin,
             IntPtr* region,
             out IntPtr image_row_pitch,
@@ -683,7 +634,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueReadBufferRect(cl_command_queue command_queue,
                                 cl_mem buffer,
-                                cl_bool blocking_read,
+                                uint blocking_read,
                                 [In] IntPtr[] buffer_offset,
                                 [In] IntPtr[] host_offset,
                                 [In] IntPtr[] region,
@@ -698,7 +649,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueReadBufferRect(cl_command_queue command_queue,
                                 cl_mem buffer,
-                                cl_bool blocking_read,
+                                uint blocking_read,
                                 IntPtr* buffer_offset,
                                 IntPtr* host_offset,
                                 IntPtr* region,
@@ -714,7 +665,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWriteBufferRect(cl_command_queue command_queue,
                                  cl_mem buffer,
-                                 cl_bool blocking_write,
+                                 uint blocking_write,
                                  [In] IntPtr[] buffer_offset,
                                  [In] IntPtr[] host_offset,
                                  [In] IntPtr[] region,
@@ -729,7 +680,7 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clEnqueueWriteBufferRect(cl_command_queue command_queue,
                                  cl_mem buffer,
-                                 cl_bool blocking_write,
+                                 uint blocking_write,
                                  IntPtr* buffer_offset,
                                  IntPtr* host_offset,
                                  IntPtr* region,
@@ -802,7 +753,7 @@ namespace OpenCLNet
         
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clGetEventInfo(cl_event _event,
-            cl_event_info param_name,
+            uint param_name,
             IntPtr param_value_size,
             void* param_value,
             out IntPtr param_value_size_ret);
@@ -826,35 +777,35 @@ namespace OpenCLNet
 
         [DllImport(Configuration.Library)]
         public extern static cl_mem clCreateFromGLBuffer(cl_context context,
-            cl_mem_flags flags,
-            GLuint bufobj,
+            ulong flags,
+            uint bufobj,
             out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         public extern static cl_mem clCreateFromGLTexture2D(cl_context context,
-            cl_mem_flags flags,
-            GLenum target,
-            GLint mipLevel,
-            GLuint texture,
+            ulong flags,
+            int target,
+            int mipLevel,
+            uint texture,
             out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         public extern static cl_mem clCreateFromGLTexture3D(cl_context context,
-            cl_mem_flags flags,
-            GLenum target,
-            GLint mipLevel,
-            GLuint texture,
+            ulong flags,
+            int target,
+            int mipLevel,
+            uint texture,
             out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         public extern static cl_mem clCreateFromGLRenderbuffer(cl_context context,
-            cl_mem_flags flags,
-            GLuint renderBuffer,
+            ulong flags,
+            uint renderBuffer,
             out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clGetGLObjectInfo(cl_mem memobj,
-            out cl_gl_object_type gl_object_type,
-            out GLuint gl_object_name);
+            out uint gl_object_type,
+            out uint gl_object_name);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clGetGLTextureInfo(cl_mem memobj,
-            cl_gl_texture_info param_name,
+            uint param_name,
             IntPtr param_value_size,
             void* param_value,
             out IntPtr param_value_size_ret);
@@ -884,14 +835,14 @@ namespace OpenCLNet
         public extern static IntPtr clGetExtensionFunctionAddressForPlatform(cl_platform_id platform, string func_name);
 
         [DllImport(Configuration.Library)]
-        public extern static int clGetEventProfilingInfo(cl_event _event, cl_profiling_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
+        public extern static int clGetEventProfilingInfo(cl_event _event, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
     }
 
 #if false
     unsafe public static class GLSharing
     {
         public delegate int clGetGLContextInfoKHRDelegate(cl_context_properties* properties,
-        cl_gl_context_info param_name,
+        uint param_name,
         IntPtr param_value_size,
         void* param_value,
         IntPtr* param_value_size_ret);

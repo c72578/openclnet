@@ -35,7 +35,6 @@ namespace OpenCLNet
 {
     #region Using statements
 
-#warning Todo: map these things to native types if they aren't IntPtrs
     using cl_platform_id = IntPtr;
     using cl_device_id = IntPtr;
     using cl_context = IntPtr;
@@ -45,53 +44,7 @@ namespace OpenCLNet
     using cl_kernel = IntPtr;
     using cl_event = IntPtr;
     using cl_sampler = IntPtr;
-
-    using cl_bool = UInt32;
-    using cl_bitfield = UInt64;
-    using cl_device_type = UInt64;
-    using cl_platform_info = UInt32;
-    using cl_device_info = UInt32;
-    using cl_device_address_info = UInt64;
-    using cl_device_fp_config = UInt64;
-    using cl_device_mem_cache_type = UInt32;
-    using cl_device_local_mem_type = UInt32;
-    using cl_device_exec_capabilities = UInt64;
-    using cl_command_queue_properties = UInt64;
-
     using cl_context_properties = IntPtr;
-    using cl_context_info = UInt32;
-    using cl_command_queue_info = UInt32;
-    using cl_channel_order = UInt32;
-    using cl_channel_type = UInt32;
-    using cl_mem_flags = UInt64;
-    using cl_mem_object_type = UInt32;
-    using cl_mem_info = UInt32;
-    using cl_image_info = UInt32;
-    using cl_addressing_mode = UInt32;
-    using cl_filter_mode = UInt32;
-    using cl_sampler_info = UInt32;
-    using cl_map_flags = UInt64;
-    using cl_program_info = UInt32;
-    using cl_program_build_info = UInt32;
-    using cl_build_status = Int32;
-    using cl_kernel_info = UInt32;
-    using cl_kernel_work_group_info = UInt32;
-    using cl_event_info = UInt32;
-    using cl_command_type = UInt32;
-    using cl_profiling_info = UInt32;
-
-    using cl_gl_object_type = UInt32;
-    using cl_gl_texture_info = UInt32;
-    using cl_gl_platform_info = UInt32;
-    using GLuint = UInt32;
-    using GLint = Int32;
-    using GLenum = Int32;
-
-    using cl_device_partition_property_ext = UInt64;
-
-    using cl_d3d10_device_source_khr = UInt32;
-    using cl_d3d10_device_set_khr = UInt32;
-    using UINT = UInt32;
     using ID3D10Buffer = IntPtr;
     using ID3D10Texture2D = IntPtr;
     using ID3D10Texture3D = IntPtr;
@@ -441,7 +394,7 @@ namespace OpenCLNet
 
         public static IntPtr CreateSubBuffer(IntPtr memobj, MemFlags flags, BufferRegion buffer_create_info, out ErrorCode errcode_ret)
         {
-            return OpenCLAPI.clCreateSubBuffer(memobj, (cl_mem_flags)flags, BufferCreateType.REGION, &buffer_create_info, out errcode_ret);
+            return OpenCLAPI.clCreateSubBuffer(memobj, (ulong)flags, BufferCreateType.REGION, &buffer_create_info, out errcode_ret);
         }
 
         #endregion
@@ -841,7 +794,7 @@ namespace OpenCLNet
         /// <param name="event_wait_list"></param>
         /// <param name="_event"></param>
         /// <returns></returns>
-        public static ErrorCode EnqueueReadBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, IntPtr[] buffer_offset, IntPtr[] host_offset, IntPtr[] region, IntPtr buffer_row_pitch, IntPtr buffer_slice_pitch, IntPtr host_row_pitch, IntPtr host_slice_pitch, void* ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
+        public static ErrorCode EnqueueReadBufferRect(cl_command_queue command_queue, cl_mem buffer, uint blocking_read, IntPtr[] buffer_offset, IntPtr[] host_offset, IntPtr[] region, IntPtr buffer_row_pitch, IntPtr buffer_slice_pitch, IntPtr host_row_pitch, IntPtr host_slice_pitch, void* ptr, uint num_events_in_wait_list, IntPtr[] event_wait_list, IntPtr* _event)
         {
             fixed( IntPtr* pBufferOffset = buffer_offset)
             {
@@ -857,11 +810,11 @@ namespace OpenCLNet
                 }
             }
         }
-        public static ErrorCode EnqueueReadBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, int buffer_row_pitch, int buffer_slice_pitch, int host_row_pitch, int host_slice_pitch, void* ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        public static ErrorCode EnqueueReadBufferRect(cl_command_queue command_queue, cl_mem buffer, uint blocking_read, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, int buffer_row_pitch, int buffer_slice_pitch, int host_row_pitch, int host_slice_pitch, void* ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
         {
             return OpenCLAPI.clEnqueueReadBufferRect(command_queue, buffer, blocking_read, buffer_offset, host_offset, region, (IntPtr)buffer_row_pitch, (IntPtr)buffer_slice_pitch, (IntPtr)host_row_pitch, (IntPtr)host_slice_pitch, ptr, (uint)num_events_in_wait_list, event_wait_list, _event);
         }
-        public static ErrorCode EnqueueReadBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_read, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, long buffer_row_pitch, long buffer_slice_pitch, long host_row_pitch, long host_slice_pitch, void* ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
+        public static ErrorCode EnqueueReadBufferRect(cl_command_queue command_queue, cl_mem buffer, uint blocking_read, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, long buffer_row_pitch, long buffer_slice_pitch, long host_row_pitch, long host_slice_pitch, void* ptr, int num_events_in_wait_list, IntPtr* event_wait_list, IntPtr* _event)
         {
             return OpenCLAPI.clEnqueueReadBufferRect(command_queue, buffer, blocking_read, buffer_offset, host_offset, region, (IntPtr)buffer_row_pitch, (IntPtr)buffer_slice_pitch, (IntPtr)host_row_pitch, (IntPtr)host_slice_pitch, ptr, (uint)num_events_in_wait_list, event_wait_list, _event);
         }
@@ -888,7 +841,7 @@ namespace OpenCLNet
         /// <param name="_event_wait_list"></param>
         /// <param name="_event"></param>
         /// <returns></returns>
-        public static ErrorCode EnqueueWriteBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, IntPtr[] buffer_offset, IntPtr[] host_offset, IntPtr[] region, IntPtr buffer_row_pitch, IntPtr buffer_slice_pitch, IntPtr host_row_pitch, IntPtr host_slice_pitch, void* ptr, uint num_events_in_wait_list, cl_event[] event_wait_list, cl_event* _event)
+        public static ErrorCode EnqueueWriteBufferRect(cl_command_queue command_queue, cl_mem buffer, uint blocking_write, IntPtr[] buffer_offset, IntPtr[] host_offset, IntPtr[] region, IntPtr buffer_row_pitch, IntPtr buffer_slice_pitch, IntPtr host_row_pitch, IntPtr host_slice_pitch, void* ptr, uint num_events_in_wait_list, cl_event[] event_wait_list, cl_event* _event)
         {
             fixed (IntPtr* pBufferOffset = buffer_offset)
             {
@@ -905,11 +858,11 @@ namespace OpenCLNet
 
             }
         }
-        public static ErrorCode EnqueueWriteBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, int buffer_row_pitch, int buffer_slice_pitch, int host_row_pitch, int host_slice_pitch, void* ptr, int num_events_in_wait_list, cl_event* _event_wait_list, cl_event* _event)
+        public static ErrorCode EnqueueWriteBufferRect(cl_command_queue command_queue, cl_mem buffer, uint blocking_write, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, int buffer_row_pitch, int buffer_slice_pitch, int host_row_pitch, int host_slice_pitch, void* ptr, int num_events_in_wait_list, cl_event* _event_wait_list, cl_event* _event)
         {
             return OpenCLAPI.clEnqueueWriteBufferRect(command_queue, buffer, blocking_write, buffer_offset, host_offset, region, (IntPtr)buffer_row_pitch, (IntPtr)buffer_slice_pitch, (IntPtr)host_row_pitch, (IntPtr)host_slice_pitch, ptr, (uint)num_events_in_wait_list, _event_wait_list, _event);
         }
-        public static ErrorCode EnqueueWriteBufferRect(cl_command_queue command_queue, cl_mem buffer, cl_bool blocking_write, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, long buffer_row_pitch, long buffer_slice_pitch, long host_row_pitch, long host_slice_pitch, void* ptr, int num_events_in_wait_list, cl_event* _event_wait_list, cl_event* _event)
+        public static ErrorCode EnqueueWriteBufferRect(cl_command_queue command_queue, cl_mem buffer, uint blocking_write, IntPtr* buffer_offset, IntPtr* host_offset, IntPtr* region, long buffer_row_pitch, long buffer_slice_pitch, long host_row_pitch, long host_slice_pitch, void* ptr, int num_events_in_wait_list, cl_event* _event_wait_list, cl_event* _event)
         {
             return OpenCLAPI.clEnqueueWriteBufferRect(command_queue, buffer, blocking_write, buffer_offset, host_offset, region, (IntPtr)buffer_row_pitch, (IntPtr)buffer_slice_pitch, (IntPtr)host_row_pitch, (IntPtr)host_slice_pitch, ptr, (uint)num_events_in_wait_list, _event_wait_list, _event);
         }
@@ -988,7 +941,7 @@ namespace OpenCLNet
             }
         }
 
-        public static ErrorCode GetEventInfo(cl_event _event, cl_event_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret)
+        public static ErrorCode GetEventInfo(cl_event _event, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret)
         {
             return OpenCLAPI.clGetEventInfo(_event, param_name, param_value_size, param_value, out param_value_size_ret);
         }
@@ -1042,9 +995,9 @@ namespace OpenCLNet
 
         #region Sampler API
 
-        public static cl_sampler CreateSampler(cl_context context, bool normalized_coords, cl_addressing_mode addressing_mode, cl_filter_mode filter_mode, out ErrorCode errcode_ret)
+        public static cl_sampler CreateSampler(cl_context context, bool normalized_coords, uint addressing_mode, uint filter_mode, out ErrorCode errcode_ret)
         {
-            return OpenCLAPI.clCreateSampler(context, normalized_coords ? (cl_bool)Bool.TRUE : (cl_bool)Bool.FALSE, addressing_mode, filter_mode, out errcode_ret);
+            return OpenCLAPI.clCreateSampler(context, normalized_coords ? (uint)Bool.TRUE : (uint)Bool.FALSE, addressing_mode, filter_mode, out errcode_ret);
         }
 
         public static ErrorCode RetainSampler(cl_sampler sampler)
@@ -1057,7 +1010,7 @@ namespace OpenCLNet
             return OpenCLAPI.clReleaseSampler(sampler);
         }
 
-        public static ErrorCode GetSamplerInfo(cl_sampler sampler, cl_sampler_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret)
+        public static ErrorCode GetSamplerInfo(cl_sampler sampler, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret)
         {
             return OpenCLAPI.clGetSamplerInfo(sampler, param_name, param_value_size, param_value, out param_value_size_ret);
         }
@@ -1066,27 +1019,27 @@ namespace OpenCLNet
 
         #region GLObject API
 
-        public static cl_mem CreateFromGLBuffer(cl_context context, cl_mem_flags flags, GLuint bufobj, out ErrorCode errcode_ret)
+        public static cl_mem CreateFromGLBuffer(cl_context context, ulong flags, uint bufobj, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clCreateFromGLBuffer(context, flags, bufobj, out errcode_ret);
         }
-        public static cl_mem CreateFromGLTexture2D(cl_context context, cl_mem_flags flags, GLenum target, GLint mipLevel, GLuint texture, out ErrorCode errcode_ret)
+        public static cl_mem CreateFromGLTexture2D(cl_context context, ulong flags, int target, int mipLevel, uint texture, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clCreateFromGLTexture2D(context, flags, target, mipLevel, texture, out errcode_ret);
         }
-        public static cl_mem CreateFromGLTexture3D(cl_context context, cl_mem_flags flags, GLenum target, GLint mipLevel, GLuint texture, out ErrorCode errcode_ret)
+        public static cl_mem CreateFromGLTexture3D(cl_context context, ulong flags, int target, int mipLevel, uint texture, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clCreateFromGLTexture3D(context, flags, target, mipLevel, texture, out errcode_ret);
         }
-        public static cl_mem CreateFromGLRenderbuffer(cl_context context, cl_mem_flags flags, GLuint renderbuffer, out ErrorCode errcode_ret)
+        public static cl_mem CreateFromGLRenderbuffer(cl_context context, ulong flags, uint renderbuffer, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clCreateFromGLRenderbuffer(context, flags, renderbuffer, out errcode_ret);
         }
-        public static ErrorCode GetGLObjectInfo(cl_mem memobj, out cl_gl_object_type gl_object_type, out GLuint gl_object_name)
+        public static ErrorCode GetGLObjectInfo(cl_mem memobj, out uint gl_object_type, out uint gl_object_name)
         {
             return OpenCLAPI.clGetGLObjectInfo(memobj, out gl_object_type, out gl_object_name);
         }
-        public static ErrorCode GetGLTextureInfo(cl_mem memobj, cl_gl_texture_info param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret)
+        public static ErrorCode GetGLTextureInfo(cl_mem memobj, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret)
         {
             return OpenCLAPI.clGetGLTextureInfo(memobj, param_name, param_value_size, param_value, out param_value_size_ret);
         }
