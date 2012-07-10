@@ -215,6 +215,13 @@ namespace OpenCLNet
         /// </summary>
         public uint MaxWorkItemDimensions { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.MAX_WORK_ITEM_DIMENSIONS ); } }
         /// <summary>
+        /// Maximum number of work-items in a work-group executing a kernel using the data parallel execution model.
+        /// (Refer to clEnqueueNDRangeKernel). 
+        /// 
+        /// The minimum value is 1.
+        /// </summary>
+        public long MaxWorkGroupSize { get { return InteropTools.ReadIntPtr( this, (uint)DeviceInfo.MAX_WORK_GROUP_SIZE ).ToInt64(); } }
+        /// <summary>
         /// Maximum number of work-items that can be specified in each dimension of
         /// the work-group to clEnqueueNDRangeKernel.
         /// 
@@ -224,13 +231,6 @@ namespace OpenCLNet
         /// The minimum value is (1, 1, 1).
         /// </summary>
         public IntPtr[] MaxWorkItemSizes { get { return InteropTools.ReadIntPtrArray( this, (uint)DeviceInfo.MAX_WORK_ITEM_SIZES ); } }
-        /// <summary>
-        /// Maximum number of work-items in a work-group executing a kernel using the data parallel execution model.
-        /// (Refer to clEnqueueNDRangeKernel). 
-        /// 
-        /// The minimum value is 1.
-        /// </summary>
-        public long MaxWorkGroupSize { get { return InteropTools.ReadIntPtr( this, (uint)DeviceInfo.MAX_WORK_GROUP_SIZE ).ToInt64(); } }
         public uint PreferredVectorWidthChar { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_CHAR ); } }
         public uint PreferredVectorWidthShort { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_SHORT ); } }
         public uint PreferredVectorWidthInt { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_INT ); } }
@@ -238,6 +238,13 @@ namespace OpenCLNet
         public uint PreferredVectorWidthFloat { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_FLOAT ); } }
         public uint PreferredVectorWidthDouble { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_DOUBLE); } }
         public uint PreferredVectorWidthHalf { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.PREFERRED_VECTOR_WIDTH_HALF); } }
+        public uint NativeVectorWidthChar { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.NATIVE_VECTOR_WIDTH_CHAR); } }
+        public uint NativeVectorWidthShort { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.NATIVE_VECTOR_WIDTH_SHORT); } }
+        public uint NativeVectorWidthInt { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.NATIVE_VECTOR_WIDTH_INT); } }
+        public uint NativeVectorWidthLong { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.NATIVE_VECTOR_WIDTH_LONG); } }
+        public uint NativeVectorWidthFloat { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.NATIVE_VECTOR_WIDTH_FLOAT); } }
+        public uint NativeVectorWidthDouble { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.NATIVE_VECTOR_WIDTH_DOUBLE); } }
+        public uint NativeVectorWidthHalf { get { return InteropTools.ReadUInt(this, (uint)DeviceInfo.NATIVE_VECTOR_WIDTH_HALF); } }
         /// <summary>
         /// Maximum configured clock frequency of the device in MHz.
         /// </summary>
@@ -314,6 +321,8 @@ namespace OpenCLNet
         /// </summary>
         public uint MinDataTypeAlignSize { get { return InteropTools.ReadUInt( this, (uint)DeviceInfo.MIN_DATA_TYPE_ALIGN_SIZE ); } }
         public ulong SingleFPConfig { get { return InteropTools.ReadULong( this, (uint)DeviceInfo.SINGLE_FP_CONFIG ); } }
+        public ulong DoubleFPConfig { get { return InteropTools.ReadULong(this, (uint)DeviceInfo.DOUBLE_FP_CONFIG); } }
+        public ulong HalfFPConfig { get { return InteropTools.ReadULong(this, (uint)DeviceInfo.HALF_FP_CONFIG); } }
         /// <summary>
         /// Type of global memory cache supported. Valid values are: CL_NONE, CL_READ_ONLY_CACHE and CL_READ_WRITE_CACHE.
         /// </summary>

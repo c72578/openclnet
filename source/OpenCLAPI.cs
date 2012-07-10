@@ -178,10 +178,10 @@ namespace OpenCLNet
         public extern static cl_mem clCreateBuffer(cl_context context, ulong flags, IntPtr size, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         [Obsolete("Deprecated in OpenCL 1.2. See clCreateImage",false)]
-        public extern static cl_mem clCreateImage2D(cl_context context, ulong flags, ImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret);
+        public extern static cl_mem clCreateImage2D(cl_context context, ulong flags, CLImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         [Obsolete("Deprecated in OpenCL 1.2. See clCreateImage",false)]
-        public extern static cl_mem clCreateImage3D(cl_context context, ulong flags, ImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret);
+        public extern static cl_mem clCreateImage3D(cl_context context, ulong flags, CLImageFormat* image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clRetainMemObject(cl_mem memobj);
         [DllImport(Configuration.Library)]
@@ -191,7 +191,7 @@ namespace OpenCLNet
             ulong flags,
             uint image_type,
             uint num_entries,
-            [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] ImageFormat[] image_formats,
+            [Out][MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 3)] CLImageFormat[] image_formats,
             out uint num_image_formats);
         [DllImport(Configuration.Library)]
         public extern static ErrorCode clGetMemObjectInfo(cl_mem memobj, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
@@ -270,9 +270,34 @@ namespace OpenCLNet
         /// <param name="errcode_ret"></param>
         /// <returns></returns>
         [DllImport(Configuration.Library)]
-        public extern static cl_program clCreateProgramWithBuiltInKernels(cl_context context, uint num_devices, cl_device_id* device_list, char* kernel_names, int* errcode_ret );
-        // public extern static int clCompileProgram(cl_program program,uint num_devices,const cl_device_id * device_list,const char * options, uint num_input_headers,const cl_program * input_headers,const char ** header_include_names,void (CL_CALLBACK * pfn_notify )(cl_program program, void * user_data ),void * user_data ) ;
-        //public extern static cl_program clLinkProgram(cl_context context,uint num_devices,const cl_device_id * device_list,const char * options, uint num_input_programs,const cl_program * input_programs,void (CL_CALLBACK * pfn_notify)(cl_program program, void * user_data),void * user_data,int * errcode_ret ) ;
+        public extern static cl_program clCreateProgramWithBuiltInKernels(
+            cl_context context,
+            uint num_devices,
+            cl_device_id* device_list,
+            char* kernel_names,
+            [MarshalAs(UnmanagedType.I4)] ErrorCode* errcode_ret );
+        [DllImport(Configuration.Library)]
+        public extern static ErrorCode clCompileProgram(
+            cl_program program,
+            uint num_devices,
+            [In] cl_device_id[] device_list,
+            string options,
+            int num_input_headers,
+            [In] cl_program[] input_headers,
+            [In] string[] header_include_names,
+            ProgramNotify pfn_notify,
+            IntPtr user_data );
+        [DllImport(Configuration.Library)]
+        public extern static cl_program clLinkProgram(
+            cl_context context,
+            uint num_devices,
+            cl_device_id[] device_list,
+            string options,
+            uint num_input_programs,
+            cl_program[] input_programs,
+            ProgramNotify pfn_notify,
+            IntPtr user_data,
+            [MarshalAs(UnmanagedType.I4)] out ErrorCode errcode_ret );
         
         /// <summary>
         /// OpenCL 1.2
@@ -306,8 +331,14 @@ namespace OpenCLNet
         public extern static ErrorCode clGetKernelWorkGroupInfo(cl_kernel kernel, cl_device_id device, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
 
         // OpenCL 1.2
-        //public extern static int clGetKernelArgInfo(cl_kernel kernel,uint arg_indx,cl_kernel_arg_info param_name,size_t param_value_size,void * param_value,size_t * param_value_size_ret);
-
+        [DllImport(Configuration.Library)]
+        public extern static int clGetKernelArgInfo(
+            cl_kernel kernel,
+            uint arg_indx,
+            uint param_name,
+            IntPtr param_value_size,
+            void* param_value,
+            IntPtr* param_value_size_ret);
         #endregion
 
         #region Enqueued Commands API
@@ -886,30 +917,4 @@ namespace OpenCLNet
         [DllImport(Configuration.Library)]
         public extern static int clGetEventProfilingInfo(cl_event _event, uint param_name, IntPtr param_value_size, void* param_value, out IntPtr param_value_size_ret);
     }
-
-#if false
-    unsafe public static class GLSharing
-    {
-        public delegate int clGetGLContextInfoKHRDelegate(cl_context_properties* properties,
-        uint param_name,
-        IntPtr param_value_size,
-        void* param_value,
-        IntPtr* param_value_size_ret);
-
-        public static readonly clGetGLContextInfoKHRDelegate clGetGLContextInfoKHR;
-        static GLSharing()
-        {
-            IntPtr func = OpenCLAPI.clGetExtensionFunctionAddress("clGetGLContextInfoKHR");
-            clGetGLContextInfoKHR = (clGetGLContextInfoKHRDelegate)Marshal.GetDelegateForFunctionPointer(func, typeof(clGetGLContextInfoKHRDelegate));
-        }
-    }
-
-    unsafe public static class GLEvent
-    {
-        static GLEvent()
-        {
-        }
-    }
-
-#endif
 }

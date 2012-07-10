@@ -31,109 +31,227 @@ namespace OpenCLNet
 {
 
     [StructLayout(LayoutKind.Sequential,Pack=1)]
-    public struct ImageFormat
+    public struct CLImageFormat
     {
         internal uint image_channel_order;
         internal uint image_channel_data_type;
 
         #region Predefined static Image formats
 
-        public static readonly ImageFormat RGB8U = new ImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT8);
-        public static readonly ImageFormat RGB8S = new ImageFormat(ChannelOrder.RGB, ChannelType.SIGNED_INT8);
-        public static readonly ImageFormat RGB16U = new ImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT16);
-        public static readonly ImageFormat RGB16S = new ImageFormat(ChannelOrder.RGB, ChannelType.SIGNED_INT16);
-        public static readonly ImageFormat RGB32U = new ImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT32);
-        public static readonly ImageFormat RGB32S = new ImageFormat(ChannelOrder.RGB, ChannelType.SIGNED_INT32);
-        public static readonly ImageFormat RGBFloat = new ImageFormat(ChannelOrder.RGB, ChannelType.FLOAT);
-        public static readonly ImageFormat RGBHalf = new ImageFormat(ChannelOrder.RGB, ChannelType.HALF_FLOAT);
+        public static readonly CLImageFormat RGB8U = new CLImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT8);
+        public static readonly CLImageFormat RGB8S = new CLImageFormat(ChannelOrder.RGB, ChannelType.SIGNED_INT8);
+        public static readonly CLImageFormat RGB16U = new CLImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT16);
+        public static readonly CLImageFormat RGB16S = new CLImageFormat(ChannelOrder.RGB, ChannelType.SIGNED_INT16);
+        public static readonly CLImageFormat RGB32U = new CLImageFormat(ChannelOrder.RGB, ChannelType.UNSIGNED_INT32);
+        public static readonly CLImageFormat RGB32S = new CLImageFormat(ChannelOrder.RGB, ChannelType.SIGNED_INT32);
+        public static readonly CLImageFormat RGBFloat = new CLImageFormat(ChannelOrder.RGB, ChannelType.FLOAT);
+        public static readonly CLImageFormat RGBHalf = new CLImageFormat(ChannelOrder.RGB, ChannelType.HALF_FLOAT);
 
-        public static readonly ImageFormat RG8U = new ImageFormat(ChannelOrder.RG, ChannelType.UNSIGNED_INT8);
-        public static readonly ImageFormat RG8S = new ImageFormat(ChannelOrder.RG, ChannelType.SIGNED_INT8);
-        public static readonly ImageFormat RG16U = new ImageFormat(ChannelOrder.RG, ChannelType.UNSIGNED_INT16);
-        public static readonly ImageFormat RG16S = new ImageFormat(ChannelOrder.RG, ChannelType.SIGNED_INT16);
-        public static readonly ImageFormat RG32U = new ImageFormat(ChannelOrder.RG, ChannelType.UNSIGNED_INT32);
-        public static readonly ImageFormat RG32S = new ImageFormat(ChannelOrder.RG, ChannelType.SIGNED_INT32);
-        public static readonly ImageFormat RGFloat = new ImageFormat(ChannelOrder.RG, ChannelType.FLOAT);
-        public static readonly ImageFormat RGHalf = new ImageFormat(ChannelOrder.RG, ChannelType.HALF_FLOAT);
+        public static readonly CLImageFormat RG8U = new CLImageFormat(ChannelOrder.RG, ChannelType.UNSIGNED_INT8);
+        public static readonly CLImageFormat RG8S = new CLImageFormat(ChannelOrder.RG, ChannelType.SIGNED_INT8);
+        public static readonly CLImageFormat RG16U = new CLImageFormat(ChannelOrder.RG, ChannelType.UNSIGNED_INT16);
+        public static readonly CLImageFormat RG16S = new CLImageFormat(ChannelOrder.RG, ChannelType.SIGNED_INT16);
+        public static readonly CLImageFormat RG32U = new CLImageFormat(ChannelOrder.RG, ChannelType.UNSIGNED_INT32);
+        public static readonly CLImageFormat RG32S = new CLImageFormat(ChannelOrder.RG, ChannelType.SIGNED_INT32);
+        public static readonly CLImageFormat RGFloat = new CLImageFormat(ChannelOrder.RG, ChannelType.FLOAT);
+        public static readonly CLImageFormat RGHalf = new CLImageFormat(ChannelOrder.RG, ChannelType.HALF_FLOAT);
 
-        public static readonly ImageFormat R8U = new ImageFormat(ChannelOrder.R, ChannelType.UNSIGNED_INT8);
-        public static readonly ImageFormat R8S = new ImageFormat(ChannelOrder.R, ChannelType.SIGNED_INT8);
-        public static readonly ImageFormat R16U = new ImageFormat(ChannelOrder.R, ChannelType.UNSIGNED_INT16);
-        public static readonly ImageFormat R16S = new ImageFormat(ChannelOrder.R, ChannelType.SIGNED_INT16);
-        public static readonly ImageFormat R32U = new ImageFormat(ChannelOrder.R, ChannelType.UNSIGNED_INT32);
-        public static readonly ImageFormat R32S = new ImageFormat(ChannelOrder.R, ChannelType.SIGNED_INT32);
-        public static readonly ImageFormat RFloat = new ImageFormat(ChannelOrder.R, ChannelType.FLOAT);
-        public static readonly ImageFormat RHalf = new ImageFormat(ChannelOrder.R, ChannelType.HALF_FLOAT);
+        public static readonly CLImageFormat R8U = new CLImageFormat(ChannelOrder.R, ChannelType.UNSIGNED_INT8);
+        public static readonly CLImageFormat R8S = new CLImageFormat(ChannelOrder.R, ChannelType.SIGNED_INT8);
+        public static readonly CLImageFormat R16U = new CLImageFormat(ChannelOrder.R, ChannelType.UNSIGNED_INT16);
+        public static readonly CLImageFormat R16S = new CLImageFormat(ChannelOrder.R, ChannelType.SIGNED_INT16);
+        public static readonly CLImageFormat R32U = new CLImageFormat(ChannelOrder.R, ChannelType.UNSIGNED_INT32);
+        public static readonly CLImageFormat R32S = new CLImageFormat(ChannelOrder.R, ChannelType.SIGNED_INT32);
+        public static readonly CLImageFormat RFloat = new CLImageFormat(ChannelOrder.R, ChannelType.FLOAT);
+        public static readonly CLImageFormat RHalf = new CLImageFormat(ChannelOrder.R, ChannelType.HALF_FLOAT);
 
-        public static readonly ImageFormat RA8U = new ImageFormat(ChannelOrder.RA, ChannelType.UNSIGNED_INT8);
-        public static readonly ImageFormat RA8S = new ImageFormat(ChannelOrder.RA, ChannelType.SIGNED_INT8);
-        public static readonly ImageFormat RA16U = new ImageFormat(ChannelOrder.RA, ChannelType.UNSIGNED_INT16);
-        public static readonly ImageFormat RA16S = new ImageFormat(ChannelOrder.RA, ChannelType.SIGNED_INT16);
-        public static readonly ImageFormat RA32U = new ImageFormat(ChannelOrder.RA, ChannelType.UNSIGNED_INT32);
-        public static readonly ImageFormat RA32S = new ImageFormat(ChannelOrder.RA, ChannelType.SIGNED_INT32);
-        public static readonly ImageFormat RAFloat = new ImageFormat(ChannelOrder.RA, ChannelType.FLOAT);
-        public static readonly ImageFormat RAHalf = new ImageFormat(ChannelOrder.RA, ChannelType.HALF_FLOAT);
+        public static readonly CLImageFormat RA8U = new CLImageFormat(ChannelOrder.RA, ChannelType.UNSIGNED_INT8);
+        public static readonly CLImageFormat RA8S = new CLImageFormat(ChannelOrder.RA, ChannelType.SIGNED_INT8);
+        public static readonly CLImageFormat RA16U = new CLImageFormat(ChannelOrder.RA, ChannelType.UNSIGNED_INT16);
+        public static readonly CLImageFormat RA16S = new CLImageFormat(ChannelOrder.RA, ChannelType.SIGNED_INT16);
+        public static readonly CLImageFormat RA32U = new CLImageFormat(ChannelOrder.RA, ChannelType.UNSIGNED_INT32);
+        public static readonly CLImageFormat RA32S = new CLImageFormat(ChannelOrder.RA, ChannelType.SIGNED_INT32);
+        public static readonly CLImageFormat RAFloat = new CLImageFormat(ChannelOrder.RA, ChannelType.FLOAT);
+        public static readonly CLImageFormat RAHalf = new CLImageFormat(ChannelOrder.RA, ChannelType.HALF_FLOAT);
 
-        public static readonly ImageFormat RGBA8U = new ImageFormat(ChannelOrder.RGBA, ChannelType.UNSIGNED_INT8);
-        public static readonly ImageFormat RGBA8S = new ImageFormat(ChannelOrder.RGBA, ChannelType.SIGNED_INT8);
-        public static readonly ImageFormat RGBA16U = new ImageFormat(ChannelOrder.RGBA, ChannelType.UNSIGNED_INT16);
-        public static readonly ImageFormat RGBA16S = new ImageFormat(ChannelOrder.RGBA, ChannelType.SIGNED_INT16);
-        public static readonly ImageFormat RGBA32U = new ImageFormat(ChannelOrder.RGBA, ChannelType.UNSIGNED_INT32);
-        public static readonly ImageFormat RGBA32S = new ImageFormat(ChannelOrder.RGBA, ChannelType.SIGNED_INT32);
-        public static readonly ImageFormat RGBAFloat = new ImageFormat(ChannelOrder.RGBA, ChannelType.FLOAT);
-        public static readonly ImageFormat RGBAHalf = new ImageFormat(ChannelOrder.RGBA, ChannelType.HALF_FLOAT);
+        public static readonly CLImageFormat RGBA8U = new CLImageFormat(ChannelOrder.RGBA, ChannelType.UNSIGNED_INT8);
+        public static readonly CLImageFormat RGBA8S = new CLImageFormat(ChannelOrder.RGBA, ChannelType.SIGNED_INT8);
+        public static readonly CLImageFormat RGBA16U = new CLImageFormat(ChannelOrder.RGBA, ChannelType.UNSIGNED_INT16);
+        public static readonly CLImageFormat RGBA16S = new CLImageFormat(ChannelOrder.RGBA, ChannelType.SIGNED_INT16);
+        public static readonly CLImageFormat RGBA32U = new CLImageFormat(ChannelOrder.RGBA, ChannelType.UNSIGNED_INT32);
+        public static readonly CLImageFormat RGBA32S = new CLImageFormat(ChannelOrder.RGBA, ChannelType.SIGNED_INT32);
+        public static readonly CLImageFormat RGBAFloat = new CLImageFormat(ChannelOrder.RGBA, ChannelType.FLOAT);
+        public static readonly CLImageFormat RGBAHalf = new CLImageFormat(ChannelOrder.RGBA, ChannelType.HALF_FLOAT);
 
-        public static readonly ImageFormat BGRA8U = new ImageFormat(ChannelOrder.BGRA, ChannelType.UNSIGNED_INT8);
-        public static readonly ImageFormat BGRA8S = new ImageFormat(ChannelOrder.BGRA, ChannelType.SIGNED_INT8);
-        public static readonly ImageFormat BGRA16U = new ImageFormat(ChannelOrder.BGRA, ChannelType.UNSIGNED_INT16);
-        public static readonly ImageFormat BGRA16S = new ImageFormat(ChannelOrder.BGRA, ChannelType.SIGNED_INT16);
-        public static readonly ImageFormat BGRA32U = new ImageFormat(ChannelOrder.BGRA, ChannelType.UNSIGNED_INT32);
-        public static readonly ImageFormat BGRA32S = new ImageFormat(ChannelOrder.BGRA, ChannelType.SIGNED_INT32);
-        public static readonly ImageFormat BGRAFloat = new ImageFormat(ChannelOrder.BGRA, ChannelType.FLOAT);
-        public static readonly ImageFormat BGRAHalf = new ImageFormat(ChannelOrder.BGRA, ChannelType.HALF_FLOAT);
+        public static readonly CLImageFormat BGRA8U = new CLImageFormat(ChannelOrder.BGRA, ChannelType.UNSIGNED_INT8);
+        public static readonly CLImageFormat BGRA8S = new CLImageFormat(ChannelOrder.BGRA, ChannelType.SIGNED_INT8);
+        public static readonly CLImageFormat BGRA16U = new CLImageFormat(ChannelOrder.BGRA, ChannelType.UNSIGNED_INT16);
+        public static readonly CLImageFormat BGRA16S = new CLImageFormat(ChannelOrder.BGRA, ChannelType.SIGNED_INT16);
+        public static readonly CLImageFormat BGRA32U = new CLImageFormat(ChannelOrder.BGRA, ChannelType.UNSIGNED_INT32);
+        public static readonly CLImageFormat BGRA32S = new CLImageFormat(ChannelOrder.BGRA, ChannelType.SIGNED_INT32);
+        public static readonly CLImageFormat BGRAFloat = new CLImageFormat(ChannelOrder.BGRA, ChannelType.FLOAT);
+        public static readonly CLImageFormat BGRAHalf = new CLImageFormat(ChannelOrder.BGRA, ChannelType.HALF_FLOAT);
 
-        public static readonly ImageFormat ARGB8U = new ImageFormat(ChannelOrder.ARGB, ChannelType.UNSIGNED_INT8);
-        public static readonly ImageFormat ARGB8S = new ImageFormat(ChannelOrder.ARGB, ChannelType.SIGNED_INT8);
-        public static readonly ImageFormat ARGB16U = new ImageFormat(ChannelOrder.ARGB, ChannelType.UNSIGNED_INT16);
-        public static readonly ImageFormat ARGB16S = new ImageFormat(ChannelOrder.ARGB, ChannelType.SIGNED_INT16);
-        public static readonly ImageFormat ARGB32U = new ImageFormat(ChannelOrder.ARGB, ChannelType.UNSIGNED_INT32);
-        public static readonly ImageFormat ARGB32S = new ImageFormat(ChannelOrder.ARGB, ChannelType.SIGNED_INT32);
-        public static readonly ImageFormat ARGBFloat = new ImageFormat(ChannelOrder.ARGB, ChannelType.FLOAT);
-        public static readonly ImageFormat ARGBHalf = new ImageFormat(ChannelOrder.ARGB, ChannelType.HALF_FLOAT);
+        public static readonly CLImageFormat ARGB8U = new CLImageFormat(ChannelOrder.ARGB, ChannelType.UNSIGNED_INT8);
+        public static readonly CLImageFormat ARGB8S = new CLImageFormat(ChannelOrder.ARGB, ChannelType.SIGNED_INT8);
+        public static readonly CLImageFormat ARGB16U = new CLImageFormat(ChannelOrder.ARGB, ChannelType.UNSIGNED_INT16);
+        public static readonly CLImageFormat ARGB16S = new CLImageFormat(ChannelOrder.ARGB, ChannelType.SIGNED_INT16);
+        public static readonly CLImageFormat ARGB32U = new CLImageFormat(ChannelOrder.ARGB, ChannelType.UNSIGNED_INT32);
+        public static readonly CLImageFormat ARGB32S = new CLImageFormat(ChannelOrder.ARGB, ChannelType.SIGNED_INT32);
+        public static readonly CLImageFormat ARGBFloat = new CLImageFormat(ChannelOrder.ARGB, ChannelType.FLOAT);
+        public static readonly CLImageFormat ARGBHalf = new CLImageFormat(ChannelOrder.ARGB, ChannelType.HALF_FLOAT);
 
-        public static readonly ImageFormat A8U = new ImageFormat(ChannelOrder.A, ChannelType.UNSIGNED_INT8);
-        public static readonly ImageFormat A8S = new ImageFormat(ChannelOrder.A, ChannelType.SIGNED_INT8);
-        public static readonly ImageFormat A16U = new ImageFormat(ChannelOrder.A, ChannelType.UNSIGNED_INT16);
-        public static readonly ImageFormat A16S = new ImageFormat(ChannelOrder.A, ChannelType.SIGNED_INT16);
-        public static readonly ImageFormat A32U = new ImageFormat(ChannelOrder.A, ChannelType.UNSIGNED_INT32);
-        public static readonly ImageFormat A32S = new ImageFormat(ChannelOrder.A, ChannelType.SIGNED_INT32);
-        public static readonly ImageFormat AFloat = new ImageFormat(ChannelOrder.A, ChannelType.FLOAT);
-        public static readonly ImageFormat AHalf = new ImageFormat(ChannelOrder.A, ChannelType.HALF_FLOAT);
+        public static readonly CLImageFormat A8U = new CLImageFormat(ChannelOrder.A, ChannelType.UNSIGNED_INT8);
+        public static readonly CLImageFormat A8S = new CLImageFormat(ChannelOrder.A, ChannelType.SIGNED_INT8);
+        public static readonly CLImageFormat A16U = new CLImageFormat(ChannelOrder.A, ChannelType.UNSIGNED_INT16);
+        public static readonly CLImageFormat A16S = new CLImageFormat(ChannelOrder.A, ChannelType.SIGNED_INT16);
+        public static readonly CLImageFormat A32U = new CLImageFormat(ChannelOrder.A, ChannelType.UNSIGNED_INT32);
+        public static readonly CLImageFormat A32S = new CLImageFormat(ChannelOrder.A, ChannelType.SIGNED_INT32);
+        public static readonly CLImageFormat AFloat = new CLImageFormat(ChannelOrder.A, ChannelType.FLOAT);
+        public static readonly CLImageFormat AHalf = new CLImageFormat(ChannelOrder.A, ChannelType.HALF_FLOAT);
 
-        public static readonly ImageFormat INTENSITY8U = new ImageFormat(ChannelOrder.INTENSITY, ChannelType.UNSIGNED_INT8);
-        public static readonly ImageFormat INTENSITY8S = new ImageFormat(ChannelOrder.INTENSITY, ChannelType.SIGNED_INT8);
-        public static readonly ImageFormat INTENSITY16U = new ImageFormat(ChannelOrder.INTENSITY, ChannelType.UNSIGNED_INT16);
-        public static readonly ImageFormat INTENSITY16S = new ImageFormat(ChannelOrder.INTENSITY, ChannelType.SIGNED_INT16);
-        public static readonly ImageFormat INTENSITY32U = new ImageFormat(ChannelOrder.INTENSITY, ChannelType.UNSIGNED_INT32);
-        public static readonly ImageFormat INTENSITY32S = new ImageFormat(ChannelOrder.INTENSITY, ChannelType.SIGNED_INT32);
-        public static readonly ImageFormat INTENSITYFloat = new ImageFormat(ChannelOrder.INTENSITY, ChannelType.FLOAT);
-        public static readonly ImageFormat INTENSITYHalf = new ImageFormat(ChannelOrder.INTENSITY, ChannelType.HALF_FLOAT);
+        public static readonly CLImageFormat INTENSITY8U = new CLImageFormat(ChannelOrder.INTENSITY, ChannelType.UNSIGNED_INT8);
+        public static readonly CLImageFormat INTENSITY8S = new CLImageFormat(ChannelOrder.INTENSITY, ChannelType.SIGNED_INT8);
+        public static readonly CLImageFormat INTENSITY16U = new CLImageFormat(ChannelOrder.INTENSITY, ChannelType.UNSIGNED_INT16);
+        public static readonly CLImageFormat INTENSITY16S = new CLImageFormat(ChannelOrder.INTENSITY, ChannelType.SIGNED_INT16);
+        public static readonly CLImageFormat INTENSITY32U = new CLImageFormat(ChannelOrder.INTENSITY, ChannelType.UNSIGNED_INT32);
+        public static readonly CLImageFormat INTENSITY32S = new CLImageFormat(ChannelOrder.INTENSITY, ChannelType.SIGNED_INT32);
+        public static readonly CLImageFormat INTENSITYFloat = new CLImageFormat(ChannelOrder.INTENSITY, ChannelType.FLOAT);
+        public static readonly CLImageFormat INTENSITYHalf = new CLImageFormat(ChannelOrder.INTENSITY, ChannelType.HALF_FLOAT);
 
-        public static readonly ImageFormat LUMINANCE8U = new ImageFormat(ChannelOrder.LUMINANCE, ChannelType.UNSIGNED_INT8);
-        public static readonly ImageFormat LUMINANCE8S = new ImageFormat(ChannelOrder.LUMINANCE, ChannelType.SIGNED_INT8);
-        public static readonly ImageFormat LUMINANCE16U = new ImageFormat(ChannelOrder.LUMINANCE, ChannelType.UNSIGNED_INT16);
-        public static readonly ImageFormat LUMINANCE16S = new ImageFormat(ChannelOrder.LUMINANCE, ChannelType.SIGNED_INT16);
-        public static readonly ImageFormat LUMINANCE32U = new ImageFormat(ChannelOrder.LUMINANCE, ChannelType.UNSIGNED_INT32);
-        public static readonly ImageFormat LUMINANCE32S = new ImageFormat(ChannelOrder.LUMINANCE, ChannelType.SIGNED_INT32);
-        public static readonly ImageFormat LUMINANCEFloat = new ImageFormat(ChannelOrder.LUMINANCE, ChannelType.FLOAT);
-        public static readonly ImageFormat LUMINANCEHalf = new ImageFormat(ChannelOrder.LUMINANCE, ChannelType.HALF_FLOAT);
+        public static readonly CLImageFormat LUMINANCE8U = new CLImageFormat(ChannelOrder.LUMINANCE, ChannelType.UNSIGNED_INT8);
+        public static readonly CLImageFormat LUMINANCE8S = new CLImageFormat(ChannelOrder.LUMINANCE, ChannelType.SIGNED_INT8);
+        public static readonly CLImageFormat LUMINANCE16U = new CLImageFormat(ChannelOrder.LUMINANCE, ChannelType.UNSIGNED_INT16);
+        public static readonly CLImageFormat LUMINANCE16S = new CLImageFormat(ChannelOrder.LUMINANCE, ChannelType.SIGNED_INT16);
+        public static readonly CLImageFormat LUMINANCE32U = new CLImageFormat(ChannelOrder.LUMINANCE, ChannelType.UNSIGNED_INT32);
+        public static readonly CLImageFormat LUMINANCE32S = new CLImageFormat(ChannelOrder.LUMINANCE, ChannelType.SIGNED_INT32);
+        public static readonly CLImageFormat LUMINANCEFloat = new CLImageFormat(ChannelOrder.LUMINANCE, ChannelType.FLOAT);
+        public static readonly CLImageFormat LUMINANCEHalf = new CLImageFormat(ChannelOrder.LUMINANCE, ChannelType.HALF_FLOAT);
 
         #endregion
 
-        public ImageFormat(ChannelOrder channelOrder, ChannelType channelType)
+        public CLImageFormat(ChannelOrder channelOrder, ChannelType channelType)
         {
             image_channel_order = (uint)channelOrder;
             image_channel_data_type = (uint)channelType;
+        }
+
+        #region Properties
+
+        public int BytesPerPixel
+        {
+            get
+            {
+                int channelSize;
+                int numberOfChannels;
+
+                if ((ChannelType)image_channel_data_type == ChannelType.UNORM_INT_101010)
+                    return 4;
+                if ((ChannelType)image_channel_data_type == ChannelType.UNORM_SHORT_555)
+                    return 2;
+                if ((ChannelType)image_channel_data_type == ChannelType.UNORM_SHORT_565)
+                    return 2;
+
+                switch ((ChannelOrder)image_channel_order)
+                {
+                    case ChannelOrder.R:
+                        numberOfChannels = 1;
+                        break;
+                    case ChannelOrder.A:
+                        numberOfChannels = 1;
+                        break;
+                    case ChannelOrder.RG:
+                        numberOfChannels = 2;
+                        break;
+                    case ChannelOrder.RA:
+                        numberOfChannels = 2;
+                        break;
+                    case ChannelOrder.RGB:
+                        numberOfChannels = 3;
+                        break;
+                    case ChannelOrder.RGBA:
+                        numberOfChannels = 4;
+                        break;
+                    case ChannelOrder.BGRA:
+                        numberOfChannels = 4;
+                        break;
+                    case ChannelOrder.ARGB:
+                        numberOfChannels = 4;
+                        break;
+                    case ChannelOrder.INTENSITY:
+                        numberOfChannels = 1;
+                        break;
+                    case ChannelOrder.LUMINANCE:
+                        numberOfChannels = 1;
+                        break;
+                    case ChannelOrder.Rx:
+                        numberOfChannels = 2;
+                        break;
+                    case ChannelOrder.RGx:
+                        numberOfChannels = 3;
+                        break;
+                    case ChannelOrder.RGBx:
+                        numberOfChannels = 4;
+                        break;
+                    default:
+                        numberOfChannels = 0;
+                        break;
+                }
+
+                switch ((ChannelType)image_channel_data_type)
+                {
+                    case ChannelType.SNORM_INT8:
+                        channelSize = 1;
+                        break;
+                    case ChannelType.SNORM_INT16:
+                        channelSize = 2;
+                        break;
+                    case ChannelType.UNORM_INT8:
+                        channelSize = 1;
+                        break;
+                    case ChannelType.UNORM_INT16:
+                        channelSize = 2;
+                        break;
+                    case ChannelType.UNORM_SHORT_565:
+                        channelSize = 2;
+                        break;
+                    case ChannelType.UNORM_SHORT_555:
+                        channelSize = 2;
+                        break;
+                    case ChannelType.UNORM_INT_101010:
+                        channelSize = 4;
+                        break;
+                    case ChannelType.SIGNED_INT8:
+                        channelSize = 1;
+                        break;
+                    case ChannelType.SIGNED_INT16:
+                        channelSize = 2;
+                        break;
+                    case ChannelType.SIGNED_INT32:
+                        channelSize = 4;
+                        break;
+                    case ChannelType.UNSIGNED_INT8:
+                        channelSize = 1;
+                        break;
+                    case ChannelType.UNSIGNED_INT16:
+                        channelSize = 2;
+                        break;
+                    case ChannelType.UNSIGNED_INT32:
+                        channelSize = 4;
+                        break;
+                    case ChannelType.HALF_FLOAT:
+                        channelSize = 2;
+                        break;
+                    case ChannelType.FLOAT:
+                        channelSize = 4;
+                        break;
+                    default:
+                        channelSize = 0;
+                        break;
+                }
+
+                return channelSize * numberOfChannels;
+            }
         }
 
         public ChannelOrder ChannelOrder
@@ -147,6 +265,7 @@ namespace OpenCLNet
                 image_channel_order = (uint)value;
             }
         }
+
         public ChannelType ChannelType
         {
             get
@@ -158,6 +277,9 @@ namespace OpenCLNet
                 image_channel_data_type = (uint)value;
             }
         }
+
+        #endregion
+
     }
 
     public enum ErrorCode: int

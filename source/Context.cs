@@ -412,29 +412,29 @@ namespace OpenCLNet
         #region Create Image2D
 
         [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
-        public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight)
+        public CLImage CreateImage2D(MemFlags flags, CLImageFormat imageFormat, int imageWidth, int imageHeight)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, IntPtr.Zero, IntPtr.Zero);
         }
         [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
-        public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, long imageWidth, long imageHeight)
+        public CLImage CreateImage2D(MemFlags flags, CLImageFormat imageFormat, long imageWidth, long imageHeight)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, IntPtr.Zero, IntPtr.Zero);
         }
 
         [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
-        public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch, IntPtr pHost)
+        public CLImage CreateImage2D(MemFlags flags, CLImageFormat imageFormat, int imageWidth, int imageHeight, int imageRowPitch, IntPtr pHost)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, pHost);
         }
         [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
-        public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, long imageWidth, long imageHeight, long imageRowPitch, IntPtr pHost)
+        public CLImage CreateImage2D(MemFlags flags, CLImageFormat imageFormat, long imageWidth, long imageHeight, long imageRowPitch, IntPtr pHost)
         {
             return CreateImage2D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageRowPitch, pHost);
         }
 
         [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
-        public CLImage CreateImage2D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageRowPitch, IntPtr pHost)
+        public CLImage CreateImage2D(MemFlags flags, CLImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageRowPitch, IntPtr pHost)
         {
             CLImage mem;
             IntPtr memID;
@@ -453,19 +453,19 @@ namespace OpenCLNet
         #region Create Image3D
 
         [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
-        public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch)
+        public CLImage CreateImage3D(MemFlags flags, CLImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch)
         {
             return CreateImage3D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageDepth, (IntPtr)imageRowPitch, (IntPtr)imageSlicePitch, IntPtr.Zero);
         }
 
         [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
-        public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch, IntPtr pHost)
+        public CLImage CreateImage3D(MemFlags flags, CLImageFormat imageFormat, int imageWidth, int imageHeight, int imageDepth, int imageRowPitch, int imageSlicePitch, IntPtr pHost)
         {
             return CreateImage3D(flags, imageFormat, (IntPtr)imageWidth, (IntPtr)imageHeight, (IntPtr)imageDepth, (IntPtr)imageRowPitch, (IntPtr)imageSlicePitch, pHost);
         }
 
         [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
-        public CLImage CreateImage3D(MemFlags flags, ImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageDepth, IntPtr imageRowPitch, IntPtr imageSlicePitch, IntPtr pHost)
+        public CLImage CreateImage3D(MemFlags flags, CLImageFormat imageFormat, IntPtr imageWidth, IntPtr imageHeight, IntPtr imageDepth, IntPtr imageRowPitch, IntPtr imageSlicePitch, IntPtr pHost)
         {
             CLImage mem;
             IntPtr memID;
@@ -489,17 +489,17 @@ namespace OpenCLNet
         /// <param name="flags"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public ImageFormat[] GetSupportedImageFormats(MemFlags flags, MemObjectType type)
+        public CLImageFormat[] GetSupportedImageFormats(MemFlags flags, MemObjectType type)
         {
             uint numImageFormats;
-            ImageFormat[] imageFormats;
+            CLImageFormat[] imageFormats;
             ErrorCode result;
 
             result = OpenCL.GetSupportedImageFormats(ContextID, (ulong)flags, (uint)type, (uint)0, null, out numImageFormats);
             if( result!=ErrorCode.SUCCESS )
                 throw new OpenCLException("GetSupportedImageFormats failed with error code " + result, result);
 
-            imageFormats = new ImageFormat[numImageFormats];
+            imageFormats = new CLImageFormat[numImageFormats];
 
             result = OpenCL.GetSupportedImageFormats(ContextID, (ulong)flags, (uint)type, numImageFormats, imageFormats, out numImageFormats);
             if (result != ErrorCode.SUCCESS)
@@ -518,8 +518,8 @@ namespace OpenCLNet
         /// <returns>true if the image format is supported, false otherwise</returns>
         public bool SupportsImageFormat(MemFlags flags, MemObjectType type, ChannelOrder channelOrder, ChannelType channelType)
         {
-            ImageFormat[] imageFormats = GetSupportedImageFormats(flags, type);
-            foreach (ImageFormat imageFormat in imageFormats)
+            CLImageFormat[] imageFormats = GetSupportedImageFormats(flags, type);
+            foreach (CLImageFormat imageFormat in imageFormats)
             {
                 if (imageFormat.ChannelOrder == channelOrder && imageFormat.ChannelType == channelType)
                     return true;

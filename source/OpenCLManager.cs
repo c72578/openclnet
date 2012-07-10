@@ -272,6 +272,20 @@ namespace OpenCLNet
             CreateContext(Platform, properties, devices);
         }
 
+        /// <summary>
+        /// Create a context from the specific device and initialize default command queues in the CQ property
+        /// </summary>
+        /// <param name="device"></param>
+        public void CreateContext(Device device)
+        {
+            IntPtr[] properties = new IntPtr[]
+            {
+                (IntPtr)ContextProperties.PLATFORM, device.Platform,
+                IntPtr.Zero
+            };
+
+            CreateContext(device.Platform, properties, new Device[]{device}, null, IntPtr.Zero);
+        }
 
         /// <summary>
         /// Create a context and initialize default command queues in the CQ property

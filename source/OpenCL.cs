@@ -356,13 +356,13 @@ namespace OpenCLNet
         }
 
         [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
-        public static IntPtr CreateImage2D(IntPtr context, ulong flags, ImageFormat image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret)
+        public static IntPtr CreateImage2D(IntPtr context, ulong flags, CLImageFormat image_format, IntPtr image_width, IntPtr image_height, IntPtr image_row_pitch, void* host_ptr, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clCreateImage2D(context, flags, &image_format, image_width, image_height, image_row_pitch, host_ptr, out errcode_ret);
         }
 
         [Obsolete("Deprecated in OpenCL 1.2. Use the new CreateImage function instead")]
-        public static IntPtr CreateImage3D(IntPtr context, ulong flags, ImageFormat image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret)
+        public static IntPtr CreateImage3D(IntPtr context, ulong flags, CLImageFormat image_format, IntPtr image_width, IntPtr image_height, IntPtr image_depth, IntPtr image_row_pitch, IntPtr image_slice_pitch, void* host_ptr, out ErrorCode errcode_ret)
         {
             return OpenCLAPI.clCreateImage3D(context, flags, &image_format, image_width, image_height, image_depth, image_row_pitch, image_slice_pitch, host_ptr, out errcode_ret);
         }
@@ -377,7 +377,7 @@ namespace OpenCLNet
             return OpenCLAPI.clReleaseMemObject(memobj);
         }
 
-        public static ErrorCode GetSupportedImageFormats(IntPtr context, ulong flags, uint image_type, uint num_entries, ImageFormat[] image_formats, out uint num_image_formats)
+        public static ErrorCode GetSupportedImageFormats(IntPtr context, ulong flags, uint image_type, uint num_entries, CLImageFormat[] image_formats, out uint num_image_formats)
         {
             return OpenCLAPI.clGetSupportedImageFormats(context, flags, image_type, num_entries, image_formats, out num_image_formats);
         }

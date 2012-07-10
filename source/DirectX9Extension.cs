@@ -88,6 +88,7 @@ namespace OpenCLNet
         {
             return ExtensionName;
         }
+
 #warning Implement entry points for the DX9 extension
 #if false
         public unsafe Device[] GetDeviceIDsFromD3D11(Platform platform, D3D11DeviceSource d3d_device_source, IntPtr d3d_object, D3D11DeviceSet d3d_device_set)

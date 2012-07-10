@@ -40,7 +40,7 @@ namespace OpenCLNet
 
         #region Properties
 
-        public ImageFormat ImageFormat
+        public CLImageFormat ImageFormat
         {
             get
             {
@@ -48,7 +48,7 @@ namespace OpenCLNet
                 byte* pBuffer = stackalloc byte[(int)size];
 
                 ReadProperty((uint)ImageInfo.FORMAT, size, pBuffer);
-                return (ImageFormat)Marshal.PtrToStructure((IntPtr)pBuffer, typeof(ImageFormat));
+                return (CLImageFormat)Marshal.PtrToStructure((IntPtr)pBuffer, typeof(CLImageFormat));
             }
         }
         public long ElementSize { get { return InteropTools.ReadIntPtr(this, (uint)ImageInfo.ELEMENT_SIZE).ToInt64(); } }
