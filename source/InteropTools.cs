@@ -264,6 +264,22 @@ namespace OpenCLNet
             return ptrs;
         }
 
+        unsafe public static ulong[] ReadULongArray(IPropertyContainer propertyContainer, uint key)
+        {
+            IntPtr size = propertyContainer.GetPropertySize(key);
+            long numElements = (long)size / sizeof(ulong);
+            ulong[] ulongs = new ulong[numElements];
+            byte[] data = InteropTools.ReadBytes(propertyContainer, key);
+
+            fixed (byte* pData = data)
+            {
+                ulong* pBS = (ulong*)pData;
+                for (int i = 0; i < numElements; i++)
+                    ulongs[i] = pBS[i];
+            }
+            return ulongs;
+        }
+
         unsafe public static void ReadPreAllocatedBytePtrArray(IPropertyContainer propertyContainer, uint key, byte[][] buffers)
         {
             GCHandle[] pinnedArrays = new GCHandle[buffers.Length];

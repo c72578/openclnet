@@ -573,6 +573,13 @@ namespace OpenCLNet
 
         // cl_amd_device_attribute_query
         PROFILING_TIMER_OFFSET_AMD       = 0x4036,
+
+        // cl_ext_device_fission
+        PARENT_DEVICE_EXT                = 0x4054,
+        PARTITION_TYPES_EXT              = 0x4055,
+        AFFINITY_DOMAINS_EXT             = 0x4056,
+        REFERENCE_COUNT_EXT              = 0x4057,
+        PARTITION_STYLE_EXT              = 0x4058,
     }	
 
     // cl_device_fp_config - bitfield
@@ -1140,17 +1147,6 @@ namespace OpenCLNet
         /// </summary>
         IntPtr resource;
         IntPtr shared_handle;
-    }
-
-
-
-    public enum DeviceInfoPropertyNames
-    {
-        PARENT_DEVICE = 0x4054,
-        PARITION_TYPES = 0x4055,
-        AFFINITY_DOMAINS = 0x4056,
-        REFERENCE_COUNT = 0x4057,
-        PARTITION_STYLE = 0x4058,
     }
 
     public enum ListTerminators : int
