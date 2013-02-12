@@ -135,7 +135,7 @@ namespace OpenCLImageTest
         public void CreateOCLImages(Context context)
         {
             OCLInputImage = CreateOCLBitmapFromBitmap(TestImage);
-            OCLOutputImage = oclContext.CreateImage2D(MemFlags.WRITE_ONLY, CL.ImageFormat.RGBA8U, panelScaled.Width, panelScaled.Height, 0, IntPtr.Zero);
+            OCLOutputImage = oclContext.CreateImage2D(MemFlags.WRITE_ONLY, CL.CLImageFormat.RGBA8U, panelScaled.Width, panelScaled.Height, 0, IntPtr.Zero);
             OCLSampler = oclContext.CreateSampler(true, AddressingMode.CLAMP_TO_EDGE, FilterMode.LINEAR);
         }
 
@@ -207,7 +207,7 @@ namespace OpenCLImageTest
 
             BitmapData bd = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
             oclImage = oclContext.CreateImage2D((MemFlags)((long)MemFlags.READ_ONLY | (long)MemFlags.COPY_HOST_PTR),
-                CL.ImageFormat.RGBA8U, bd.Width, bd.Height, bd.Stride, bd.Scan0);
+                CL.CLImageFormat.RGBA8U, bd.Width, bd.Height, bd.Stride, bd.Scan0);
             bitmap.UnlockBits(bd);
             return oclImage;
         }
