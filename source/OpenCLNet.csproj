@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40</TargetFrameworks>
+    <TargetFrameworks>net47</TargetFrameworks>
     <Version>0.5.1.0</Version>
     <PackageId>OpenCL.Net</PackageId>
     <Product>OpenCL.Net</Product>
